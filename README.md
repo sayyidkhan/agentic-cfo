@@ -1,28 +1,29 @@
 # Agentic CFO
 
-An AI-powered personal finance application helping working professionals **manage monthly budgets, understand their net worth, and develop healthier financial habits** through timely, personalised guidance.
+An AI-powered personal finance application helping **working professionals** manage monthly budgets, understand their estimated net worth, and improve financial habits with proactive conversational guidance.
 
-**Hackathon alignment:** UOB Theme 3 — Proactive Financial Wellbeing and Engagement.
+**Hackathon:** UOB Theme 3 — Proactive Financial Wellbeing and Engagement.
 
 ## MVP pillars
-1. **Budget tracking:** Income, expenses, categories, monthly limits.
-2. **Wealth tracking:** Accounts, asset and liability balances, net worth.
-3. **AI CFO insights:** Identify spending risks early and recommend concrete next steps.
+1. **Budget tracker** — income, expenses, monthly budgets.
+2. **Wealth tracker** — accounts, assets, liabilities and estimated net worth.
+3. **AI CFO** — conversational financial reviews, early risk detection and practical recommendations.
 
-**Target audience:** Working professionals managing regular income, recurring bills and savings goals.
+## Agreed technical architecture
+- **AdonisJS + TypeScript** — full-stack application and server logic
+- **React + Inertia** — frontend in the same deployment
+- **Tuyau** — end-to-end type-safe routes/API calls; no tRPC needed initially
+- **VineJS** — runtime request validation
+- **Lucid + PostgreSQL** — persistence and financial models
+- **AI SDK (planned)** — streaming conversation and model tool calls
+- **Tailwind CSS** — styling
+- **Docker** — single application deployment; PostgreSQL separate
 
-**Product goal:** Help people become better at managing their money—not merely record where it went.
+Financial calculations remain deterministic and testable; AI explains and advises, with no autonomous payments.
 
 ## Documentation
 - [Product requirements](docs/PRD.md)
-- [Build proposal](docs/BUILD_PLAN.md)
+- [Agreed architecture and build plan](docs/BUILD_PLAN.md)
 - [UOB challenge statements](docs/uob-challenge-statements.md)
 
-## Current status
-Documentation-only initialization. **No application code has been implemented yet.** Architecture and implementation are pending review.
-
-## Guardrails
-- User-controlled financial decisions; no autonomous transfers or payments in MVP.
-- Manual / sample records for POC; no bank connections.
-- Financial values calculated deterministically; AI explains recommendations rather than inventing totals.
-- Source dates and valuations visible, especially for investment/property values.
+**Status:** Architecture approved, documentation only. App implementation has not started.
