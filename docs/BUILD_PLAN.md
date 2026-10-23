@@ -16,11 +16,11 @@ A personal CFO application for working professionals, with three MVP pillars:
 - **React + Inertia:** UI served as part of the same application. No independent frontend or separate API deployment.
 - **Tuyau:** Native AdonisJS ecosystem for end-to-end typed route/API clients; prefer this to introducing tRPC. Configure and verify inference and version compatibility during scaffolding.
 - **VineJS:** Runtime validation at every data-writing boundary; static type inference alone is insufficient.
-- **Lucid ORM:** PostgreSQL models, migrations and transactional updates.
-- **PostgreSQL:** The only separate required stateful service for the POC.
+- **Lucid ORM:** SQLite models, migrations and transactional updates. Keep persistence behind domain services to make a future PostgreSQL migration manageable.
+- **SQLite:** Default database for development and the Zo Computer deployment. Store the DB file on persistent storage and maintain backups; PostgreSQL is a possible future adapter, not an MVP requirement.
 - **AI SDK (proposed integration):** Model adapter, streaming conversational interface and tool calling, invoked by AdonisJS server endpoints. Exact integration to be validated while implementing.
 - **Tailwind CSS:** UI styling.
-- **Docker:** One deployed AdonisJS application container connecting to a separate PostgreSQL database.
+- **Docker:** Optional packaging for one AdonisJS application with a persistent mounted SQLite volume.
 
 ### Logical structure
 ```text
@@ -33,7 +33,7 @@ AdonisJS controllers / endpoints / auth / VineJS
  ┌──────────────┼──────────────────────┐
  Finance services    CFO agent & tools   Conversation service
  └──────────────┼──────────────────────┘
-         Lucid ORM / PostgreSQL
+           Lucid ORM / SQLite
 ```
 
 The AI may request read-only financial tool calls but cannot bypass validated domain services. Future mutation tools require explicit confirmation and permission checks. Financial totals must be computed deterministically outside the model.
@@ -68,7 +68,7 @@ Actual generated directories may differ with selected Adonis starter and current
 - Do not give an AI model authority to fabricate or persist balances.
 
 ## Build sequence
-1. **Scaffold and schema:** AdonisJS + React/Inertia, Tuyau, Lucid/Postgres; implement testable finance services.
+1. **Scaffold and schema:** AdonisJS + React/Inertia, Tuyau, Lucid/SQLite; implement testable finance services.
 2. **Tracking experience:** manual entry, category budgets, accounts, assets/liabilities and dashboard.
 3. **Conversational CFO:** read-only tools, streaming chat and persisted conversations.
 4. **Proactive guidance:** deterministic financial risk detection with AI-generated explanations; user acknowledgment.
@@ -76,6 +76,13 @@ Actual generated directories may differ with selected Adonis starter and current
 
 ## Explicitly out of scope
 No Next.js or SvelteKit; no tRPC layer unless requirements change; no bank connections, payment execution, complex multi-agent orchestration, dynamic user-defined database schema, or SME multi-tenant features.
+
+## Deployment portability
+- Maintain **one GitHub codebase** for ChatGPT-assisted development and a separate runnable copy on Zo Computer; ChatGPT is the development workflow, not necessarily an application host.
+- Both environments can run the same application code but their SQLite files are independent unless explicit import/export or synchronization is implemented.
+- Use environment-based database paths and secrets; never commit database files, credentials or private financial data.
+- Keep finance, budgeting, wealth, agent, and infrastructure concerns modular within a single deployable application, not separate services.
+- SQLite requires a writable persistent volume and backups in any hosted deployment.
 
 ## Deferred operational decisions
 - Choose AI model provider and deployment host later.
