@@ -1,52 +1,66 @@
 # Proposed Build Plan — For Approval
 
-**Status:** Proposal only; no application implementation started.
+**Status:** Architecture proposal only; no application implementation started.
 
-## Technical direction
-Build a responsive web POC. Suggested stack:
-- **Next.js + TypeScript** for a single full-stack codebase.
-- **PostgreSQL + Prisma** for persistent financial records and explicit relationships.
-- **Tailwind CSS** for rapid UI development.
-- **Server-side deterministic financial calculations** for totals, remaining budgets and net worth.
-- **AI model API behind a small service abstraction**, given structured computed facts, with explanations and suggestions returned in a validated JSON shape.
+## Deployment requirement
+**One full-stack application** serving frontend pages and backend logic from the same deployable Node.js process/container. **PostgreSQL is the only separate infrastructure service** in the MVP. No Next.js, separate Express API, or independently deployed frontend.
 
-Stack is a proposal, not an irreversible choice. A local SQLite development mode is also viable if speed is a priority.
+## Proposed stack
+- **SvelteKit + TypeScript** — integrated frontend, server-side route handlers, form actions and pages within one project.
+- **Tailwind CSS** — rapid, maintainable responsive UI.
+- **PostgreSQL + Drizzle ORM** — explicit relational financial data and migrations.
+- **Server-side financial services** — deterministic calculations for balances, transfers, budgets and net worth.
+- **AI provider behind a server-side adapter** — receives verified financial facts; returns validated recommendations.
+
+Deployment: one Docker container / Node application + one managed PostgreSQL database, with secrets held server-side.
+
+## Suggested project structure
+```text
+src/
+  routes/
+    +page.svelte
+    budget/+page.svelte
+    transactions/+page.svelte
+    wealth/+page.svelte
+    insights/+page.svelte
+    api/review/+server.ts
+  lib/
+    components/
+    server/
+      db/
+      finance/
+      ai/
+  app.css
+drizzle/
+docs/
+```
+The UI calls server actions or same-origin routes within this single app. There is no separate backend project.
 
 ## Data model (first pass)
-- **User** — profile and preferred currency (SGD initially).
-- **Account** — cash/bank/investment/debt account, opening balance and dates.
-- **Transaction** — date, amount, type, category, source account and optional destination account for transfers.
-- **Budget** — month, category, spending limit.
-- **AssetValuation / LiabilityBalance** — externally estimated/manual values with as-of date; prevent double-counting account balances.
+- **User** — optional for sample-data POC, currency (SGD).
+- **Account** — cash/bank/investment/debt account, opening balance and date.
+- **Transaction** — date, amount in integer cents, category, type, source account and optional destination account for transfers.
+- **Budget** — month, category and limit.
+- **AssetValuation / LiabilityBalance** — dated manual values; avoid double-counting account balances.
 - **FinancialGoal** — target amount and date (minimal).
-- **Insight** — detected issue, evidence, suggestion, created timestamp, acknowledgment state.
-
-The exact modeling of loans, account balances and standalone asset valuations must be nailed down before implementation to avoid double counting.
+- **Insight** — risk, evidence, suggestion, timestamp and acknowledgement.
 
 ## Build sequence
+1. **Financial core:** schema, migrations, calculation services, tests for transfers, loans and budget consumption.
+2. **Working UI:** transaction entry, monthly budget dashboard, asset and liability entry, net worth display with timestamps.
+3. **AI CFO:** deterministic risk triggers (e.g. budget 80% used with time remaining), model-written guidance grounded in verified numbers.
+4. **POC validation:** seeded working-professional scenario, demo script, acceptance and privacy checks.
 
-### Phase 1 — Finance engine and data model
-Implement account, transaction and budget persistence; calculate account balances, budgets, transfers and net worth with automated tests. Use SGD integer cents.
-
-### Phase 2 — Working dashboard
-Onboard a user with sample/manual data. Build transaction entry, monthly budget view, and assets/liabilities/net worth views. Display last updated dates.
-
-### Phase 3 — CFO review
-Start with deterministic triggers (e.g. >80% of budget used before month-end, upcoming bills exceed available funds). Pass verified figures to an LLM for plain-language recommendations. Cite the numbers and show optional user acknowledgment.
-
-### Phase 4 — POC polish
-Seed realistic working-professional example data; write a demo script; test edge cases and verify the Theme 3 narrative (early identification → timely guidance → better habit).
-
-## Main technical risks and mitigations
-- **Wrong financial totals:** deterministic computation, unit tests, transfer/debt scenarios.
-- **Hallucinated AI numbers:** strict structured fact payload and validation; AI never calculates authoritative account balances.
-- **Unreliable wealth estimates:** show valuation timestamps and source.
-- **Scope creep:** no bank integrations, dynamic schema generation or autonomous payments.
-- **Sensitive data exposure:** protect personal financial data, use least-privilege access, never send unnecessary identifiers to an AI model.
+## Guardrails
+- User-controlled decisions; no payments or bank integration.
+- No arbitrary user-generated database schemas in MVP.
+- No promises of perfectly current wealth figures: show valuation dates and sources.
+- Server computes all monetary results; AI interprets.
+- For demonstration start with a single sample user; add authentication before storing real personal financial data.
 
 ## Decisions to settle before coding
-1. Next.js/TypeScript + PostgreSQL as the default stack?
-2. Single-user POC with sample data or multi-user login from day one?
-3. Manual balances plus transactions, or a fully ledger-based approach in V1?
+1. Confirm **SvelteKit** as the integrated full-stack framework.
+2. Confirm Drizzle + PostgreSQL.
+3. Decide whether the first POC uses sample data only or protected real-user accounts.
 
-**Recommended default:** Start with single-user sample data, transaction-backed bank balances, manually valued non-cash assets, no external payments, and add authentication before any real personal data is stored.
+**Not implemented yet.**
