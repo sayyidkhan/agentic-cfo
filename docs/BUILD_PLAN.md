@@ -1,66 +1,85 @@
-# Proposed Build Plan — For Approval
+# Agentic CFO — Agreed Architecture & Build Plan
 
-**Status:** Architecture proposal only; no application implementation started.
+**Status:** Architecture approved; implementation not started.  
+**Decision date:** 2026-10-23
 
-## Deployment requirement
-**One full-stack application** serving frontend pages and backend logic from the same deployable Node.js process/container. **PostgreSQL is the only separate infrastructure service** in the MVP. No Next.js, separate Express API, or independently deployed frontend.
+## Product scope
+A personal CFO application for working professionals, with three MVP pillars:
+1. Monthly income, expense and budget tracking.
+2. Asset, liability and net-worth tracking.
+3. Conversational AI CFO providing proactive, actionable financial guidance.
 
-## Proposed stack
-- **SvelteKit + TypeScript** — integrated frontend, server-side route handlers, form actions and pages within one project.
-- **Tailwind CSS** — rapid, maintainable responsive UI.
-- **PostgreSQL + Drizzle ORM** — explicit relational financial data and migrations.
-- **Server-side financial services** — deterministic calculations for balances, transfers, budgets and net worth.
-- **AI provider behind a server-side adapter** — receives verified financial facts; returns validated recommendations.
+## Architecture decision
+**AdonisJS + React + Inertia + Tuyau + Lucid + PostgreSQL**.
 
-Deployment: one Docker container / Node application + one managed PostgreSQL database, with secrets held server-side.
+- **AdonisJS (TypeScript):** Single full-stack web application; server routes, controllers, validation, authentication and domain services.
+- **React + Inertia:** UI served as part of the same application. No independent frontend or separate API deployment.
+- **Tuyau:** Native AdonisJS ecosystem for end-to-end typed route/API clients; prefer this to introducing tRPC. Configure and verify inference and version compatibility during scaffolding.
+- **VineJS:** Runtime validation at every data-writing boundary; static type inference alone is insufficient.
+- **Lucid ORM:** PostgreSQL models, migrations and transactional updates.
+- **PostgreSQL:** The only separate required stateful service for the POC.
+- **AI SDK (proposed integration):** Model adapter, streaming conversational interface and tool calling, invoked by AdonisJS server endpoints. Exact integration to be validated while implementing.
+- **Tailwind CSS:** UI styling.
+- **Docker:** One deployed AdonisJS application container connecting to a separate PostgreSQL database.
 
-## Suggested project structure
+### Logical structure
 ```text
-src/
-  routes/
-    +page.svelte
-    budget/+page.svelte
-    transactions/+page.svelte
-    wealth/+page.svelte
-    insights/+page.svelte
-    api/review/+server.ts
-  lib/
-    components/
-    server/
-      db/
-      finance/
-      ai/
-  app.css
-drizzle/
+React + Inertia pages (budget, wealth, transactions, chat)
+                │
+      Typed routes (Tuyau)
+                │
+AdonisJS controllers / endpoints / auth / VineJS
+                │
+ ┌──────────────┼──────────────────────┐
+ Finance services    CFO agent & tools   Conversation service
+ └──────────────┼──────────────────────┘
+         Lucid ORM / PostgreSQL
+```
+
+The AI may request read-only financial tool calls but cannot bypass validated domain services. Future mutation tools require explicit confirmation and permission checks. Financial totals must be computed deterministically outside the model.
+
+## Initial proposed project layout
+```text
+app/
+  controllers/
+  models/
+  services/
+    finance/
+    ai/
+  validators/
+  middleware/
+inertia/
+  pages/
+  components/
+database/
+  migrations/
+start/
+  routes.ts
 docs/
 ```
-The UI calls server actions or same-origin routes within this single app. There is no separate backend project.
+Actual generated directories may differ with selected Adonis starter and current framework conventions.
 
-## Data model (first pass)
-- **User** — optional for sample-data POC, currency (SGD).
-- **Account** — cash/bank/investment/debt account, opening balance and date.
-- **Transaction** — date, amount in integer cents, category, type, source account and optional destination account for transfers.
-- **Budget** — month, category and limit.
-- **AssetValuation / LiabilityBalance** — dated manual values; avoid double-counting account balances.
-- **FinancialGoal** — target amount and date (minimal).
-- **Insight** — risk, evidence, suggestion, timestamp and acknowledgement.
+## Financial data rules
+- Store money in integer minor units (e.g., SGD cents) or fixed-precision decimal.
+- Avoid double counting an account transfer as an expense or net worth change.
+- Distinguish loan principal repayment from interest.
+- Net worth = known assets minus known liabilities; show data freshness for manually valued holdings.
+- Every balance mutation must be validated, authorised and handled transactionally where applicable.
+- Do not give an AI model authority to fabricate or persist balances.
 
 ## Build sequence
-1. **Financial core:** schema, migrations, calculation services, tests for transfers, loans and budget consumption.
-2. **Working UI:** transaction entry, monthly budget dashboard, asset and liability entry, net worth display with timestamps.
-3. **AI CFO:** deterministic risk triggers (e.g. budget 80% used with time remaining), model-written guidance grounded in verified numbers.
-4. **POC validation:** seeded working-professional scenario, demo script, acceptance and privacy checks.
+1. **Scaffold and schema:** AdonisJS + React/Inertia, Tuyau, Lucid/Postgres; implement testable finance services.
+2. **Tracking experience:** manual entry, category budgets, accounts, assets/liabilities and dashboard.
+3. **Conversational CFO:** read-only tools, streaming chat and persisted conversations.
+4. **Proactive guidance:** deterministic financial risk detection with AI-generated explanations; user acknowledgment.
+5. **POC validation:** test arithmetic, transfers, stale valuations and representative demo scenarios.
 
-## Guardrails
-- User-controlled decisions; no payments or bank integration.
-- No arbitrary user-generated database schemas in MVP.
-- No promises of perfectly current wealth figures: show valuation dates and sources.
-- Server computes all monetary results; AI interprets.
-- For demonstration start with a single sample user; add authentication before storing real personal financial data.
+## Explicitly out of scope
+No Next.js or SvelteKit; no tRPC layer unless requirements change; no bank connections, payment execution, complex multi-agent orchestration, dynamic user-defined database schema, or SME multi-tenant features.
 
-## Decisions to settle before coding
-1. Confirm **SvelteKit** as the integrated full-stack framework.
-2. Confirm Drizzle + PostgreSQL.
-3. Decide whether the first POC uses sample data only or protected real-user accounts.
+## Deferred operational decisions
+- Choose AI model provider and deployment host later.
+- Start with demo/sample accounts; add secure authentication before storing real financial information.
+- Scheduled background agent runs could eventually need a scheduler/worker; not required for initial POC.
 
-**Not implemented yet.**
+**No application code has been implemented.**
