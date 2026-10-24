@@ -68,11 +68,11 @@ jobs:
             check 'Generate app key' node ace generate:key
             check 'Run migrations' node ace migration:run
             check 'Typecheck and codegen' npm run typecheck
-            check 'Unit tests' npm test -- --suite=unit
-            check 'Authenticated-route smoke tests' npm test -- --suite=functional
-            check 'Install Chromium for browser tests' npx playwright install --with-deps chromium
-            check 'Full browser journey and user isolation' npm test -- --suite=browser --browser=chromium
+            check 'Unit tests' node ace test unit
+            check 'Authenticated-route smoke tests' node ace test functional
             check 'Production build' npm run build
+            check 'Install Chromium for browser tests' npx playwright install --with-deps chromium
+            check 'Full browser journey and user isolation' node ace test browser --browser=chromium
           else
             echo '- **Dependency installation:** FAIL; no subsequent checks run.' >> docs/CI_VERIFICATION.md
           fi
