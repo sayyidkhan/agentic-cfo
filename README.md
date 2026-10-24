@@ -14,10 +14,10 @@ An AI-powered personal finance application helping **working professionals** man
 - **React + Inertia** — frontend in the same deployment
 - **Tuyau** — end-to-end type-safe routes/API calls; no tRPC needed initially
 - **VineJS** — runtime request validation
-- **Lucid + PostgreSQL** — persistence and financial models
+- **Lucid + SQLite** — persistent per-deployment financial records
 - **Server-side Chat Completions integration** — read-only CFO tool calls; no extra AI orchestration service
-- **Tailwind CSS** — styling
-- **Docker** — single application deployment; PostgreSQL separate
+- **Responsive CSS** — custom financial workspace styling
+- **Native Node.js service** — one full-stack deployment on Zo Computer (no Docker)
 
 Financial calculations remain deterministic and testable; AI explains and advises, with no autonomous payments.
 
@@ -26,6 +26,8 @@ Financial calculations remain deterministic and testable; AI explains and advise
 - [Agreed architecture and build plan](docs/BUILD_PLAN.md)
 - [CFO chat setup and security](docs/CFO_CHAT.md)
 - [UI design and browser-review checklist](docs/UI_REVIEW.md)
+- [Zo native Node deployment](docs/ZO_DEPLOYMENT.md)
+- [ChatGPT Sites compatibility](docs/SITES_COMPATIBILITY.md)
 - [UOB challenge statements](docs/uob-challenge-statements.md)
 
 **Status:** Full-stack budgeting and wealth app, redesigned five-view finance interface, planning rules and read-only conversational CFO implemented. Automated tests and build pass; browser walkthrough and Zo deployment remain outstanding. See [implementation status](docs/IMPLEMENTATION_STATUS.md) and [CI verification](docs/CI_VERIFICATION.md).
@@ -34,4 +36,4 @@ Financial calculations remain deterministic and testable; AI explains and advise
 
 **CFO chat:** Configure `CFO_AI_API_KEY`, `CFO_AI_MODEL`, and optionally `CFO_AI_BASE_URL` on the server. Chat requires a Chat Completions-compatible model with function calling; without credentials it stays disabled. See [CFO chat setup](docs/CFO_CHAT.md).
 
-**Zo deployment:** Set `DB_FILE` to an existing writable persistent volume; use a separate SQLite file for each deployment.
+**Zo deployment:** Build with `bash scripts/zo-build.sh`, then register a Zo Node HTTP Service with working directory `build`, command `node bin/server.js`, and an absolute persistent `DB_FILE`. See [Zo deployment guide](docs/ZO_DEPLOYMENT.md).
