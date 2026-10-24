@@ -11,7 +11,7 @@ The app requires Node.js **24+**. It serves React/Inertia and backend API routes
 1. Clone `https://github.com/sayyidkhan/agentic-cfo` in your Zo environment.
 2. Copy `.env.example` to `.env` and set your real `APP_KEY` (generate with `node ace generate:key` on a trusted machine or use a securely generated compatible key), `APP_URL`, and other required values. Never commit `.env`.
 3. Set `APP_URL` to the actual HTTPS origin users will browse; configure Zo's proxy to forward to local TCP port 3333. Compose listens on `127.0.0.1:3333` by default and assumes an external TLS proxy.
-4. Build the container, run migrations, then start the service:
+5. Build the container, run migrations, then start the service:
 
 ```bash
 docker compose build
