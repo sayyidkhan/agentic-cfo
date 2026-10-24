@@ -26,4 +26,4 @@ Financial calculations remain deterministic and testable; AI explains and advise
 - [Agreed architecture and build plan](docs/BUILD_PLAN.md)
 - [UOB challenge statements](docs/uob-challenge-statements.md)
 
-**Status:** Architecture approved, documentation only. App implementation has not started.
+**Status:** Initial AdonisJS/React/SQLite application and finance dashboard implemented. See [implementation status](docs/IMPLEMENTATION_STATUS.md) and [CI verification](docs/CI_VERIFICATION.md).\n\n**Local setup:** Node.js 24+, npm 11+, then run `npm ci`, copy `.env.example` to `.env`, `node ace generate:key`, `node ace migration:run`, and `npm run dev`.\n\n**Zo deployment:** Set `DB_FILE` to an existing writable persistent volume; use a separate SQLite file for each deployment.
