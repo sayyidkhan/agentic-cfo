@@ -1,11 +1,12 @@
 import './css/app.css'
+import './css/cfo.css'
 import { client } from './client'
 import { createRoot } from 'react-dom/client'
 import { TuyauProvider } from '@adonisjs/inertia/react'
 import { resolvePageComponent } from '@adonisjs/inertia/helpers'
 import { createInertiaApp, type ResolvedComponent } from '@inertiajs/react'
 
-const appName = import.meta.env.VITE_APP_NAME || 'AdonisJS'
+const appName = import.meta.env.VITE_APP_NAME || 'Agentic CFO'
 
 createInertiaApp({
   title: (title) => (title ? `${title} - ${appName}` : appName),
