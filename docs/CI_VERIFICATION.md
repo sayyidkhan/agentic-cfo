@@ -1,229 +1,150 @@
 # Initial Foundation Verification
 
-Automated checks performed by GitHub Actions on 2026-10-24 11:12 UTC.
+Automated checks performed by GitHub Actions on 2026-10-24 14:31 UTC.
 
 - **Generate app key:** PASS
 - **Run migrations:** PASS
-- **Typecheck and codegen:** FAIL
-
-<details><summary>Typecheck and codegen logs</summary>
-
-\`\`\`
-
-> agentic-cfo-starter@0.0.0 typecheck
-> node ace codegen && tsc --noEmit && tsc --noEmit --project inertia/tsconfig.json
-
-[ info ] loading hooks...
-[ info ] generating indexes...
-[ info ] codegen: created 6 file(s)
-[ info ] tuyau: created api client registry (./.adonisjs/client/registry) (1.99 ms)
-[ success ] Codegen files generated
-tests/browser/finance_journey.spec.ts(54,53): error TS2584: Cannot find name 'document'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
-\`\`\`
-</details>
-
+- **Typecheck and codegen:** PASS
 - **Unit tests:** FAIL
 
 <details><summary>Unit tests logs</summary>
 
 \`\`\`
+[2/4]─
 
-unit / read-only CFO tools (tests/unit/cfo_tools.spec.ts)
-  ✔ returns verified budget values, without mutating source (0.61ms)
-  ✔ assesses a hypothetical purchase in integer cents (0.62ms)
-  ✔ rejects unknown operations or invalid model-generated arguments (0.75ms)
+❯ guided financial coach / does not add savings goals to wealth balances
 
-unit / financial calculations (tests/unit/finance.spec.ts)
-  ✔ transfers between owned accounts do not change net worth (0.75ms)
-  ✔ loan principal repayment reduces cash and liability equally (0.25ms)
-  ✔ spending decreases net worth and consumes budget (0.37ms)
-  ✔ manual valuation is added to net worth (0.22ms)
-  ✔ invalid amounts and unknown accounts are rejected (0.68ms)
+::error file=tests/unit/guided_cfo.spec.ts,title=guided financial coach / uses category budgets from computed records,line=25,column=12::expected 'Dining: $425.00 of $500.00 used (85%25)…' to include 'S$425.00'
 
-unit / exact SGD parsing (tests/unit/money.spec.ts)
-  ✔ converts dollars to integer cents (0.26ms)
-  ✔ rejects negative, fractional cent and invalid inputs (0.54ms)
-  ✔ formats money (3.92ms)
+[31mℹ AssertionError: expected 'Emergency fund: $300.00 saved toward …' to include 'S$300.00'[39m
 
-unit / financial planning (tests/unit/planning.spec.ts)
-  ✔ tracks upcoming unpaid bills without posting transactions (0.54ms)
-  ✔ alerts for projected shortfall and budget pressure (0.2ms)
-  ✔ flags overdue savings goal, not completed goals (0.16ms)
-  ✔ rejects unrealistic due day and invalid date (0.38ms)
+ ⁃ at Assert.include [33m(node_modules/@japa/assert/build/index.js:233:19)[39m
+ ⁃ at Object.executor [33m(tests/unit/guided_cfo.spec.ts:30:12)[39m
 
-functional / financial workspace access (tests/functional/financial_workspace_access.spec.ts)
-  ✔ requires authentication for overview, finance views and CFO conversation (246.81ms)
- ERRORS 
+   [2m25[22m [2m┃[22m      assert[34m.[0m[35minclude[0m(output[34m,[0m [32m'S$425.00'[0m)
+   [2m26[22m [2m┃[22m      assert[34m.[0m[35minclude[0m(output[34m,[0m [32m'85%'[0m)
+   [2m27[22m [2m┃[22m    })
+   [2m28[22m [2m┃[22m    [35mtest[0m([32m'does not add savings goals to wealth balances'[0m[34m,[0m ({ assert }) [31m=>[0m {
+   [2m29[22m [2m┃[22m      [31mconst[0m output [34m=[0m [35mguidedCfoReply[0m([32m'How are my savings goals?'[0m[34m,[0m user)
+ [41m❯ 30 ┃      assert.include(output, 'S$300.00')[49m
+   [2m31[22m [2m┃[22m      assert[34m.[0m[35minclude[0m(output[34m,[0m [32m'not be counted as extra net worth'[0m)
+   [2m32[22m [2m┃[22m    })
+   [2m33[22m [2m┃[22m    [35mtest[0m([32m'prompts onboarding when no recorded money exists'[0m[34m,[0m ({ assert }) [31m=>[0m {
+   [2m34[22m [2m┃[22m      [31mconst[0m output [34m=[0m [35mguidedCfoReply[0m([32m'What is my net worth?'[0m[34m,[0m {
+   [2m35[22m [2m┃[22m        [34m...[0muser[34m,[0m accountsRecorded[34m:[0m [33m0[0m[34m,[0m valuations[34m:[0m [][34m,[0m
 
-❯ browser: Setup hook
+ ⁃ at #runTest [33m(node_modules/@japa/core/build/index.js:634:121)[39m
+ ⁃ at #wrapRegressionTest [33m(node_modules/@japa/core/build/index.js:670:118)[39m
+ ⁃ at #wrapTestInTimeout [33m(node_modules/@japa/core/build/index.js:680:102)[39m
+ ⁃ at #wrapTestInRetries [33m(node_modules/@japa/core/build/index.js:686:66)[39m
+ ⁃ at TestRunner.run [33m(node_modules/@japa/core/build/index.js:710:33)[39m
+ ⁃ at async Test$1.exec [33m(node_modules/@japa/core/build/index.js:918:3)[39m
+ ⁃ at async GroupRunner.run [33m(node_modules/@japa/core/build/index.js:259:4)[39m
+ ⁃ at async Group$1.exec [33m(node_modules/@japa/core/build/index.js:354:3)[39m
+[3/4]─
 
-[31mℹ Error: browserType.launch: Executable doesn't exist at /home/runner/.cache/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝[39m
+❯ guided financial coach / returns tool-backed cash, not a guessed figure
 
- ⁃ at chromium [33m(node_modules/@japa/browser-client/build/index.js:17:42)[39m
+::error file=tests/unit/guided_cfo.spec.ts,title=guided financial coach / does not add savings goals to wealth balances,line=30,column=12::expected 'Emergency fund: $300.00 saved toward …' to include 'S$300.00'
 
-   [2m12[22m [2m┃[22m  		[31mthis[0m[34m.[0mcontext [34m=[0m context;
-   [2m13[22m [2m┃[22m  	}
-   [2m14[22m [2m┃[22m  };
-   [2m15[22m [2m┃[22m  [31mvar[0m debug_default [34m=[0m [35mdebuglog[0m([32m"japa:browser-client"[0m);
-   [2m16[22m [2m┃[22m  [31mconst[0m [33mDEFAULT_LAUNCHERS[0m [34m=[0m {
- [41m❯ 17 ┃  	chromium: (launcherOptions) => chromium.launch(launcherOptions),[49m
-   [2m18[22m [2m┃[22m  	firefox[34m:[0m (launcherOptions) [31m=>[0m firefox[34m.[0m[35mlaunch[0m(launcherOptions)[34m,[0m
-   [2m19[22m [2m┃[22m  	webkit[34m:[0m (launcherOptions) [31m=>[0m webkit[34m.[0m[35mlaunch[0m(launcherOptions)
-   [2m20[22m [2m┃[22m  };
-   [2m21[22m [2m┃[22m  [31mconst[0m [33mDEFAULT_ASSERTIONS_CONFIG[0m [34m=[0m {
-   [2m22[22m [2m┃[22m  	timeout[34m:[0m [33m5e3[0m[34m,[0m
+[31mℹ AssertionError: expected 'You have $1,000.00 in recorded bank/c…' to include 'S$1,000.00'[39m
 
- ⁃ at Object.launcher [33m(node_modules/@japa/browser-client/build/index.js:46:11)[39m
- ⁃ [33m(node_modules/@japa/browser-client/build/index.js:574:55)[39m
- ⁃ at #exec [33m(node_modules/@poppinss/hooks/build/index.js:115:63)[39m
- ⁃ at Runner.run [33m(node_modules/@poppinss/hooks/build/index.js:137:22)[39m
- ⁃ at #runSetupHooks [33m(node_modules/@japa/core/build/index.js:1039:28)[39m
- ⁃ at SuiteRunner.run [33m(node_modules/@japa/core/build/index.js:1091:28)[39m
- ⁃ at Suite$1.exec [33m(node_modules/@japa/core/build/index.js:1175:16)[39m
- ⁃ at Runner$1.exec [33m(node_modules/@japa/core/build/index.js:427:16)[39m
- ⁃ at async run [33m(node_modules/@japa/runner/build/index.js:213:3)[39m
- ⁃ at async TestRunnerProcess.run [33m(node_modules/@adonisjs/core/build/main-B2rXbPKm.js:158:3)[39m
-[1/1]─
+ ⁃ at Assert.include [33m(node_modules/@japa/assert/build/index.js:233:19)[39m
+ ⁃ at Object.executor [33m(tests/unit/guided_cfo.spec.ts:41:12)[39m
+
+   [2m34[22m [2m┃[22m      [31mconst[0m output [34m=[0m [35mguidedCfoReply[0m([32m'What is my net worth?'[0m[34m,[0m {
+   [2m35[22m [2m┃[22m        [34m...[0muser[34m,[0m accountsRecorded[34m:[0m [33m0[0m[34m,[0m valuations[34m:[0m [][34m,[0m
+   [2m36[22m [2m┃[22m      })
+   [2m37[22m [2m┃[22m      assert[34m.[0m[35minclude[0m(output[34m,[0m [32m'do not have any financial accounts'[0m)
+   [2m38[22m [2m┃[22m    })
+   [2m39[22m [2m┃[22m    [35mtest[0m([32m'returns tool-backed cash, not a guessed figure'[0m[34m,[0m ({ assert }) [31m=>[0m {
+   [2m40[22m [2m┃[22m      [31mconst[0m output [34m=[0m [35mguidedCfoReply[0m([32m'What is my bank balance?'[0m[34m,[0m user)
+ [41m❯ 41 ┃      assert.include(output, 'S$1,000.00')[49m
+   [2m42[22m [2m┃[22m    })
+   [2m43[22m [2m┃[22m  })
+   [2m44[22m [2m┃[22m  
+
+ ⁃ at #runTest [33m(node_modules/@japa/core/build/index.js:634:121)[39m
+ ⁃ at #wrapRegressionTest [33m(node_modules/@japa/core/build/index.js:670:118)[39m
+ ⁃ at #wrapTestInTimeout [33m(node_modules/@japa/core/build/index.js:680:102)[39m
+ ⁃ at #wrapTestInRetries [33m(node_modules/@japa/core/build/index.js:686:66)[39m
+ ⁃ at TestRunner.run [33m(node_modules/@japa/core/build/index.js:710:33)[39m
+ ⁃ at async Test$1.exec [33m(node_modules/@japa/core/build/index.js:918:3)[39m
+ ⁃ at async GroupRunner.run [33m(node_modules/@japa/core/build/index.js:259:4)[39m
+ ⁃ at async Group$1.exec [33m(node_modules/@japa/core/build/index.js:354:3)[39m
+[4/4]─
 
  FAILED 
 
-Tests  18 passed (18)
- Time  303ms
+Tests  18 passed, 4 failed (22)
+ Time  31ms
+
+::error file=tests/unit/guided_cfo.spec.ts,title=guided financial coach / returns tool-backed cash%2C not a guessed figure,line=41,column=12::expected 'You have $1,000.00 in recorded bank/c…' to include 'S$1,000.00'
 \`\`\`
 </details>
 
-- **Authenticated-route smoke tests:** FAIL
+- **Authenticated-route smoke tests:** PASS
+- **Production build:** PASS
+- **Install Chromium for browser tests:** PASS
+- **Full browser journey and user isolation:** FAIL
 
-<details><summary>Authenticated-route smoke tests logs</summary>
-
-\`\`\`
-
-unit / read-only CFO tools (tests/unit/cfo_tools.spec.ts)
-  ✔ returns verified budget values, without mutating source (0.65ms)
-  ✔ assesses a hypothetical purchase in integer cents (0.62ms)
-  ✔ rejects unknown operations or invalid model-generated arguments (0.7ms)
-
-unit / financial calculations (tests/unit/finance.spec.ts)
-  ✔ transfers between owned accounts do not change net worth (0.72ms)
-  ✔ loan principal repayment reduces cash and liability equally (0.2ms)
-  ✔ spending decreases net worth and consumes budget (0.39ms)
-  ✔ manual valuation is added to net worth (0.19ms)
-  ✔ invalid amounts and unknown accounts are rejected (0.64ms)
-
-unit / exact SGD parsing (tests/unit/money.spec.ts)
-  ✔ converts dollars to integer cents (0.27ms)
-  ✔ rejects negative, fractional cent and invalid inputs (0.5ms)
-  ✔ formats money (3.85ms)
-
-unit / financial planning (tests/unit/planning.spec.ts)
-  ✔ tracks upcoming unpaid bills without posting transactions (0.51ms)
-  ✔ alerts for projected shortfall and budget pressure (0.21ms)
-  ✔ flags overdue savings goal, not completed goals (0.17ms)
-  ✔ rejects unrealistic due day and invalid date (0.3ms)
-
-functional / financial workspace access (tests/functional/financial_workspace_access.spec.ts)
-  ✔ requires authentication for overview, finance views and CFO conversation (251.41ms)
- ERRORS 
-
-❯ browser: Setup hook
-
-[31mℹ Error: browserType.launch: Executable doesn't exist at /home/runner/.cache/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝[39m
-
- ⁃ at chromium [33m(node_modules/@japa/browser-client/build/index.js:17:42)[39m
-
-   [2m12[22m [2m┃[22m  		[31mthis[0m[34m.[0mcontext [34m=[0m context;
-   [2m13[22m [2m┃[22m  	}
-   [2m14[22m [2m┃[22m  };
-   [2m15[22m [2m┃[22m  [31mvar[0m debug_default [34m=[0m [35mdebuglog[0m([32m"japa:browser-client"[0m);
-   [2m16[22m [2m┃[22m  [31mconst[0m [33mDEFAULT_LAUNCHERS[0m [34m=[0m {
- [41m❯ 17 ┃  	chromium: (launcherOptions) => chromium.launch(launcherOptions),[49m
-   [2m18[22m [2m┃[22m  	firefox[34m:[0m (launcherOptions) [31m=>[0m firefox[34m.[0m[35mlaunch[0m(launcherOptions)[34m,[0m
-   [2m19[22m [2m┃[22m  	webkit[34m:[0m (launcherOptions) [31m=>[0m webkit[34m.[0m[35mlaunch[0m(launcherOptions)
-   [2m20[22m [2m┃[22m  };
-   [2m21[22m [2m┃[22m  [31mconst[0m [33mDEFAULT_ASSERTIONS_CONFIG[0m [34m=[0m {
-   [2m22[22m [2m┃[22m  	timeout[34m:[0m [33m5e3[0m[34m,[0m
-
- ⁃ at Object.launcher [33m(node_modules/@japa/browser-client/build/index.js:46:11)[39m
- ⁃ [33m(node_modules/@japa/browser-client/build/index.js:574:55)[39m
- ⁃ at #exec [33m(node_modules/@poppinss/hooks/build/index.js:115:63)[39m
- ⁃ at Runner.run [33m(node_modules/@poppinss/hooks/build/index.js:137:22)[39m
- ⁃ at #runSetupHooks [33m(node_modules/@japa/core/build/index.js:1039:28)[39m
- ⁃ at SuiteRunner.run [33m(node_modules/@japa/core/build/index.js:1091:28)[39m
- ⁃ at Suite$1.exec [33m(node_modules/@japa/core/build/index.js:1175:16)[39m
- ⁃ at Runner$1.exec [33m(node_modules/@japa/core/build/index.js:427:16)[39m
- ⁃ at async run [33m(node_modules/@japa/runner/build/index.js:213:3)[39m
- ⁃ at async TestRunnerProcess.run [33m(node_modules/@adonisjs/core/build/main-B2rXbPKm.js:158:3)[39m
-[1/1]─
-
- FAILED 
-
-Tests  18 passed (18)
- Time  305ms
-\`\`\`
-</details>
-
-- **Production build:** FAIL
-
-<details><summary>Production build logs</summary>
+<details><summary>Full browser journey and user isolation logs</summary>
 
 \`\`\`
-
-> agentic-cfo-starter@0.0.0 build
-> node ace build
-
-[ info ] loading hooks...
+c[ info ] loading hooks...
 [ info ] generating indexes...
 [ info ] codegen: created 6 file(s)
-[ info ] cleaning up output directory (build)
-[ info ] building assets with vite
-[36mvite v8.3.5 [32mbuilding client environment for production...[36m[39m
-transforming...
-✓ 2525 modules transformed.
-rendering chunks...
-computing gzip size...
-public/assets/.vite/manifest.json           3.37 kB │ gzip:   0.61 kB
-public/assets/app-DEij1GWR.css             28.36 kB │ gzip:   6.30 kB
-public/assets/arrow-up-right-DtVP6NWi.js    0.20 kB │ gzip:   0.18 kB
-public/assets/not_found-BwxiiYjp.js         0.70 kB │ gzip:   0.37 kB
-public/assets/server_error-DSpmpCd0.js      0.73 kB │ gzip:   0.38 kB
-public/assets/marketing-C0TlyrW_.js         0.82 kB │ gzip:   0.39 kB
-public/assets/auth-XGIA0_Fi.js              1.11 kB │ gzip:   0.52 kB
-public/assets/logo-DKFQAFVH.js              1.12 kB │ gzip:   0.67 kB
-public/assets/login-DMMPHnkN.js             1.55 kB │ gzip:   0.63 kB
-public/assets/signup-Xorbi6N_.js            2.44 kB │ gzip:   0.73 kB
-public/assets/page-qym1U2FS.js              5.27 kB │ gzip:   1.97 kB
-public/assets/home-M7l6fwTt.js              6.18 kB │ gzip:   2.29 kB
-public/assets/cfo-chat-geuwW0iU.js          6.94 kB │ gzip:   2.74 kB
-public/assets/dashboard-BsPn4uBN.js        37.27 kB │ gzip:   8.40 kB
-public/assets/theme_toggle-DTXqxTP7.js     38.66 kB │ gzip:  11.34 kB
-public/assets/app-DuJ9l2dw.js             378.46 kB │ gzip: 118.35 kB
+[ info ] booting application to run tests...
 
-[32m✓ built in 297ms[39m
-[ info ] compiling typescript source (tsc)
-tests/browser/finance_journey.spec.ts(54,53): error TS2584: Cannot find name 'document'. Do you need to change your target library? Try changing the 'lib' compiler option to include 'dom'.
-[ info ] created ace file (build/ace.js)
-╭─────────────────────────────────────────────────────────────────────────────────────────────╮
-│                                                                                             │
-│    Cannot complete the build process as there are TypeScript errors.                        │
-│    Use "--ignore-ts-errors" flag to ignore TypeScript errors and continue the build.        │
-│                                                                                             │
-╰─────────────────────────────────────────────────────────────────────────────────────────────╯
+browser / Acorra browser journey (tests/browser/finance_journey.spec.ts)
+❯ Already up to date
+[ success ] Truncated tables successfully
+  ✖ a working professional can build a budget and move through the financial workspace (31s)
+❯ Already up to date
+[ success ] Truncated tables successfully
+  ✔ logged-in users only see their own bank and chat records (480.66ms)
+ ERRORS 
+
+❯ Acorra browser journey / a working professional can build a budget and move through the financial workspace
+
+[31mℹ TimeoutError: locator.selectOption: Timeout 30000ms exceeded.
+Call log:
+  - waiting for getByLabel('Category', { exact: true })
+[39m
+
+ ⁃ at Object.executor [33m(tests/browser/finance_journey.spec.ts:33:56)[39m
+
+   [2m28[22m [2m┃[22m      [31mawait[0m page[34m.[0m[35mgetByText[0m([32m'Everyday bank'[0m)[34m.[0m[35mfirst[0m()[34m.[0m[35mwaitFor[0m()
+   [2m29[22m [2m┃[22m      [31mawait[0m page[34m.[0m[35mgetByRole[0m([32m'link'[0m[34m,[0m { name[34m:[0m [34m/Budgets & goals/[0m })[34m.[0m[35mclick[0m()
+   [2m30[22m [2m┃[22m      [31mawait[0m page[34m.[0m[35mgetByRole[0m([32m'heading'[0m[34m,[0m { name[34m:[0m [32m'Spend with intention.'[0m })[34m.[0m[35mwaitFor[0m()
+   [2m31[22m [2m┃[22m      [31mawait[0m page[34m.[0m[35mgetByLabel[0m([32m'New category'[0m)[34m.[0m[35mfill[0m([32m'Dining'[0m)
+   [2m32[22m [2m┃[22m      [31mawait[0m page[34m.[0m[35mgetByRole[0m([32m'button'[0m[34m,[0m { name[34m:[0m [32m'Add category'[0m })[34m.[0m[35mclick[0m()
+ [41m❯ 33 ┃      await page.getByLabel('Category', { exact: true }).selectOption({ label: 'Dining' })[49m
+   [2m34[22m [2m┃[22m      [31mawait[0m page[34m.[0m[35mgetByLabel[0m([32m'Monthly limit (SGD)'[0m)[34m.[0m[35mfill[0m([32m'500.00'[0m)
+   [2m35[22m [2m┃[22m      [31mawait[0m page[34m.[0m[35mgetByRole[0m([32m'button'[0m[34m,[0m { name[34m:[0m [32m'Save monthly budget'[0m })[34m.[0m[35mclick[0m()
+   [2m36[22m [2m┃[22m      [31mawait[0m page[34m.[0m[35mgetByText[0m([32m'Dining'[0m)[34m.[0m[35mfirst[0m()[34m.[0m[35mwaitFor[0m()
+   [2m37[22m [2m┃[22m  
+   [2m38[22m [2m┃[22m      [31mawait[0m page[34m.[0m[35mgetByRole[0m([32m'link'[0m[34m,[0m { name[34m:[0m [34m/Transactions/[0m })[34m.[0m[35mclick[0m()
+
+ ⁃ at async #wrapTestInTimeout [33m(node_modules/@japa/core/build/index.js:680:4)[39m
+ ⁃ at async TestRunner.run [33m(node_modules/@japa/core/build/index.js:710:4)[39m
+ ⁃ at async Test$1.exec [33m(node_modules/@japa/core/build/index.js:918:3)[39m
+ ⁃ at async GroupRunner.run [33m(node_modules/@japa/core/build/index.js:259:4)[39m
+ ⁃ at async Group$1.exec [33m(node_modules/@japa/core/build/index.js:354:3)[39m
+ ⁃ at async SuiteRunner.run [33m(node_modules/@japa/core/build/index.js:1100:4)[39m
+ ⁃ at async Suite$1.exec [33m(node_modules/@japa/core/build/index.js:1175:3)[39m
+ ⁃ at async Runner$1.exec [33m(node_modules/@japa/core/build/index.js:427:4)[39m
+ ⁃ at async run [33m(node_modules/@japa/runner/build/index.js:213:3)[39m
+ ⁃ at async TestRunnerProcess.run [33m(node_modules/@adonisjs/core/build/main-B2rXbPKm.js:158:3)[39m
+[1/1]─
+
+ FAILED 
+
+Tests  1 passed, 1 failed (2)
+ Time  32s
+
+::error file=tests/browser/finance_journey.spec.ts,title=Acorra browser journey / a working professional can build a budget and move through the financial workspace,line=33,column=56::locator.selectOption: Timeout 30000ms exceeded.%0ACall log:%0A  - waiting for getByLabel('Category', { exact: true })%0A
 \`\`\`
 </details>
 
+- **Compiled Node server and SQLite smoke:** PASS
