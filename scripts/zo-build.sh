@@ -12,9 +12,9 @@ if [ "$NODE_MAJOR" -lt 24 ]; then
   exit 1
 fi
 
-npm ci
-npm run typecheck
-npm run build
+NODE_ENV=development npm ci
+NODE_ENV=development npm run typecheck
+NODE_ENV=development npm run build
 (
   cd build
   npm ci --omit=dev
