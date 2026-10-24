@@ -1,10 +1,13 @@
-name: Verify Agentic CFO foundation (codegen enabled)
+name: Verify Agentic CFO Node POC
 on:
   push:
     paths:
       - '.github/workflows/verify-initial-mvp.yml'
       - 'app/**'
       - 'config/**'
+      - 'scripts/**'
+      - 'package.json'
+      - 'package-lock.json'
       - 'database/migrations/**'
       - 'inertia/**'
       - 'start/**'
@@ -73,8 +76,7 @@ jobs:
             check 'Production build' npm run build
             check 'Install Chromium for browser tests' npx playwright install --with-deps chromium
             check 'Full browser journey and user isolation' node ace test browser --browser=chromium
-            check 'Docker production image' docker build -t agentic-cfo:ci .
-            check 'Docker SQLite migration smoke' docker run --rm --env-file .env -e APP_URL=http://localhost:3333 -e HOST=0.0.0.0 -e PORT=3333 agentic-cfo:ci node ace migration:run --force
+            check 'Compiled Node server and SQLite smoke' bash scripts/node-runtime-smoke.sh
           else
             echo '- **Dependency installation:** FAIL; no subsequent checks run.' >> docs/CI_VERIFICATION.md
           fi
