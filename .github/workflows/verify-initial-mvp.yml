@@ -1,4 +1,4 @@
-name: Verify Agentic CFO foundation
+name: Verify Agentic CFO foundation (codegen enabled)
 on:
   push:
     paths:
@@ -60,7 +60,7 @@ jobs:
             cp .env.example .env
             check 'Generate app key' node ace generate:key
             check 'Run migrations' node ace migration:run
-            check 'Typecheck' npm run typecheck
+            check 'Typecheck and codegen' npm run typecheck
             check 'Unit tests' npm test -- --suite=unit
             check 'Production build' npm run build
           else
