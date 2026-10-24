@@ -1,4 +1,5 @@
 import { Form } from '@adonisjs/inertia/react'
+import { useState } from 'react'
 import Page from '~/components/page'
 import AppLayout from '~/layouts/app'
 
@@ -26,6 +27,7 @@ export default function Dashboard({
   accounts, categories, currentDate, month, incomeCents, expenseCents,
   financialPosition, budgetStatus, valuations, recentTransactions,
 }: DashboardProps) {
+  const [transactionKind, setTransactionKind] = useState<'income' | 'expense' | 'transfer'>('expense')
   const assets = accounts.filter((a) => a.kind === 'asset')
   const categoryName = (id: string | number | null) =>
     categories.find((c) => String(c.id) === String(id))?.name ?? 'Uncategorised'
@@ -84,13 +86,13 @@ export default function Dashboard({
           <p>Record income, expenses or transfers. Transfers between your own accounts do not count as spending.</p>
           <Form route="finance.transactions.store">
             {({ errors, processing }) => <div style={{ display: 'grid', gap: 10 }}>
-              <label>Type<select name="kind" style={fieldStyle}><option value="expense">Expense</option><option value="income">Income</option><option value="transfer">Transfer</option></select></label>
+              <label>Type<select name="kind" value={transactionKind} onChange={(event) => setTransactionKind(event.target.value as typeof transactionKind)} style={fieldStyle}><option value="expense">Expense</option><option value="income">Income</option><option value="transfer">Transfer</option></select></label>
               <label>Account<select name="accountId" required style={fieldStyle} defaultValue=""><option value="" disabled>Choose account</option>{assets.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}</select></label>
               <label>Amount (S$)<input name="amount" inputMode="decimal" placeholder="12.50" required style={fieldStyle}/></label>
               <label>Date<input name="bookedOn" type="date" defaultValue={currentDate} required style={fieldStyle}/></label>
-              <label>Category (required for expenses)<select name="categoryId" style={fieldStyle} defaultValue=""><option value="">None</option>{categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select></label>
-              <label>Destination (for transfers)<select name="destinationAccountId" style={fieldStyle} defaultValue=""><option value="">None</option>{accounts.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}</select></label>
-              <label>Note<input name="note" placeholder="Groceries, salary..." style={fieldStyle}/></label>
+              {transactionKind === 'expense' && <label>Category<select name="categoryId" required style={fieldStyle} defaultValue=""><option value="" disabled>Choose category</option>{categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select></label>}
+              {transactionKind === 'transfer' && <label>Destination account<select name="destinationAccountId" required style={fieldStyle} defaultValue=""><option value="" disabled>Choose destination</option>{accounts.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}</select></label>}
+              </label>
               {Object.values(errors).map((e, i) => <small key={i} role="alert">{e}</small>)}
               <button className="btn btn--primary" type="submit" disabled={processing || !assets.length}>Save transaction</button>
             </div>}
