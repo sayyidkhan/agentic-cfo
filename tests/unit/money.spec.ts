@@ -1,19 +1,21 @@
-import { describe, expect, it } from 'vitest'
+import { test } from '@japa/runner'
 import { formatSgd, parseSgdAmount } from '../../app/services/finance/money.js'
 
-describe('exact SGD input parsing', () => {
-  it('converts dollars without floating point errors', () => {
-    expect(parseSgdAmount('12.30')).toBe(1230)
-    expect(parseSgdAmount('0.01')).toBe(1)
-    expect(parseSgdAmount('100')).toBe(10000)
-    expect(parseSgdAmount('0')).toBe(0)
+test.group('exact SGD parsing', () => {
+  test('converts dollars to integer cents', ({ assert }) => {
+    assert.equal(parseSgdAmount('12.30'), 1230)
+    assert.equal(parseSgdAmount('0.01'), 1)
+    assert.equal(parseSgdAmount('100'), 10000)
+    assert.equal(parseSgdAmount('0'), 0)
   })
-  it('rejects negative values, excessive precision and invalid text', () => {
-    for (const value of ['-1', '1.001', '1e3', '1,000', 'abc', '']) {
-      expect(() => parseSgdAmount(value)).toThrow()
+
+  test('rejects negative, fractional cent and invalid inputs', ({ assert }) => {
+    for (const raw of ['-1', '1.001', '1e3', '1,000', 'abc', '']) {
+      assert.throws(() => parseSgdAmount(raw))
     }
   })
-  it('formats money down to the cent', () => {
-    expect(formatSgd(1230)).toContain('12.30')
+
+  test('formats money', ({ assert }) => {
+    assert.include(formatSgd(1230), '12.30')
   })
 })
