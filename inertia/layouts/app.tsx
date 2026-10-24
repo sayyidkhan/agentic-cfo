@@ -1,16 +1,17 @@
 import { Form } from '@adonisjs/inertia/react'
 import { Link, usePage } from '@inertiajs/react'
 import { type ReactNode } from 'react'
-import { LayoutDashboard, ReceiptText, Target, Landmark, MessageCircle, Wallet, LogOut } from 'lucide-react'
+import { LayoutDashboard, ReceiptText, Target, Landmark, MessageCircle, Leaf, LogOut } from 'lucide-react'
 import ThemeToggle from '~/components/theme_toggle'
 import FlashToasts from '~/components/flash_toasts'
+import SandyAvatar from '~/components/sandy_avatar'
 
 const nav = [
   { label: 'Overview', url: '/dashboard', view: 'overview', icon: LayoutDashboard },
   { label: 'Transactions', url: '/dashboard?view=transactions', view: 'transactions', icon: ReceiptText },
   { label: 'Budgets & goals', url: '/dashboard?view=budget', view: 'budget', icon: Target },
   { label: 'Wealth', url: '/dashboard?view=wealth', view: 'wealth', icon: Landmark },
-  { label: 'Ask CFO', url: '/cfo', view: 'chat', icon: MessageCircle },
+  { label: 'Sandy', url: '/cfo', view: 'chat', icon: MessageCircle },
 ] as const
 
 export default function AppLayout({ children }: { children: ReactNode }) {
@@ -20,12 +21,13 @@ export default function AppLayout({ children }: { children: ReactNode }) {
   return <div className="cfo-app">
     <header className="header header--bar">
       <div className="header__inner">
-        <Link className="cfo-brand-row" href="/dashboard" aria-label="Agentic CFO home">
-          <span className="cfo-brand-mark"><Wallet size={21}/></span>
-          <span className="cfo-brand-type"><strong>Agentic CFO</strong><span>Make better money decisions</span></span>
+        <Link className="cfo-brand-row" href="/dashboard" aria-label="Acorra home">
+          <span className="cfo-brand-mark"><Leaf size={21}/></span>
+          <span className="cfo-brand-type"><strong>Acorra</strong><span>Grow your wealth, one habit at a time</span></span>
         </Link>
         <div className="cfo-header-side">
-          <span className="cfo-header-pill">PERSONAL FINANCE</span>
+          <span className="cfo-header-pill">YOUR WEALTH COMPANION</span>
+          <Link href="/cfo" aria-label="Chat with Sandy" className="cfo-header-sandy"><SandyAvatar size="sm" /></Link>
           <ThemeToggle/>
           <Form route="session.destroy">
             <button className="btn btn--secondary btn--sm" type="submit"><LogOut size={15}/> <span>Log out</span></button>
