@@ -6,6 +6,8 @@
 - Official **AdonisJS 7 + React/Inertia** starter (Tuyau, Lucid, authentication).
 - **SQLite** migration for user-scoped accounts, categories, transactions, budgets, and dated asset/liability valuations.
 - Auth-protected dashboard using one full-stack deployment.
+- Responsive financial UI with Overview, Transactions, Budgets & Goals, Wealth and Ask CFO navigation, plus clearer onboarding/empty states.
+- Redesigned CFO chat and interactive sample questions; original read-only service boundaries preserved.
 - Manual account, expense, income, transfer, budget, category and valuation entry forms.
 - Transaction edit/delete with user-scoped access and full ledger revalidation before database commit.
 - Manual asset/debt valuation edit/delete, with exact-name duplicate checks against recorded accounts.
@@ -59,6 +61,9 @@ Each deployment has its **own SQLite file**; copies do not automatically synchro
 
 ## CFO chat setup and limitations
 Refer to [CFO_CHAT.md](CFO_CHAT.md) for provider configuration, read-only tool permissions, privacy implications and manual test script.
+
+## UI milestone
+See [UI_REVIEW.md](UI_REVIEW.md) for the five-view navigation structure, responsive design approach, and required manual browser verification. HTTP auth smoke tests are part of automated CI, but real visual/device testing is still pending.
 
 ## POC demonstration path
 1. Sign up, create a bank account with a starting balance.
