@@ -1,24 +1,31 @@
-# ChatGPT Sites compatibility — separate runtime, shared product logic
+# ChatGPT Sites and Zo: simple CFO model approach
 
-**Decision:** The main repository is an AdonisJS + React/Inertia + Lucid + local SQLite Node application.
+## Current decision
 
-This app is **not** a ready-to-deploy ChatGPT Site. Sites uses its own supported hosting/runtime model with D1 and R2 bindings; it cannot be assumed to start an unrestricted AdonisJS Node server or use the same local SQLite connection.
+**No LiteLLM gateway, no subscription-token proxy, and no Docker.**
 
-## Sharing LiteLLM across environments
+Agentic CFO's source of truth is [GitHub](https://github.com/sayyidkhan/agentic-cfo). The Node/AdonisJS app runs on Zo with SQLite. The product's budgeting, net worth calculations and **guided financial chat** work without AI keys.
 
-Both a Zo Node app and a future Sites-compatible backend may use the same LiteLLM gateway URL and `agentic-cfo` model alias, with separate restricted virtual keys. In ChatGPT Sites, store secrets through hosted Site Settings, **not in browser code or a public file**. Sites needs an adapter that can make authenticated outbound requests from its supported server runtime. This repository does not currently contain or deploy a complete Sites adaptation.
+## What the same ChatGPT subscription gives you
 
-Using one ChatGPT subscription to build/manage both environments does not automatically connect runtime AI calls to that plan. The LiteLLM ChatGPT-subscription provider is a separate OAuth-authenticated upstream integration with model/plan restrictions. See [LiteLLM setup](LITELLM_SETUP.md).
+- **ChatGPT / Sites:** A plan-eligible place to build, edit and manage a supported Site, subject to plan limits.
+- **Zo Codex:** Supported subscription sign-in for using Codex as an AI coding/agent tool inside Zo. This does **not** automatically give this AdonisJS server a model API.
+- **Sign in with ChatGPT:** Some participating apps can ask permission to use the ChatGPT plan for eligible AI requests. This is not enabled automatically for arbitrary applications; the custom Agentic CFO is not currently enrolled as a participating integration.
 
-## Valid development approach
+OpenAI documentation:
+- [Using your ChatGPT plan in other apps](https://help.openai.com/en/articles/20001542-using-your-chatgpt-plan-in-other-apps-and-sites)
+- [Sign in with ChatGPT](https://help.openai.com/en/articles/20001410-sign-in-with-chatgpt)
 
-- ChatGPT remains a convenient development environment for this GitHub repository.
-- Deploy the **full AdonisJS app** on a Node-capable host (Zo Computer Services) with a persistent SQLite file.
-- If a separately hosted ChatGPT Site is needed, treat that as a dedicated adapter/application targeting Sites runtime, storage and authentication. Reuse only portable, pure TypeScript domain services after compatibility testing (financial calculations, planning rules, input representations). Keep data and application contracts consistent; do not copy Node-specific Lucid code into a D1 worker and expect it to run.
-- Site instances would use an independent D1 database until explicitly migrated or synchronized. Never claim the Zo SQLite DB and Sites D1 stay in sync automatically.
+## Sites deployment limitation
 
-## What is deliberately not included
+The AdonisJS + Lucid + local SQLite server cannot simply be deployed unchanged to ChatGPT Sites. A separate Sites-compatible runtime and data adapter would be required (for example, a compatible frontend/backend and D1 records). Pure calculation services can be reused where the runtime supports them.
 
-No second Sites frontend or SQLite-to-D1 adapter has been fabricated. Before implementing one, confirm the Sites environment supports the desired framework/build output and decide which data source is canonical.
+We have **not** created this separate Sites application or connected its records to Zo. No automatic data sync exists.
 
-Current reference: [Sites documentation](https://learn.chatgpt.com/docs/sites).
+## If live model responses are required later
+
+Option A: Use an officially supported native model capability exposed to a compatible Site, if that capability is available for your project.
+
+Option B: Adopt a properly authorised external direct API model when you're ready, with separate server-side credentials and any applicable usage billing.
+
+Until then, **guided mode is deliberate, reliable and credential-free**, but it is a rules-based assistant, not a generative model.
