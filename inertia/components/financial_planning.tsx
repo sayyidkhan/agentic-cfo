@@ -17,7 +17,7 @@ export interface Goal {
   targetDate: string
 }
 export interface Planning {
-  upcoming: (Commitment & { dueOn: string })[]
+  upcoming: { id: string; name: string; amountCents: number; dueDay: number; dueOn: string; lastPaidMonth?: string | null }[]
   upcomingTotalCents: number
   cashAfterUpcomingCents: number
   insights: { code: string; severity: 'notice' | 'warning'; title: string; detail: string }[]
