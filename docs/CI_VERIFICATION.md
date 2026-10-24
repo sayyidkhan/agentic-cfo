@@ -1,6 +1,6 @@
 # Initial Foundation Verification
 
-Automated checks performed by GitHub Actions on 2026-10-24 10:18 UTC.
+Automated checks performed by GitHub Actions on 2026-10-24 10:19 UTC.
 
 - **Generate app key:** PASS
 - **Run migrations:** PASS
@@ -16,9 +16,9 @@ Automated checks performed by GitHub Actions on 2026-10-24 10:18 UTC.
 [ info ] loading hooks...
 [ info ] generating indexes...
 [ info ] codegen: created 6 file(s)
-[ info ] tuyau: created api client registry (./.adonisjs/client/registry) (8.66 ms)
+[ info ] tuyau: created api client registry (./.adonisjs/client/registry) (1.83 ms)
 [ success ] Codegen files generated
-app/controllers/finance_controller.ts(107,7): error TS2353: Object literal may only specify known properties, and 'availableCashCents' does not exist in type '{ month: ScrollProp<never, false> | PagePropsEagerDataTypes<string> | MergeableProp<UnPackedPageProps<string>> | OnceProp<...>; ... 8 more ...; recentTransactions: ScrollProp<...> | ... 2 more ... | OnceProp<...>; }'.
+app/controllers/finance_controller.ts(90,40): error TS2345: Argument of type '{ accounts: { id: any; name: any; kind: any; }[]; categories: { id: any; name: any; }[]; recentTransactions: { id: any; bookedOn: any; kind: any; amountCents: number; accountId: any; destinationAccountId: any; note: any; categoryId: any; }[]; ... 10 more ...; planning: { ...; }; }' is not assignable to parameter of type 'never'.
 \`\`\`
 </details>
 
