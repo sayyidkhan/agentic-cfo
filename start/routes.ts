@@ -12,6 +12,7 @@ import { controllers } from '#generated/controllers'
 import router from '@adonisjs/core/services/router'
 
 const FinanceController = () => import('#controllers/finance_controller')
+const CfoChatController = () => import('#controllers/cfo_chat_controller')
 
 router.on('/').renderInertia('home', {}).as('home')
 
@@ -28,6 +29,9 @@ router
 router
   .group(() => {
     router.get('/dashboard', [FinanceController, 'index']).as('dashboard')
+    router.get('/cfo', [CfoChatController, 'index']).as('cfo.chat')
+    router.post('/cfo/chat', [CfoChatController, 'store']).as('cfo.message.store')
+    router.delete('/cfo/chat', [CfoChatController, 'clear']).as('cfo.message.clear')
     router.post('/finance/accounts', [FinanceController, 'storeAccount']).as('finance.accounts.store')
     router.post('/finance/categories', [FinanceController, 'storeCategory']).as('finance.categories.store')
     router.post('/finance/transactions', [FinanceController, 'storeTransaction']).as('finance.transactions.store')
