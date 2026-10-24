@@ -103,7 +103,7 @@ export default class FinanceController {
       currency: 'SGD',
       created_at: new Date().toISOString(),
     })
-    return response.redirect().toRoute('finance.index')
+    return response.redirect().toRoute('dashboard')
   }
 
   async storeCategory({ request, auth, response }: HttpContext) {
@@ -113,7 +113,7 @@ export default class FinanceController {
     if (!exists) {
       await db.table('financial_categories').insert({ user_id: userId, name: input.name })
     }
-    return response.redirect().toRoute('finance.index')
+    return response.redirect().toRoute('dashboard')
   }
 
   async storeTransaction({ request, auth, response }: HttpContext) {
@@ -161,7 +161,7 @@ export default class FinanceController {
       note: input.note ?? null,
       created_at: new Date().toISOString(),
     })
-    return response.redirect().toRoute('finance.index')
+    return response.redirect().toRoute('dashboard')
   }
 
   async storeBudget({ request, auth, response }: HttpContext) {
@@ -179,7 +179,7 @@ export default class FinanceController {
         user_id: userId, category_id: input.categoryId, month: input.month, limit_cents: limit,
       })
     }
-    return response.redirect().toRoute('finance.index')
+    return response.redirect().toRoute('dashboard')
   }
 
   async storeValuation({ request, auth, response }: HttpContext) {
@@ -193,6 +193,6 @@ export default class FinanceController {
       as_of: input.asOf,
       created_at: new Date().toISOString(),
     })
-    return response.redirect().toRoute('finance.index')
+    return response.redirect().toRoute('dashboard')
   }
 }
