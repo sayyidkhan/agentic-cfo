@@ -10,7 +10,7 @@ A personal CFO application for working professionals, with three MVP pillars:
 3. Conversational AI CFO providing proactive, actionable financial guidance.
 
 ## Architecture decision
-**AdonisJS + React + Inertia + Tuyau + Lucid + PostgreSQL**.
+**AdonisJS + React + Inertia + Tuyau + Lucid + SQLite** (PostgreSQL remains an optional future migration).
 
 - **AdonisJS (TypeScript):** Single full-stack web application; server routes, controllers, validation, authentication and domain services.
 - **React + Inertia:** UI served as part of the same application. No independent frontend or separate API deployment.
@@ -71,7 +71,7 @@ Actual generated directories may differ with selected Adonis starter and current
 1. **Scaffold and schema:** AdonisJS + React/Inertia, Tuyau, Lucid/SQLite; implement testable finance services.
 2. **Tracking experience:** manual entry, category budgets, accounts, assets/liabilities and dashboard.
 3. **Conversational CFO:** read-only tools, streaming chat and persisted conversations.
-4. **Proactive guidance:** deterministic financial risk detection with AI-generated explanations; user acknowledgment.
+4. **Proactive guidance:** deterministic warnings now implemented; AI explanations and user acknowledgment are future enhancements.
 5. **POC validation:** test arithmetic, transfers, stale valuations and representative demo scenarios.
 
 ## Explicitly out of scope
