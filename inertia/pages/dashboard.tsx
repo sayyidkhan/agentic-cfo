@@ -2,8 +2,8 @@ import { Form } from '@adonisjs/inertia/react'
 import { useState } from 'react'
 import Page from '~/components/page'
 import AppLayout from '~/layouts/app'
-import FinancialPlanning, { type Commitment, type Goal, type Planning } from '~/components/financial_planning'
-import { TransactionManager, ValuationManager, type FinanceTransaction, type ManualValuation } from '~/components/financial_record_editor'
+import FinancialPlanning from '~/components/financial_planning'
+import { TransactionManager, ValuationManager } from '~/components/financial_record_editor'
 
 interface DashboardProps {
   accounts: { id: number; name: string; kind: 'asset' | 'liability' }[]
@@ -14,12 +14,17 @@ interface DashboardProps {
   expenseCents: number
   financialPosition: { assetsCents: number; liabilitiesCents: number; netWorthCents: number }
   budgetStatus: { id: string; categoryId: string; limitCents: number; spentCents: number; remainingCents: number; percentUsed: number }[]
-  valuations: ManualValuation[]
-  recentTransactions: FinanceTransaction[]
+  valuations: { id: number; name: string; kind: 'asset' | 'liability'; valueCents: number; asOf: string }[]
+  recentTransactions: { id: number; bookedOn: string; kind: 'income' | 'expense' | 'transfer'; amountCents: number; accountId: number; destinationAccountId: number | null; note: string | null; categoryId: number | null }[]
   availableCashCents: number
-  commitments: Commitment[]
-  goals: Goal[]
-  planning: Planning
+  commitments: { id: number; name: string; amountCents: number; dueDay: number; lastPaidMonth: string | null }[]
+  goals: { id: number; name: string; targetCents: number; savedCents: number; targetDate: string }[]
+  planning: {
+    upcoming: { id: string; name: string; amountCents: number; dueDay: number; dueOn: string; lastPaidMonth?: string | null }[]
+    upcomingTotalCents: number
+    cashAfterUpcomingCents: number
+    insights: { code: string; severity: 'notice' | 'warning'; title: string; detail: string }[]
+  }
 }
 
 const money = (cents: number) =>
