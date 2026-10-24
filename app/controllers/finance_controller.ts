@@ -127,7 +127,7 @@ export default class FinanceController {
       currency: 'SGD',
       created_at: new Date().toISOString(),
     })
-    return response.redirect().toRoute('dashboard')
+    return response.redirect().back('/dashboard')
   }
 
   async storeCategory({ request, auth, response }: HttpContext) {
@@ -137,7 +137,7 @@ export default class FinanceController {
     if (!exists) {
       await db.table('financial_categories').insert({ user_id: userId, name: input.name })
     }
-    return response.redirect().toRoute('dashboard')
+    return response.redirect().back('/dashboard')
   }
 
   async storeTransaction({ request, auth, response }: HttpContext) {
@@ -185,7 +185,7 @@ export default class FinanceController {
       note: input.note ?? null,
       created_at: new Date().toISOString(),
     })
-    return response.redirect().toRoute('dashboard')
+    return response.redirect().back('/dashboard')
   }
 
   async storeBudget({ request, auth, response }: HttpContext) {
@@ -203,7 +203,7 @@ export default class FinanceController {
         user_id: userId, category_id: input.categoryId, month: input.month, limit_cents: limit,
       })
     }
-    return response.redirect().toRoute('dashboard')
+    return response.redirect().back('/dashboard')
   }
 
   async storeValuation({ request, auth, response }: HttpContext) {
@@ -223,7 +223,7 @@ export default class FinanceController {
       as_of: input.asOf,
       created_at: new Date().toISOString(),
     })
-    return response.redirect().toRoute('dashboard')
+    return response.redirect().back('/dashboard')
   }
 
   /** Edit an existing financial entry; replay the whole ledger before committing. */
@@ -270,7 +270,7 @@ export default class FinanceController {
     } catch {
       return response.badRequest('Unable to update transaction. Check accounts and outstanding loan balances.')
     }
-    return response.redirect().toRoute('dashboard')
+    return response.redirect().back('/dashboard')
   }
 
   async deleteTransaction({ params, auth, response }: HttpContext) {
@@ -292,7 +292,7 @@ export default class FinanceController {
     } catch {
       return response.badRequest('Cannot remove this transaction without creating an invalid loan balance')
     }
-    return response.redirect().toRoute('dashboard')
+    return response.redirect().back('/dashboard')
   }
 
   async updateValuation({ params, request, auth, response }: HttpContext) {
@@ -311,7 +311,7 @@ export default class FinanceController {
     await db.from('financial_valuations').where('id', id).where('user_id', userId).update({
       name: input.name, kind: input.kind, value_cents: parseSgdAmount(input.value), as_of: input.asOf,
     })
-    return response.redirect().toRoute('dashboard')
+    return response.redirect().back('/dashboard')
   }
 
   async deleteValuation({ params, auth, response }: HttpContext) {
@@ -319,7 +319,7 @@ export default class FinanceController {
     const id = Number(params.id)
     if (!Number.isSafeInteger(id) || id < 1) return response.badRequest('Invalid valuation')
     await db.from('financial_valuations').where('id', id).where('user_id', userId).delete()
-    return response.redirect().toRoute('dashboard')
+    return response.redirect().back('/dashboard')
   }
 
   async storeCommitment({ request, auth, response }: HttpContext) {
@@ -331,7 +331,7 @@ export default class FinanceController {
       amount_cents: parseSgdAmount(input.amount), last_paid_month: null,
       created_at: new Date().toISOString(),
     })
-    return response.redirect().toRoute('dashboard')
+    return response.redirect().back('/dashboard')
   }
 
   async markCommitmentPaid({ params, auth, response }: HttpContext) {
@@ -342,7 +342,7 @@ export default class FinanceController {
     await db.from('financial_commitments').where('id', id).where('user_id', userId)
       .update({ last_paid_month: currentMonth })
     // This only marks the forecast as paid; it deliberately does not create an expense.
-    return response.redirect().toRoute('dashboard')
+    return response.redirect().back('/dashboard')
   }
 
   async deleteCommitment({ params, auth, response }: HttpContext) {
@@ -350,7 +350,7 @@ export default class FinanceController {
     const id = Number(params.id)
     if (!Number.isSafeInteger(id) || id < 1) return response.badRequest('Invalid commitment')
     await db.from('financial_commitments').where('id', id).where('user_id', userId).delete()
-    return response.redirect().toRoute('dashboard')
+    return response.redirect().back('/dashboard')
   }
 
   async storeGoal({ request, auth, response }: HttpContext) {
@@ -363,7 +363,7 @@ export default class FinanceController {
       saved_cents: parseSgdAmount(input.saved), target_date: input.targetDate,
       created_at: new Date().toISOString(),
     })
-    return response.redirect().toRoute('dashboard')
+    return response.redirect().back('/dashboard')
   }
 
   async updateGoal({ params, request, auth, response }: HttpContext) {
@@ -376,13 +376,13 @@ export default class FinanceController {
       name: input.name, target_cents: parseSgdAmount(input.target),
       saved_cents: parseSgdAmount(input.saved), target_date: input.targetDate,
     })
-    return response.redirect().toRoute('dashboard')
+    return response.redirect().back('/dashboard')
   }
 
   async deleteGoal({ params, auth, response }: HttpContext) {
     const id = Number(params.id)
     if (!Number.isSafeInteger(id) || id < 1) return response.badRequest('Invalid goal')
     await db.from('financial_goals').where('id', id).where('user_id', auth.getUserOrFail().id).delete()
-    return response.redirect().toRoute('dashboard')
+    return response.redirect().back('/dashboard')
   }
 }
