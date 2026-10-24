@@ -5,7 +5,7 @@ export default function Signup() {
   return (
     <>
       <h1 className="auth__title">Create your account</h1>
-      <p className="auth__sub">Start building with the starter kit.</p>
+      <p className="auth__sub">Start building better money habits with Acorra. Sandy will be here to help.</p>
 
       <Form route="new_account.store">
         {({ errors, processing }) => (
