@@ -1,6 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import db from '@adonisjs/lucid/services/db'
-import { netWorth, monthlyBudgetStatus } from '#services/finance/calculations'
+import { netWorth, monthlyBudgetStatus, accountBalances } from '#services/finance/calculations'
+import { financialPlan } from '#services/finance/planning'
 import { parseSgdAmount } from '#services/finance/money'
 import type { Account, Budget, Transaction, Valuation } from '#services/finance/types'
 import {
@@ -9,6 +10,8 @@ import {
   createTransactionValidator,
   createValuationValidator,
   upsertBudgetValidator,
+  createCommitmentValidator,
+  createGoalValidator,
 } from '#validators/finance'
 
 const todayInSingapore = () =>
@@ -27,12 +30,14 @@ const isValidCalendarDate = (value: string) => {
 export default class FinanceController {
   async index({ auth, inertia }: HttpContext) {
     const userId = auth.getUserOrFail().id
-    const [rawAccounts, categories, rawTransactions, rawBudgets, rawValuations] = await Promise.all([
+    const [rawAccounts, categories, rawTransactions, rawBudgets, rawValuations, rawCommitments, rawGoals] = await Promise.all([
       db.from('financial_accounts').where('user_id', userId).orderBy('id'),
       db.from('financial_categories').where('user_id', userId).orderBy('name'),
       db.from('financial_transactions').where('user_id', userId).orderBy('booked_on', 'desc').orderBy('id', 'desc'),
       db.from('financial_budgets').where('user_id', userId),
       db.from('financial_valuations').where('user_id', userId).orderBy('id', 'desc'),
+      db.from('financial_commitments').where('user_id', userId).orderBy('due_day'),
+      db.from('financial_goals').where('user_id', userId).orderBy('target_date'),
     ])
 
     const accounts: Account[] = rawAccounts.map((a) => ({
@@ -72,12 +77,22 @@ export default class FinanceController {
     const monthly = transactions.filter((t) => t.date.startsWith(month))
     const incomeCents = monthly.filter((t) => t.kind === 'income').reduce((s, t) => s + t.amountCents, 0)
     const expenseCents = monthly.filter((t) => t.kind === 'expense').reduce((s, t) => s + t.amountCents, 0)
+    // MVP asset accounts represent spendable bank/cash; other assets go under dated valuations.
+    const balances = accountBalances(accounts, transactions)
+    const availableCashCents = accounts.filter(a => a.kind === 'asset').reduce((s, a) => s + balances[a.id], 0)
+    const planning = financialPlan({
+      today: currentDate, availableCashCents,
+      commitments: rawCommitments.map(c => ({ id: String(c.id), name: c.name, amountCents: Number(c.amount_cents), dueDay: Number(c.due_day), lastPaidMonth: c.last_paid_month })),
+      goals: rawGoals.map(g => ({ id: String(g.id), name: g.name, targetCents: Number(g.target_cents), savedCents: Number(g.saved_cents), targetDate: g.target_date })),
+      budgets: budgetStatus.map(b => ({ categoryName: categories.find(c => String(c.id) === b.categoryId)?.name ?? 'Category', remainingCents: b.remainingCents, percentUsed: b.percentUsed })),
+    })
 
     return inertia.render('dashboard', {
       accounts: rawAccounts.map((a) => ({ id: a.id, name: a.name, kind: a.kind })),
       categories: categories.map((c) => ({ id: c.id, name: c.name })),
       recentTransactions: rawTransactions.slice(0, 20).map((t) => ({
         id: t.id, bookedOn: t.booked_on, kind: t.kind, amountCents: Number(t.amount_cents),
+        accountId: t.account_id, destinationAccountId: t.destination_account_id,
         note: t.note, categoryId: t.category_id,
       })),
       valuations: rawValuations.map((v) => ({
@@ -89,6 +104,10 @@ export default class FinanceController {
       month,
       incomeCents,
       expenseCents,
+      availableCashCents,
+      commitments: rawCommitments.map(c => ({ id: c.id, name: c.name, amountCents: Number(c.amount_cents), dueDay: c.due_day, lastPaidMonth: c.last_paid_month })),
+      goals: rawGoals.map(g => ({ id: g.id, name: g.name, targetCents: Number(g.target_cents), savedCents: Number(g.saved_cents), targetDate: g.target_date })),
+      planning,
     })
   }
 
