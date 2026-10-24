@@ -114,6 +114,11 @@ export default class FinanceController {
   async storeAccount({ request, auth, response }: HttpContext) {
     const userId = auth.getUserOrFail().id
     const input = await request.validateUsing(createAccountValidator)
+    const duplicate = await db.from('financial_accounts').where('user_id', userId)
+      .whereRaw('lower(name) = ?', [input.name.toLowerCase()]).first()
+    const alreadyValued = await db.from('financial_valuations').where('user_id', userId)
+      .whereRaw('lower(name) = ?', [input.name.toLowerCase()]).first()
+    if (duplicate || alreadyValued) return response.badRequest('An account or valuation with that name already exists')
     await db.table('financial_accounts').insert({
       user_id: userId,
       name: input.name,
@@ -207,6 +212,9 @@ export default class FinanceController {
     const accountAlreadyTracked = await db.from('financial_accounts')
       .where('user_id', auth.getUserOrFail().id).whereRaw('lower(name) = ?', [input.name.toLowerCase()]).first()
     if (accountAlreadyTracked) return response.badRequest('Already tracked as an account; do not double count')
+    const valuationExists = await db.from('financial_valuations').where('user_id', auth.getUserOrFail().id)
+      .whereRaw('lower(name) = ?', [input.name.toLowerCase()]).first()
+    if (valuationExists) return response.badRequest('A valuation with that name already exists')
     await db.table('financial_valuations').insert({
       user_id: auth.getUserOrFail().id,
       name: input.name,
@@ -297,6 +305,9 @@ export default class FinanceController {
     const conflictingAccount = await db.from('financial_accounts')
       .where('user_id', userId).whereRaw('lower(name) = ?', [input.name.toLowerCase()]).first()
     if (conflictingAccount) return response.badRequest('Already tracked as an account; do not double count')
+    const duplicateValuation = await db.from('financial_valuations').where('user_id', userId)
+      .whereNot('id', id).whereRaw('lower(name) = ?', [input.name.toLowerCase()]).first()
+    if (duplicateValuation) return response.badRequest('A valuation with that name already exists')
     await db.from('financial_valuations').where('id', id).where('user_id', userId).update({
       name: input.name, kind: input.kind, value_cents: parseSgdAmount(input.value), as_of: input.asOf,
     })
