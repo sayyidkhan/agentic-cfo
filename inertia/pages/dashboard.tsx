@@ -243,14 +243,14 @@ export default function Dashboard(props: DashboardProps) {
         <div className="cfo-action-row">
           {view === 'overview' && <Link className="cfo-action" href="/dashboard?view=transactions"><Plus size={16}/> Record spending</Link>}
           {view !== 'overview' && <Link className="cfo-action cfo-action--quiet" href="/dashboard"><ArrowRight size={15}/> Overview</Link>}
-          <Link className="cfo-action cfo-action--quiet" href="/cfo"><Sparkles size={16}/> Chat with Sandy</Link>
+          <Link className="cfo-action cfo-action--quiet" href="/cfo"><SandyAvatar size="sm" /> Chat with Sandy</Link>
         </div>
       </header>
 
       {view === 'overview' && <>
         {!recorded && <div className="cfo-card cfo-alert" role="status">
           <ShieldCheck size={21}/>
-          <div><strong>Welcome to Agentic CFO</strong><p>Start by adding a bank account or a valuation. The dashboard will use your real entries—never sample figures presented as your finances.</p>
+          <div><strong>Welcome to Acorra</strong><p>Start by adding a bank account or a valuation. The dashboard will use your real entries—never sample figures presented as your finances.</p>
             <Link className="cfo-action" href="/dashboard?view=wealth">Get started <ArrowRight size={14}/></Link></div>
         </div>}
         <div className="cfo-grid">
