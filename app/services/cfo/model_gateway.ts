@@ -19,13 +19,13 @@ const nonEmpty = (value: string | undefined): string | undefined => value?.trim(
  */
 export function cfoModelConfigured(env: NodeJS.ProcessEnv = process.env): boolean {
   return Boolean(
-    (nonEmpty(env.LITELLM_API_KEY) && nonEmpty(env.LITELLM_MODEL)) ||
+    (nonEmpty(env.LITELLM_BASE_URL) && nonEmpty(env.LITELLM_API_KEY) && nonEmpty(env.LITELLM_MODEL)) ||
     (nonEmpty(env.CFO_AI_API_KEY) && nonEmpty(env.CFO_AI_MODEL))
   )
 }
 
 export function resolveCfoModelGateway(env: NodeJS.ProcessEnv = process.env): CfoModelGateway {
-  const useLiteLLM = Boolean(nonEmpty(env.LITELLM_API_KEY) && nonEmpty(env.LITELLM_MODEL))
+  const useLiteLLM = Boolean(nonEmpty(env.LITELLM_BASE_URL) && nonEmpty(env.LITELLM_API_KEY) && nonEmpty(env.LITELLM_MODEL))
   const apiKey = useLiteLLM ? nonEmpty(env.LITELLM_API_KEY) : nonEmpty(env.CFO_AI_API_KEY)
   const model = useLiteLLM ? nonEmpty(env.LITELLM_MODEL) : nonEmpty(env.CFO_AI_MODEL)
   if (!apiKey || !model) throw new Error('CFO model credentials are not configured')
@@ -34,7 +34,7 @@ export function resolveCfoModelGateway(env: NodeJS.ProcessEnv = process.env): Cf
     ? nonEmpty(env.LITELLM_BASE_URL)
     : (nonEmpty(env.CFO_AI_BASE_URL) || 'https://api.openai.com/v1')
 
-  if (!rawBase) throw new Error('LiteLLM base URL must be configured')
+  if (!rawBase) throw new Error('Model gateway base URL must be configured')
   let parsed: URL
   try {
     parsed = new URL(rawBase)
