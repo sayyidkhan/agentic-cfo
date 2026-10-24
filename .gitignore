@@ -24,3 +24,15 @@ yarn-error.log
 
 # Platform specific
 .DS_Store
+
+# Personal financial data, backup files and browser traces
+/backups/
+/data/
+/artifacts/
+/browsers/
+*.sqlite
+*.sqlite3
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite3-wal
+*.sqlite3-shm
