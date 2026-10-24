@@ -4,7 +4,7 @@ import db from '@adonisjs/lucid/services/db'
 import testUtils from '@adonisjs/core/services/test_utils'
 import { mkdirSync } from 'node:fs'
 
-test.group('Agentic CFO browser journey', (group) => {
+test.group('Acorra browser journey', (group) => {
   group.each.setup(() => testUtils.db().truncate())
 
   test('a working professional can build a budget and move through the financial workspace', async ({
@@ -76,8 +76,8 @@ test.group('Agentic CFO browser journey', (group) => {
     const page = await visit('/dashboard?view=wealth')
     await page.getByText('Bob everyday wallet').waitFor()
     await page.getByText('Alice only savings').waitFor({ state: 'detached' })
-    await page.getByRole('link', { name: /Ask CFO/ }).click()
-    await page.getByRole('heading', { name: 'Your financial copilot.' }).waitFor()
+    await page.getByRole('link', { name: /Sandy/ }).click()
+    await page.getByRole('heading', { name: 'Meet Sandy.' }).waitFor()
     await page.getByText('Alice private chat token').waitFor({ state: 'detached' })
   })
 })
