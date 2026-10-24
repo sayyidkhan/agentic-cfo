@@ -6,7 +6,7 @@
 - AdonisJS + React/Inertia + Tuyau single full-stack application.
 - SQLite, signed-in per-user financial records, budget/wealth calculations and monthly planning.
 - Income/expense/transfer CRUD; budgets, commitments, savings goals and estimated wealth.
-- Read-only conversational CFO with local guided mode (no API key required) and optional configured model; per-user history and bounded tool calls.
+- Read-only financial CFO with local guided mode (no API key or gateway), per-user history and verified finance calculations; separate direct API integration is optional.
 - Responsive five-view UI and helpful empty states.
 - Production POC signup control (`CFO_ALLOW_SIGNUP=false` by default).
 - Browser journey and two-user isolation tests committed under `tests/browser`.
