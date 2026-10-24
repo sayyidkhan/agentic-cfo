@@ -46,7 +46,9 @@ test.group('CFO model integration', () => {
       assert.equal(requests.length, 2)
       assert.equal(requests[0].tool_choice, 'required')
       assert.equal(requests[1].tool_choice, 'none')
-      assert.include(JSON.stringify(requests[1].messages), '"availableCashCents":100000')
+      const toolMessage = requests[1].messages?.find(m => m.role === 'tool')
+      assert.exists(toolMessage)
+      assert.equal(JSON.parse(toolMessage!.content).availableCashCents, 100_000)
     } finally {
       globalThis.fetch = originalFetch
       if (oldKey === undefined) delete process.env.CFO_AI_API_KEY
