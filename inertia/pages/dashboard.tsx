@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 import { useState } from 'react'
 import Page from '~/components/page'
+import SandyAvatar from '~/components/sandy_avatar'
 import AppLayout from '~/layouts/app'
 import FinancialPlanning from '~/components/financial_planning'
 import { TransactionManager, ValuationManager } from '~/components/financial_record_editor'
@@ -235,14 +236,14 @@ export default function Dashboard(props: DashboardProps) {
   const share = wealthBase ? Math.min(100, Math.max(0, (Math.max(0, assetsTotal) / wealthBase) * 100)) : 0
   const categoryName = (id: number | null) => categories.find(c => c.id === id)?.name ?? 'Uncategorised'
 
-  return <Page title={view === 'overview' ? 'Financial overview' : descriptor.title} hideTitle>
+  return <Page title={view === 'overview' ? 'Acorra · Overview' : descriptor.title} hideTitle>
     <div className="cfo-workspace">
       <header className="cfo-page-intro">
         <div><div className="cfo-eyebrow">{descriptor.eyebrow} · {month}</div><h1>{descriptor.title}</h1><p>{descriptor.detail}</p></div>
         <div className="cfo-action-row">
           {view === 'overview' && <Link className="cfo-action" href="/dashboard?view=transactions"><Plus size={16}/> Record spending</Link>}
           {view !== 'overview' && <Link className="cfo-action cfo-action--quiet" href="/dashboard"><ArrowRight size={15}/> Overview</Link>}
-          <Link className="cfo-action cfo-action--quiet" href="/cfo"><Sparkles size={16}/> Ask CFO</Link>
+          <Link className="cfo-action cfo-action--quiet" href="/cfo"><Sparkles size={16}/> Chat with Sandy</Link>
         </div>
       </header>
 
