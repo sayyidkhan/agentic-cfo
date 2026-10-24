@@ -163,3 +163,50 @@
   .cfo-list-table th:nth-child(2), .cfo-list-table td:nth-child(2) { display: none; }
   .cfo-page-intro h1 { font-size: 28px; }
 }
+
+/* Chat companion: consistent visual hierarchy and readable conversation widths. */
+.cfo-chat-header { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 20px 22px; border-bottom: 1px solid var(--cfo-stroke); flex-wrap: wrap; }
+.cfo-chat-thread { padding: 22px; min-height: 340px; max-height: 550px; overflow-y: auto; display: flex; flex-direction: column; gap: 18px; }
+.cfo-chat-welcome { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 12px; max-width: 440px; margin: auto; }
+.cfo-chat-welcome h2 { font-size: 23px; letter-spacing: -.04em; }
+.cfo-chat-welcome p { color: var(--cfo-muted); font-size: 13px; line-height: 1.65; }
+.cfo-chat-orb { width: 66px; height: 66px; background: var(--cfo-tint); color: var(--cfo-brand); border-radius: 20px; display: grid; place-items: center; }
+.cfo-chat-message { display: grid; gap: 6px; max-width: 89%; min-width: 0; }
+.cfo-chat-message--user { align-self: flex-end; }
+.cfo-chat-message--agent { align-self: flex-start; }
+.cfo-chat-message-name { color: var(--cfo-muted); font-size: 11px; font-weight: 750; }
+.cfo-chat-message--user .cfo-chat-message-name { text-align: right; }
+.cfo-chat-message-text { padding: 12px 15px; border-radius: 13px; background: var(--cfo-bg); border: 1px solid var(--cfo-stroke); color: var(--cfo-ink); font-size: 13px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; }
+.cfo-chat-message--user .cfo-chat-message-text { background: var(--cfo-brand); border-color: var(--cfo-brand); color: white; }
+.cfo-chat-compose { border-top: 1px solid var(--cfo-stroke); padding: 20px 22px; }
+.cfo-chat-form { display: grid; gap: 10px; }
+.cfo-chat-form textarea { width: 100%; border: 1px solid var(--cfo-stroke); border-radius: 11px; background: var(--cfo-surface); color: var(--cfo-ink); padding: 13px; resize: vertical; line-height: 1.5; font-size: 14px; outline-offset: 2px; }
+.cfo-chat-form textarea:focus { border-color: var(--cfo-brand); }
+.cfo-chat-form textarea:disabled { opacity: .58; cursor: not-allowed; }
+.cfo-chat-notice { display: flex; gap: 12px; padding: 13px 15px; border-radius: 11px; background: var(--cfo-tint); color: var(--cfo-ink); margin-bottom: 14px; }
+.cfo-chat-notice svg { color: var(--cfo-brand); flex-shrink: 0; }
+.cfo-chat-notice strong { font-size: 13px; }
+.cfo-chat-notice p { font-size: 12px; margin-top: 5px; color: var(--cfo-muted); }
+.cfo-suggested-question { border: 1px solid var(--cfo-stroke); border-radius: 11px; padding: 13px; display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; text-align: left; background: var(--cfo-surface); }
+.cfo-suggested-question:not(:disabled):hover { border-color: var(--cfo-brand); background: var(--cfo-bg); }
+.cfo-suggested-question:disabled { opacity: .53; cursor: not-allowed; }
+.cfo-suggested-question span { display: grid; gap: 4px; }
+.cfo-suggested-question strong { font-size: 12.5px; }
+.cfo-suggested-question small { font-size: 11.5px; color: var(--cfo-muted); line-height: 1.5; }
+.cfo-suggested-question svg { color: var(--cfo-brand); flex-shrink: 0; }
+.cfo-workspace > section:not(.cfo-card), .cfo-workspace .cfo-span-5 > section:not(.cfo-card), .cfo-workspace .cfo-span-7 > section:not(.cfo-card) {
+  background: var(--cfo-surface);
+  color: var(--cfo-ink);
+}
+.cfo-workspace section input, .cfo-workspace section select {
+  background-color: var(--cfo-surface);
+  color: var(--cfo-ink);
+}
+.cfo-workspace section h2 { letter-spacing: -.025em; }
+.cfo-workspace section small { color: var(--cfo-muted); }
+.cfo-workspace section p { overflow-wrap: break-word; }
+@media (max-width: 680px) {
+  .cfo-chat-header, .cfo-chat-compose { padding: 15px; }
+  .cfo-chat-thread { padding: 15px; max-height: 58vh; min-height: 240px; }
+  .cfo-chat-message { max-width: 96%; }
+}
