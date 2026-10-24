@@ -12,10 +12,10 @@ test.group('financial planning', () => {
       ],
       budgets: [], goals: [],
     })
-    assert.equal(result.upcoming.length, 1)
-    assert.equal(result.upcomingTotalCents, 25_000)
-    assert.equal(result.cashAfterUpcomingCents, 5_000)
-    assert.lengthOf(result.insights, 0)
+    assert.equal(result.upcoming.length, 2)
+    assert.equal(result.upcomingTotalCents, 26_000)
+    assert.equal(result.cashAfterUpcomingCents, 4_000)
+    assert.deepEqual(result.insights.map(i => i.code), ['past_due_bills'])
   })
 
   test('alerts for projected shortfall and budget pressure', ({ assert }) => {
