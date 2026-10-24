@@ -49,13 +49,13 @@ Set `DB_FILE` to a **writable, persistent, backed-up path**; e.g. `/data/agentic
 Each deployment has its **own SQLite file**; copies do not automatically synchronize. Keep `.env`, APP_KEY, SQLite files and personal financial data out of Git.
 
 ## Important limitations
-- **Conversational CFO code is now present**, but real model responses require an external compatible model and provider API key. No key is configured or live provider response tested here. Dashboard warning cards remain deterministic.
+- **Conversational CFO supports local guided mode without credentials**; it answers known questions via deterministic read-only tools. Full AI responses still require a compatible model key. No live provider response has been tested here. Dashboard warnings remain deterministic.
 - Transactions and manual valuations now support edit/delete; accounts, categories and budgets do not yet have full edit/delete flows. Historical snapshots, automatic bank reconciliation, FX, robust debt schedules and recurring-bill transaction posting are future work.
 - Manually entered valuations can be stale and must **not double-count** balances already represented by accounts. Exact-name duplicate protection has been added, but it cannot identify two differently named records representing the same asset.
 - For this POC, asset accounts represent spendable bank/cash balances; less-liquid assets should be entered as dated valuations. The projected cash figure assumes account balances are available and commitments have been correctly marked paid.
 - Proactive warning cards appear when the user visits the dashboard, but there is no scheduled/background review, notification system or automatic bill posting.
-- Chat uses a complete request/response rather than token streaming; tools are read-only.
-- Messages are saved in the app SQLite file as plaintext and sent with relevant financial facts to the configured AI provider. Review backups, confidentiality and provider data terms before entering sensitive records. Marking a recurring bill paid does not post a bank transaction; users must also record the corresponding expense.
+- Chat uses a complete request/response rather than token streaming; tools are read-only. Guided mode is not presented as an LLM.
+- Messages are saved in the app SQLite file as plaintext; when external AI is configured, relevant questions and figures are sent to the provider. Review backups, confidentiality and provider data terms before entering sensitive records. Marking a recurring bill paid does not post a bank transaction; users must also record the corresponding expense.
 - Starter authentication is present; security review, tenant isolation tests, and deployment hardening remain necessary before handling real financial records.
 - All figures use SGD and a fixed minor-unit representation. Financial totals, not language models, are the source of truth.
 
