@@ -3,7 +3,7 @@ import { Link, usePage } from '@inertiajs/react'
 import {
   Activity, AlertCircle, ArrowRight, ArrowUpRight, CalendarClock,
   ChevronRight, CircleDollarSign, Landmark, Plus, ReceiptText,
-  ShieldCheck, Sparkles, TrendingDown, TrendingUp, WalletCards,
+  ShieldCheck, TrendingDown, TrendingUp, WalletCards,
 } from 'lucide-react'
 import { useState } from 'react'
 import Page from '~/components/page'
