@@ -18,7 +18,7 @@ const dbConfig = defineConfig({
         /**
          * Database file location.
          */
-        filename: app.tmpPath('db.sqlite3'),
+        filename: process.env.DB_FILE ?? app.tmpPath('db.sqlite3'),
       },
 
       /**
