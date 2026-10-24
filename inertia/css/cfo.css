@@ -210,3 +210,34 @@
   .cfo-chat-thread { padding: 15px; max-height: 58vh; min-height: 240px; }
   .cfo-chat-message { max-width: 96%; }
 }
+
+/* Acorra v1: unobtrusive brand, Sandy's intentionally temporary mascot avatar. */
+.sandy-avatar {
+  --sandy-size: 44px;
+  display: inline-grid;
+  place-items: center;
+  width: var(--sandy-size);
+  height: var(--sandy-size);
+  flex: 0 0 var(--sandy-size);
+  border-radius: 34%;
+  color: #173d35;
+  background: #e2eace;
+  border: 1px solid #c6d9bd;
+}
+.sandy-avatar svg { width: 64%; height: 64%; }
+.sandy-avatar--sm { --sandy-size: 30px; border-radius: 10px; }
+.sandy-avatar--md { --sandy-size: 44px; }
+.sandy-avatar--lg { --sandy-size: 76px; border-radius: 24px; }
+.sandy-avatar--thinking { background: #f5edda; border-color: #e3d5ac; }
+.sandy-avatar--celebrating { background: #e1f2d8; border-color: #b9d6aa; }
+.sandy-message-byline { display: inline-flex; align-items: center; gap: 7px; }
+.sandy-message-byline .sandy-avatar { --sandy-size: 23px; border-radius: 8px; }
+.cfo-header-sandy { display: inline-flex; align-items: center; border-radius: 10px; }
+.cfo-header-sandy:hover { opacity: .85; }
+.cfo-chat-welcome > .sandy-avatar { margin-bottom: 4px; }
+:root[data-theme='dark'] .sandy-avatar { color: #e4f2da; background: #35594c; border-color: #567363; }
+.cfo-app .cfo-brand-type strong { font-weight: 800; letter-spacing: -.05em; font-size: 18px; }
+@media (max-width: 680px) {
+  .cfo-brand-type span { display: none; }
+  .cfo-header-sandy { display: none; }
+}
