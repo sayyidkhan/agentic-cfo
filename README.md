@@ -30,7 +30,7 @@ Financial calculations remain deterministic and testable; AI explains and advise
 - [ChatGPT Sites compatibility](docs/SITES_COMPATIBILITY.md)
 - [UOB challenge statements](docs/uob-challenge-statements.md)
 
-**Status:** Full-stack budgeting and wealth app, redesigned five-view finance interface, planning rules and read-only conversational CFO implemented. Automated tests and build pass; browser walkthrough and Zo deployment remain outstanding. See [implementation status](docs/IMPLEMENTATION_STATUS.md) and [CI verification](docs/CI_VERIFICATION.md).
+**Status:** Full-stack budgeting and wealth app, redesigned five-view finance interface, planning rules and read-only conversational CFO implemented. Previous baseline checks passed; latest expanded browser and native Node verification is pending. Zo deployment remains outstanding. See [implementation status](docs/IMPLEMENTATION_STATUS.md) and [CI verification](docs/CI_VERIFICATION.md).
 
 **Local setup:** Node.js 24+, npm 11+, then run `npm ci`, copy `.env.example` to `.env`, `node ace generate:key`, `node ace migration:run`, and `npm run dev`.
 
