@@ -1,5 +1,6 @@
-name: Verify Agentic CFO Node POC
+name: Verify Agentic CFO Node POC (manual or push)
 on:
+  workflow_dispatch:
   push:
     paths:
       - '.github/workflows/verify-initial-mvp.yml'
