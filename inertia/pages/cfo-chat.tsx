@@ -63,7 +63,7 @@ export default function CfoChat({ configured, messages, dailyMessageLimit }: Cfo
             <div className="cfo-chat-compose">
               {!configured && <div className="cfo-chat-notice" role="status">
                 <AlertCircle size={17}/>
-                <div><strong>Guided mode — works without an AI key</strong><p>Basic questions are answered using your recorded financial data and deterministic rules. Configure CFO_AI_API_KEY and CFO_AI_MODEL on the server for flexible AI conversation.</p></div>
+                <div><strong>Guided mode — works without an AI key</strong><p>Your recorded finances are reviewed locally using deterministic rules. No external model or additional subscription setup is required for guided mode.</p></div>
               </div>}
               <Form route="cfo.message.store" resetOnSuccess>
                 {({errors, processing}) => <div className="cfo-chat-form">
@@ -74,7 +74,7 @@ export default function CfoChat({ configured, messages, dailyMessageLimit }: Cfo
                   {errors.message && <p className="cfo-field-error" role="alert">{errors.message}</p>}
                   <div className="cfo-between" style={{alignItems:'center',flexWrap:'wrap',gap:10}}>
                     <span className="cfo-subtle">SGD · {dailyMessageLimit} questions/day · {configured ? 'AI mode' : 'Guided mode'} · Not financial advice</span>
-                    <button className="cfo-action" type="submit" disabled={!configured || processing}>
+                    <button className="cfo-action" type="submit" disabled={processing}>
                       <Send size={15}/>{processing ? 'Reviewing your finances…' : 'Send question'}
                     </button>
                   </div>
