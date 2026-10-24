@@ -1,7 +1,7 @@
 import { Form } from '@adonisjs/inertia/react'
 import { Link, router } from '@inertiajs/react'
 import { useRef } from 'react'
-import { AlertCircle, ArrowLeft, BookOpen, LockKeyhole, MessageCircle, Send, ShieldCheck, Sparkles, Trash2 } from 'lucide-react'
+import { AlertCircle, ArrowLeft, BookOpen, LockKeyhole, Send, ShieldCheck, Sparkles, Trash2 } from 'lucide-react'
 import AppLayout from '~/layouts/app'
 import SandyAvatar from '~/components/sandy_avatar'
 import Page from '~/components/page'
