@@ -48,7 +48,8 @@ test.group('LiteLLM model gateway settings', () => {
   })
   test('requires complete credentials and explicit LiteLLM URL', ({ assert }) => {
     assert.isFalse(cfoModelConfigured({}))
-    assert.isTrue(cfoModelConfigured({ LITELLM_API_KEY: 'test-key', LITELLM_MODEL: 'alias' }))
+    assert.isTrue(cfoModelConfigured({ LITELLM_BASE_URL: 'https://gateway.example.com/v1', LITELLM_API_KEY: 'test-key', LITELLM_MODEL: 'alias' }))
+    assert.isFalse(cfoModelConfigured({ LITELLM_API_KEY: 'test-key', LITELLM_MODEL: 'alias' }))
     assert.throws(() => resolveCfoModelGateway({
       LITELLM_API_KEY: 'key', LITELLM_MODEL: 'alias',
     }))
