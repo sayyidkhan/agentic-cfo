@@ -2,6 +2,7 @@ import Logo from '~/components/logo'
 import { type ReactNode } from 'react'
 import FlashToasts from '~/components/flash_toasts'
 import ThemeToggle from '~/components/theme_toggle'
+import SandyAvatar from '~/components/sandy_avatar'
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
@@ -19,23 +20,13 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
           </div>
 
           <p className="auth__quote">
-            Auth, kept intentionally minimal so you can build it your way.
+            Grow your wealth, one habit at a time.
           </p>
 
-          <div>
-            <div className="pitch__t">Looking for production-ready auth?</div>
-            <p className="pitch__p">
-              Check out Feature packs, production-ready full-stack components from the creator of
-              AdonisJS.
-            </p>
-            <a
-              className="il pitch__a"
-              href="https://plus.adonisjs.com/feature-packs"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Explore Feature packs →
-            </a>
+          <div style={{display:'grid',gap:12,justifyItems:'start'}}>
+            <SandyAvatar size="lg" />
+            <div className="pitch__t">Meet Sandy the Squirrel</div>
+            <p className="pitch__p">Your friendly companion for smarter money habits. Start small, stay consistent, and watch your progress grow.</p>
           </div>
         </aside>
       </div>
