@@ -69,6 +69,7 @@ jobs:
             check 'Run migrations' node ace migration:run
             check 'Typecheck and codegen' npm run typecheck
             check 'Unit tests' npm test -- --suite=unit
+            check 'Authenticated-route smoke tests' npm test -- --suite=functional
             check 'Production build' npm run build
           else
             echo '- **Dependency installation:** FAIL; no subsequent checks run.' >> docs/CI_VERIFICATION.md
