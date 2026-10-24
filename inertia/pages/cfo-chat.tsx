@@ -30,7 +30,7 @@ export default function CfoChat({ configured, messages, dailyMessageLimit }: Cfo
         <div>
           <div className="cfo-eyebrow">PERSONAL FINANCIAL GUIDANCE</div>
           <h1>Your financial copilot.</h1>
-          <p>Ask about spending, upcoming commitments or savings goals. Your CFO uses read-only tools and cannot move money.</p>
+          <p>Ask about spending, upcoming commitments or savings goals. Your CFO uses read-only tools and cannot move money. Without an AI model, guided responses are available.</p>
         </div>
         <Link href="/dashboard" className="cfo-action cfo-action--quiet"><ArrowLeft size={15}/> Financial overview</Link>
       </header>
@@ -40,7 +40,7 @@ export default function CfoChat({ configured, messages, dailyMessageLimit }: Cfo
             <header className="cfo-chat-header">
               <div className="cfo-brand-row">
                 <span className="cfo-brand-mark"><Sparkles size={19}/></span>
-                <span className="cfo-brand-type"><strong>Agentic CFO</strong><span>Read-only financial insights</span></span>
+                <span className="cfo-brand-type"><strong>Agentic CFO</strong><span>Read-only insights</span></span>
               </div>
               {messages.length > 0 && <button className="btn btn--secondary btn--sm" type="button"
                 onClick={() => { if (window.confirm('Delete your CFO conversation history?')) router.delete('/cfo/chat') }}>
@@ -63,17 +63,17 @@ export default function CfoChat({ configured, messages, dailyMessageLimit }: Cfo
             <div className="cfo-chat-compose">
               {!configured && <div className="cfo-chat-notice" role="status">
                 <AlertCircle size={17}/>
-                <div><strong>AI chat isn't enabled yet</strong><p>Add server-side CFO_AI_API_KEY and CFO_AI_MODEL to connect a supported model. Financial tracking is available without AI.</p></div>
+                <div><strong>Guided mode — works without an AI key</strong><p>Basic questions are answered using your recorded financial data and deterministic rules. Configure CFO_AI_API_KEY and CFO_AI_MODEL on the server for flexible AI conversation.</p></div>
               </div>}
               <Form route="cfo.message.store" resetOnSuccess>
                 {({errors, processing}) => <div className="cfo-chat-form">
                   <label htmlFor="cfo-question" className="cfo-eyebrow">YOUR QUESTION</label>
                   <textarea ref={composerRef} id="cfo-question" name="message" rows={3} required minLength={2} maxLength={1500}
                     placeholder="Could I spend S$300 this month and still cover my upcoming bills?"
-                    disabled={!configured || processing}/>
+                    disabled={processing}/>
                   {errors.message && <p className="cfo-field-error" role="alert">{errors.message}</p>}
                   <div className="cfo-between" style={{alignItems:'center',flexWrap:'wrap',gap:10}}>
-                    <span className="cfo-subtle">SGD · {dailyMessageLimit} questions/day · Not financial advice</span>
+                    <span className="cfo-subtle">SGD · {dailyMessageLimit} questions/day · {configured ? 'AI mode' : 'Guided mode'} · Not financial advice</span>
                     <button className="cfo-action" type="submit" disabled={!configured || processing}>
                       <Send size={15}/>{processing ? 'Reviewing your finances…' : 'Send question'}
                     </button>
@@ -89,7 +89,7 @@ export default function CfoChat({ configured, messages, dailyMessageLimit }: Cfo
             <p className="cfo-card-note">A few good starting points. Choose a question to fill the composer.</p>
             <div style={{display:'grid',gap:9}}>
               {suggestions.map(suggestion => <button type="button" key={suggestion.title} className="cfo-suggested-question"
-                disabled={!configured} onClick={() => insertSuggestion(suggestion.prompt)}>
+                disabled={false} onClick={() => insertSuggestion(suggestion.prompt)}>
                 <span><strong>{suggestion.title}</strong><small>{suggestion.prompt}</small></span>
                 <Sparkles size={15}/>
               </button>)}
