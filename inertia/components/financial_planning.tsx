@@ -43,7 +43,7 @@ export default function FinancialPlanning({ commitments, goals, planning, month,
       <section style={box}>
         <h2>Upcoming commitments</h2>
         <p>Monthly bills are reminders and projections only. They are <strong>not</strong> posted as expenses automatically.</p>
-        <p><strong>Recorded bank/cash balances:</strong> {dollars(availableCashCents)} · <strong>Unpaid future bills this month:</strong> {dollars(planning.upcomingTotalCents)}</p>
+        <p><strong>Recorded bank/cash balances:</strong> {dollars(availableCashCents)} · <strong>Unpaid bills this month (including overdue):</strong> {dollars(planning.upcomingTotalCents)}</p>
         <p><strong>Projected after those bills:</strong> {dollars(planning.cashAfterUpcomingCents)}</p>
         {commitments.length === 0 ? <p>No monthly commitments yet.</p> : (
           <ul style={{ display: 'grid', gap: 9, marginBottom: 18 }}>
@@ -123,7 +123,7 @@ export default function FinancialPlanning({ commitments, goals, planning, month,
             ))}
           </div>
         )}
-        <small>Assumptions: recurring bills are considered upcoming until marked paid, and only for their due date in the current month. Bills paid or due earlier in the month are excluded.</small>
+        <small>Assumptions: monthly bills remain outstanding until marked paid. Bills due earlier this month remain included and are flagged as potentially overdue; recording the actual expense remains a separate step.</small>
       </section>
     </>
   )
