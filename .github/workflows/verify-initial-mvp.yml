@@ -70,6 +70,8 @@ jobs:
             check 'Typecheck and codegen' npm run typecheck
             check 'Unit tests' npm test -- --suite=unit
             check 'Authenticated-route smoke tests' npm test -- --suite=functional
+            check 'Install Chromium for browser tests' npx playwright install --with-deps chromium
+            check 'Full browser journey and user isolation' npm test -- --suite=browser --browser=chromium
             check 'Production build' npm run build
           else
             echo '- **Dependency installation:** FAIL; no subsequent checks run.' >> docs/CI_VERIFICATION.md
@@ -81,3 +83,13 @@ jobs:
           git pull --rebase origin main || true
           git push origin main
           exit "$failures"
+      - name: Store synthetic browser screenshots and traces
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cfo-browser-verification
+          path: |
+            artifacts/
+            browsers/
+          if-no-files-found: ignore
+          retention-days: 7
