@@ -95,6 +95,9 @@ export async function generateCfoReply(history: HistoryMessage[], snapshot: CfoS
     ...history.slice(-10).map(m => ({ role: m.role, content: m.content.slice(0, 3000) })),
   ]
   let reply = await requestModel(messages, true)
+  if (!reply.tool_calls?.length) {
+    throw new CfoProviderRequestError('CFO model did not consult verified financial tools')
+  }
   if (reply.tool_calls?.length) {
     const calls = reply.tool_calls.slice(0, 5)
     // Preserve the original tool call message when returning function results.
