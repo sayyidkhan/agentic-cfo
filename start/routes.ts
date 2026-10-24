@@ -25,7 +25,12 @@ router
 
 router
   .group(() => {
-    router.on('/dashboard').renderInertia('dashboard', {}).as('dashboard')
+    router.get('/dashboard', [controllers.Finance, 'index']).as('dashboard')
+    router.post('/finance/accounts', [controllers.Finance, 'storeAccount']).as('finance.accounts.store')
+    router.post('/finance/categories', [controllers.Finance, 'storeCategory']).as('finance.categories.store')
+    router.post('/finance/transactions', [controllers.Finance, 'storeTransaction']).as('finance.transactions.store')
+    router.post('/finance/budgets', [controllers.Finance, 'storeBudget']).as('finance.budgets.store')
+    router.post('/finance/valuations', [controllers.Finance, 'storeValuation']).as('finance.valuations.store')
     router.post('logout', [controllers.Session, 'destroy'])
   })
   .use(middleware.auth())
