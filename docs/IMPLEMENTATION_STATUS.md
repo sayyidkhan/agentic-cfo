@@ -13,6 +13,9 @@
 - Monthly bill commitments (1st–28th), user-marked payment status and unposted cash projections.
 - Savings goals with target dates, progress tracking and updates.
 - Rules-based warnings for over-budget spending, cash shortfalls, overdue bills and overdue goals.
+- Read-only conversational CFO with server-side financial tools (cash, budgets, unpaid bills, goals and hypothetical purchases).
+- User-scoped SQLite chat history, clear-chat action and per-user request limits.
+- Configurable Chat Completions-compatible AI model provider; no additional application server.
 - Deterministic balance, net-worth and monthly budget calculations in integer cents.
 - Exact SGD input parsing with validation.
 - Japa unit tests for transactions, transfers, loan principal, budget totals and input parsing.
@@ -44,13 +47,18 @@ Set `DB_FILE` to a **writable, persistent, backed-up path**; e.g. `/data/agentic
 Each deployment has its **own SQLite file**; copies do not automatically synchronize. Keep `.env`, APP_KEY, SQLite files and personal financial data out of Git.
 
 ## Important limitations
-- **No conversational CFO yet.** Warnings are currently deterministic, with no AI conversation or personalised natural-language reasoning. The next phase will introduce a read-only conversational CFO.
+- **Conversational CFO code is now present**, but real model responses require an external compatible model and provider API key. No key is configured or live provider response tested here. Dashboard warning cards remain deterministic.
 - Transactions and manual valuations now support edit/delete; accounts, categories and budgets do not yet have full edit/delete flows. Historical snapshots, automatic bank reconciliation, FX, robust debt schedules and recurring-bill transaction posting are future work.
 - Manually entered valuations can be stale and must **not double-count** balances already represented by accounts. Exact-name duplicate protection has been added, but it cannot identify two differently named records representing the same asset.
 - For this POC, asset accounts represent spendable bank/cash balances; less-liquid assets should be entered as dated valuations. The projected cash figure assumes account balances are available and commitments have been correctly marked paid.
-- Proactive warning cards appear when the user visits the dashboard, but there is no scheduled/background review, notification system or automatic bill posting. Marking a recurring bill paid does not post a bank transaction; users must also record the corresponding expense.
+- Proactive warning cards appear when the user visits the dashboard, but there is no scheduled/background review, notification system or automatic bill posting.
+- Chat uses a complete request/response rather than token streaming; tools are read-only.
+- Messages are saved in the app SQLite file as plaintext and sent with relevant financial facts to the configured AI provider. Review backups, confidentiality and provider data terms before entering sensitive records. Marking a recurring bill paid does not post a bank transaction; users must also record the corresponding expense.
 - Starter authentication is present; security review, tenant isolation tests, and deployment hardening remain necessary before handling real financial records.
 - All figures use SGD and a fixed minor-unit representation. Financial totals, not language models, are the source of truth.
+
+## CFO chat setup and limitations
+Refer to [CFO_CHAT.md](CFO_CHAT.md) for provider configuration, read-only tool permissions, privacy implications and manual test script.
 
 ## POC demonstration path
 1. Sign up, create a bank account with a starting balance.
