@@ -6,7 +6,7 @@ import FinancialPlanning from '~/components/financial_planning'
 import { TransactionManager, ValuationManager } from '~/components/financial_record_editor'
 
 interface DashboardProps {
-  accounts: { id: number; name: string; kind: 'asset' | 'liability' }[]
+  accounts: { id: number; name: string; kind: 'asset' | 'liability'; balanceCents: number }[]
   categories: { id: number; name: string }[]
   currentDate: string
   month: string
@@ -76,6 +76,19 @@ export default function Dashboard({
           </div>
         )}
       </div>
+
+      <section style={sectionStyle}>
+        <h2>Account balances</h2>
+        {accounts.length === 0 ? <p>Add a bank/cash account or loan to begin.</p> : (
+          <div style={gridStyle}>
+            {accounts.map(a => <div key={a.id} style={{padding:12,border:'1px solid #d4d9dd',borderRadius:8}}>
+              <strong>{a.name}</strong>
+              <p>{a.kind === 'asset' ? 'Cash / bank' : 'Amount owed'}: {money(a.balanceCents)}</p>
+            </div>)}
+          </div>
+        )}
+        <small>Derived from opening balances and posted transactions; compare with real statements to identify discrepancies.</small>
+      </section>
 
       <div style={gridStyle}>
         <section style={sectionStyle}>
