@@ -4,6 +4,12 @@
 
 This app is **not** a ready-to-deploy ChatGPT Site. Sites uses its own supported hosting/runtime model with D1 and R2 bindings; it cannot be assumed to start an unrestricted AdonisJS Node server or use the same local SQLite connection.
 
+## Sharing LiteLLM across environments
+
+Both a Zo Node app and a future Sites-compatible backend may use the same LiteLLM gateway URL and `agentic-cfo` model alias, with separate restricted virtual keys. In ChatGPT Sites, store secrets through hosted Site Settings, **not in browser code or a public file**. Sites needs an adapter that can make authenticated outbound requests from its supported server runtime. This repository does not currently contain or deploy a complete Sites adaptation.
+
+Using one ChatGPT subscription to build/manage both environments does not automatically connect runtime AI calls to that plan. The LiteLLM ChatGPT-subscription provider is a separate OAuth-authenticated upstream integration with model/plan restrictions. See [LiteLLM setup](LITELLM_SETUP.md).
+
 ## Valid development approach
 
 - ChatGPT remains a convenient development environment for this GitHub repository.
