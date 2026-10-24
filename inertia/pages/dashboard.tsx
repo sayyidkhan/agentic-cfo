@@ -88,7 +88,7 @@ function BudgetBars({ budgets, categories, count }: Pick<DashboardProps, 'catego
       const variant = b.remainingCents < 0 ? 'cfo-budget-fill--over' : b.percentUsed >= 80 ? 'cfo-budget-fill--warn' : ''
       return <div className="cfo-budget-row" key={b.id}>
         <div className="cfo-between"><strong>{name}</strong><span>{money(b.spentCents)} / {money(b.limitCents)}</span></div>
-        <div className="cfo-budget-track" role="progressbar" aria-label={name + ' budget used'} aria-valuenow={Math.round(Math.max(0, b.percentUsed))} aria-valuemin={0} aria-valuemax={100}>
+        <div className="cfo-budget-track" role="progressbar" aria-label={name + ' budget used'} aria-valuenow={Math.round(Math.min(100, Math.max(0, b.percentUsed)))} aria-valuemin={0} aria-valuemax={100}>
           <div className={'cfo-budget-fill ' + variant} style={{width: Math.min(100, Math.max(0, b.percentUsed)) + '%'}}/>
         </div>
         <div className="cfo-between">
