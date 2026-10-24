@@ -1,13 +1,17 @@
-# Agentic CFO
+# Acorra
 
-An AI-powered personal finance application helping **working professionals** manage monthly budgets, understand their estimated net worth, and improve financial habits with proactive conversational guidance.
+A personal finance application helping **working professionals** manage monthly budgets, understand their estimated net worth, and improve financial habits with proactive conversational guidance.
 
 **Hackathon:** UOB Theme 3 — Proactive Financial Wellbeing and Engagement.
+
+**Mascot:** Sandy the Squirrel (temporary icon avatar; full design intentionally deferred).
+
+**Former working title:** Agentic CFO. The GitHub repository retains its technical name to avoid breaking existing integrations.
 
 ## MVP pillars
 1. **Budget tracker** — income, expenses, monthly budgets.
 2. **Wealth tracker** — accounts, assets, liabilities and estimated net worth.
-3. **AI CFO** — conversational financial reviews, early risk detection and practical recommendations.
+3. **Sandy** — read-only guided financial conversations, proactive risk signals and practical suggestions. Optional generative AI can be configured separately.
 
 ## Agreed technical architecture
 - **AdonisJS + TypeScript** — full-stack application and server logic
@@ -26,6 +30,7 @@ Financial calculations remain deterministic and testable; AI explains and advise
 - [Agreed architecture and build plan](docs/BUILD_PLAN.md)
 - [CFO chat setup and security](docs/CFO_CHAT.md)
 - [UI design and browser-review checklist](docs/UI_REVIEW.md)
+- [Acorra branding and Sandy mascot placeholder](docs/BRAND.md)
 - [Zo native Node deployment](docs/ZO_DEPLOYMENT.md)
 - [ChatGPT Sites compatibility](docs/SITES_COMPATIBILITY.md)
 - [UOB challenge statements](docs/uob-challenge-statements.md)
