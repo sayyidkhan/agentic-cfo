@@ -20,7 +20,7 @@ A personal CFO application for working professionals, with three MVP pillars:
 - **SQLite:** Default database for development and the Zo Computer deployment. Store the DB file on persistent storage and maintain backups; PostgreSQL is a possible future adapter, not an MVP requirement.
 - **Conversational CFO (implemented):** Server-side Chat Completions-compatible provider integration with bounded read-only financial tool calls; the initial chat uses complete responses, not streaming. Model provider is configured through server environment variables.
 - **Tailwind CSS:** UI styling.
-- **Docker:** Optional packaging for one AdonisJS application with a persistent mounted SQLite volume.
+- **Deployment:** Standalone AdonisJS build under Node.js 24+, registered as a Zo HTTP Service with a persistent SQLite directory; no Node.
 
 ### Logical structure
 ```text
