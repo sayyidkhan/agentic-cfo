@@ -5,6 +5,7 @@ import {
   cfoProviderConfigured, CfoProviderRequestError, CfoProviderUnavailableError, generateCfoReply,
 } from '#services/cfo/agent'
 import { loadCfoSnapshot } from '#services/cfo/snapshot'
+import { guidedCfoReply } from '#services/cfo/guided_coach'
 import type { HistoryMessage } from '#services/cfo/agent'
 
 const MAX_DAILY_MESSAGES = 20
@@ -29,12 +30,7 @@ export default class CfoChatController {
   async store({ auth, request, response, session }: HttpContext) {
     const userId = auth.getUserOrFail().id
     const input = await request.validateUsing(cfoMessageValidator)
-    if (!cfoProviderConfigured()) {
-      session.flash('errors', { message: 'Configure CFO_AI_API_KEY and CFO_AI_MODEL to enable the conversational CFO.' })
-      return response.redirect().toRoute('cfo.chat')
-    }
-
-    // Per-user, server-enforced daily budget to contain unexpected provider costs.
+    // Per-user, server-enforced daily limit for storage and AI provider usage.
     const today = new Date()
     const utcDayStart = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate())).toISOString()
     const usedToday = await db.from('cfo_chat_messages').where('user_id', userId)
@@ -52,7 +48,9 @@ export default class CfoChatController {
     history.push({ role: 'user', content: input.message })
     try {
       const snapshot = await loadCfoSnapshot(userId)
-      const answer = await generateCfoReply(history, snapshot)
+      const answer = cfoProviderConfigured()
+        ? await generateCfoReply(history, snapshot)
+        : guidedCfoReply(input.message, snapshot)
       await db.transaction(async trx => {
         await trx.table('cfo_chat_messages').insert({
           user_id: userId, role: 'user', content: input.message, created_at: new Date().toISOString(),
@@ -69,7 +67,7 @@ export default class CfoChatController {
       })
     } catch (error) {
       const message = error instanceof CfoProviderUnavailableError
-        ? 'AI provider not configured.'
+        ? 'AI provider not configured; guided mode is still available.'
         : error instanceof CfoProviderRequestError
           ? 'Unable to get a CFO response right now. Your message was not saved; please retry.'
           : 'Unable to calculate your financial snapshot. Please verify your records.'
