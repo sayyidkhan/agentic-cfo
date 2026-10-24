@@ -35,3 +35,17 @@ export const createValuationValidator = vine.create({
   value: amount,
   asOf: date,
 })
+
+
+export const createCommitmentValidator = vine.create({
+  name: vine.string().trim().minLength(1).maxLength(120),
+  amount,
+  dueDay: vine.number().min(1).max(28),
+})
+
+export const createGoalValidator = vine.create({
+  name: vine.string().trim().minLength(1).maxLength(120),
+  target: amount,
+  saved: amount,
+  targetDate: date,
+})
