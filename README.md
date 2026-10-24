@@ -15,7 +15,7 @@ An AI-powered personal finance application helping **working professionals** man
 - **Tuyau** — end-to-end type-safe routes/API calls; no tRPC needed initially
 - **VineJS** — runtime request validation
 - **Lucid + PostgreSQL** — persistence and financial models
-- **AI SDK (planned)** — streaming conversation and model tool calls
+- **Server-side Chat Completions integration** — read-only CFO tool calls; no extra AI orchestration service
 - **Tailwind CSS** — styling
 - **Docker** — single application deployment; PostgreSQL separate
 
