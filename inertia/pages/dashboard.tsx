@@ -92,7 +92,6 @@ export default function Dashboard({
               <label>Date<input name="bookedOn" type="date" defaultValue={currentDate} required style={fieldStyle}/></label>
               {transactionKind === 'expense' && <label>Category<select name="categoryId" required style={fieldStyle} defaultValue=""><option value="" disabled>Choose category</option>{categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select></label>}
               {transactionKind === 'transfer' && <label>Destination account<select name="destinationAccountId" required style={fieldStyle} defaultValue=""><option value="" disabled>Choose destination</option>{accounts.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}</select></label>}
-              </label>
               {Object.values(errors).map((e, i) => <small key={i} role="alert">{e}</small>)}
               <button className="btn btn--primary" type="submit" disabled={processing || !assets.length}>Save transaction</button>
             </div>}
