@@ -1,6 +1,6 @@
 # Agentic CFO — MVP Product Requirements Document
 
-**Status:** Draft for review | **Date:** 2026-10-23  
+**Status:** MVP scope agreed; implementation in progress | **Date:** 2026-10-24  
 **Audience:** Working professionals | **Challenge:** UOB Theme 3 — Proactive Financial Wellbeing and Engagement
 
 ## 1. Executive summary
@@ -74,4 +74,4 @@ Bank feeds and open banking; payment initiation; full accounting ledger; investm
 - Are recommendations useful enough to change behaviour?
 - Would a budget-first onboarding feel less overwhelming than entering every asset/debt immediately?
 
-See [BUILD_PLAN.md](./BUILD_PLAN.md) for the proposed technical approach, **not yet implemented**.
+See [BUILD_PLAN.md](./BUILD_PLAN.md) for architecture and [IMPLEMENTATION_STATUS.md](./IMPLEMENTATION_STATUS.md) for features implemented, remaining work and verification.
