@@ -1,0 +1,26 @@
+services:
+  cfo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: agentic-cfo:local
+    restart: unless-stopped
+    ports:
+      # Bind to loopback by default; front with HTTPS via Zo's supported proxy.
+      - "127.0.0.1:${CFO_PORT:-3333}:3333"
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 3333
+      DB_FILE: /data/agentic-cfo.sqlite
+      SESSION_DRIVER: cookie
+    volumes:
+      - cfo-data:/data
+      - cfo-backups:/backups
+    read_only: false
+
+volumes:
+  cfo-data:
+  cfo-backups:
