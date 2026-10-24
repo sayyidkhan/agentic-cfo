@@ -1,12 +1,13 @@
-# Agentic CFO — Implementation Status
+# Acorra — Implementation Status
 
-**As of 2026-10-24:** Budgeting and wealth foundation plus a new forward-looking planning vertical slice committed. See [automated verification](CI_VERIFICATION.md).
+**As of 2026-10-24:** Acorra branding and Sandy's placeholder chat avatar implemented on top of the finance dashboard and guided coach. See [automated verification](CI_VERIFICATION.md).
 
 ## Implemented
 - Official **AdonisJS 7 + React/Inertia** starter (Tuyau, Lucid, authentication).
 - **SQLite** migration for user-scoped accounts, categories, transactions, budgets, and dated asset/liability valuations.
 - Auth-protected dashboard using one full-stack deployment.
-- Responsive financial UI with Overview, Transactions, Budgets & Goals, Wealth and Ask CFO navigation, plus clearer onboarding/empty states.
+- Responsive financial UI with Overview, Transactions, Budgets & Goals, Wealth and Sandy navigation, plus clearer onboarding/empty states.
+- Product and landing-page branding updated to **Acorra**, with a reusable, explicitly temporary squirrel avatar for **Sandy**. Final mascot artwork is postponed.
 - Redesigned CFO chat and interactive sample questions; original read-only service boundaries preserved.
 - Manual account, expense, income, transfer, budget, category and valuation entry forms.
 - Transaction edit/delete with user-scoped access and full ledger revalidation before database commit.
