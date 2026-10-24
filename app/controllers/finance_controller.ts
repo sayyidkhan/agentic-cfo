@@ -88,7 +88,7 @@ export default class FinanceController {
     })
 
     return inertia.render('dashboard', {
-      accounts: rawAccounts.map((a) => ({ id: a.id, name: a.name, kind: a.kind })),
+      accounts: rawAccounts.map((a) => ({ id: a.id, name: a.name, kind: a.kind, balanceCents: balances[String(a.id)] })),
       categories: categories.map((c) => ({ id: c.id, name: c.name })),
       recentTransactions: rawTransactions.slice(0, 20).map((t) => ({
         id: t.id, bookedOn: t.booked_on, kind: t.kind, amountCents: Number(t.amount_cents),
