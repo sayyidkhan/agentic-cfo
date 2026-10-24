@@ -204,6 +204,9 @@ export default class FinanceController {
   async storeValuation({ request, auth, response }: HttpContext) {
     const input = await request.validateUsing(createValuationValidator)
     if (!isValidCalendarDate(input.asOf)) return response.badRequest('Invalid valuation date')
+    const accountAlreadyTracked = await db.from('financial_accounts')
+      .where('user_id', auth.getUserOrFail().id).whereRaw('lower(name) = ?', [input.name.toLowerCase()]).first()
+    if (accountAlreadyTracked) return response.badRequest('Already tracked as an account; do not double count')
     await db.table('financial_valuations').insert({
       user_id: auth.getUserOrFail().id,
       name: input.name,
@@ -212,6 +215,163 @@ export default class FinanceController {
       as_of: input.asOf,
       created_at: new Date().toISOString(),
     })
+    return response.redirect().toRoute('dashboard')
+  }
+
+  /** Edit an existing financial entry; replay the whole ledger before committing. */
+  async updateTransaction({ params, request, auth, response }: HttpContext) {
+    const userId = auth.getUserOrFail().id
+    const input = await request.validateUsing(createTransactionValidator)
+    const amountCents = parseSgdAmount(input.amount)
+    const id = Number(params.id)
+    if (!Number.isSafeInteger(id) || id < 1 || amountCents === 0 || !isValidCalendarDate(input.bookedOn)) {
+      return response.badRequest('Invalid transaction')
+    }
+    try {
+      await db.transaction(async trx => {
+        const existing = await trx.from('financial_transactions').where('id', id).where('user_id', userId).first()
+        if (!existing) throw new Error('Transaction not found')
+        const source = await trx.from('financial_accounts').where('id', input.accountId).where('user_id', userId).first()
+        if (!source || source.kind !== 'asset') throw new Error('Invalid source account')
+        if (input.kind === 'expense') {
+          if (!input.categoryId) throw new Error('Expense requires a category')
+          const category = await trx.from('financial_categories').where('id', input.categoryId).where('user_id', userId).first()
+          if (!category) throw new Error('Invalid category')
+        }
+        if (input.kind === 'transfer') {
+          if (!input.destinationAccountId || input.destinationAccountId === input.accountId) {
+            throw new Error('Transfer requires a different destination account')
+          }
+          const destination = await trx.from('financial_accounts').where('id', input.destinationAccountId).where('user_id', userId).first()
+          if (!destination) throw new Error('Invalid destination')
+        }
+        await trx.from('financial_transactions').where('id', id).where('user_id', userId).update({
+          kind: input.kind, booked_on: input.bookedOn, amount_cents: amountCents,
+          account_id: input.accountId,
+          category_id: input.kind === 'expense' ? input.categoryId : null,
+          destination_account_id: input.kind === 'transfer' ? input.destinationAccountId : null,
+          note: input.note ?? null,
+        })
+        const accountRows = await trx.from('financial_accounts').where('user_id', userId)
+        const entries = await trx.from('financial_transactions').where('user_id', userId).orderBy('booked_on').orderBy('id')
+        accountBalances(
+          accountRows.map(a => ({ id: String(a.id), name: a.name, kind: a.kind, currency: 'SGD' as const, openingBalanceCents: Number(a.opening_balance_cents) })),
+          entries.map(t => ({ id: String(t.id), date: t.booked_on, kind: t.kind, amountCents: Number(t.amount_cents), accountId: String(t.account_id), destinationAccountId: t.destination_account_id ? String(t.destination_account_id) : undefined, categoryId: t.category_id ? String(t.category_id) : undefined }))
+        )
+      })
+    } catch {
+      return response.badRequest('Unable to update transaction. Check accounts and outstanding loan balances.')
+    }
+    return response.redirect().toRoute('dashboard')
+  }
+
+  async deleteTransaction({ params, auth, response }: HttpContext) {
+    const userId = auth.getUserOrFail().id
+    const id = Number(params.id)
+    if (!Number.isSafeInteger(id) || id < 1) return response.badRequest('Invalid transaction')
+    try {
+      await db.transaction(async trx => {
+        const existing = await trx.from('financial_transactions').where('id', id).where('user_id', userId).first()
+        if (!existing) throw new Error('Transaction not found')
+        await trx.from('financial_transactions').where('id', id).where('user_id', userId).delete()
+        const accounts = await trx.from('financial_accounts').where('user_id', userId)
+        const entries = await trx.from('financial_transactions').where('user_id', userId).orderBy('booked_on').orderBy('id')
+        accountBalances(
+          accounts.map(a => ({ id: String(a.id), name: a.name, kind: a.kind, currency: 'SGD' as const, openingBalanceCents: Number(a.opening_balance_cents) })),
+          entries.map(t => ({ id: String(t.id), date: t.booked_on, kind: t.kind, amountCents: Number(t.amount_cents), accountId: String(t.account_id), destinationAccountId: t.destination_account_id ? String(t.destination_account_id) : undefined }))
+        )
+      })
+    } catch {
+      return response.badRequest('Cannot remove this transaction without creating an invalid loan balance')
+    }
+    return response.redirect().toRoute('dashboard')
+  }
+
+  async updateValuation({ params, request, auth, response }: HttpContext) {
+    const input = await request.validateUsing(createValuationValidator)
+    const userId = auth.getUserOrFail().id
+    const id = Number(params.id)
+    if (!Number.isSafeInteger(id) || !isValidCalendarDate(input.asOf)) return response.badRequest('Invalid valuation')
+    const exists = await db.from('financial_valuations').where('id', id).where('user_id', userId).first()
+    if (!exists) return response.notFound()
+    const conflictingAccount = await db.from('financial_accounts')
+      .where('user_id', userId).whereRaw('lower(name) = ?', [input.name.toLowerCase()]).first()
+    if (conflictingAccount) return response.badRequest('Already tracked as an account; do not double count')
+    await db.from('financial_valuations').where('id', id).where('user_id', userId).update({
+      name: input.name, kind: input.kind, value_cents: parseSgdAmount(input.value), as_of: input.asOf,
+    })
+    return response.redirect().toRoute('dashboard')
+  }
+
+  async deleteValuation({ params, auth, response }: HttpContext) {
+    const userId = auth.getUserOrFail().id
+    const id = Number(params.id)
+    if (!Number.isSafeInteger(id) || id < 1) return response.badRequest('Invalid valuation')
+    await db.from('financial_valuations').where('id', id).where('user_id', userId).delete()
+    return response.redirect().toRoute('dashboard')
+  }
+
+  async storeCommitment({ request, auth, response }: HttpContext) {
+    const input = await request.validateUsing(createCommitmentValidator)
+    if (!Number.isInteger(input.dueDay)) return response.badRequest('Due day must be an integer')
+    const userId = auth.getUserOrFail().id
+    await db.table('financial_commitments').insert({
+      user_id: userId, name: input.name, due_day: input.dueDay,
+      amount_cents: parseSgdAmount(input.amount), last_paid_month: null,
+      created_at: new Date().toISOString(),
+    })
+    return response.redirect().toRoute('dashboard')
+  }
+
+  async markCommitmentPaid({ params, auth, response }: HttpContext) {
+    const userId = auth.getUserOrFail().id
+    const id = Number(params.id)
+    if (!Number.isSafeInteger(id) || id < 1) return response.badRequest('Invalid commitment')
+    const currentMonth = todayInSingapore().slice(0, 7)
+    await db.from('financial_commitments').where('id', id).where('user_id', userId)
+      .update({ last_paid_month: currentMonth })
+    // This only marks the forecast as paid; it deliberately does not create an expense.
+    return response.redirect().toRoute('dashboard')
+  }
+
+  async deleteCommitment({ params, auth, response }: HttpContext) {
+    const userId = auth.getUserOrFail().id
+    const id = Number(params.id)
+    if (!Number.isSafeInteger(id) || id < 1) return response.badRequest('Invalid commitment')
+    await db.from('financial_commitments').where('id', id).where('user_id', userId).delete()
+    return response.redirect().toRoute('dashboard')
+  }
+
+  async storeGoal({ request, auth, response }: HttpContext) {
+    const input = await request.validateUsing(createGoalValidator)
+    if (!isValidCalendarDate(input.targetDate) || parseSgdAmount(input.target) === 0) {
+      return response.badRequest('Invalid goal')
+    }
+    await db.table('financial_goals').insert({
+      user_id: auth.getUserOrFail().id, name: input.name, target_cents: parseSgdAmount(input.target),
+      saved_cents: parseSgdAmount(input.saved), target_date: input.targetDate,
+      created_at: new Date().toISOString(),
+    })
+    return response.redirect().toRoute('dashboard')
+  }
+
+  async updateGoal({ params, request, auth, response }: HttpContext) {
+    const input = await request.validateUsing(createGoalValidator)
+    const id = Number(params.id)
+    if (!Number.isSafeInteger(id) || id < 1 || !isValidCalendarDate(input.targetDate) || parseSgdAmount(input.target) === 0) {
+      return response.badRequest('Invalid goal')
+    }
+    await db.from('financial_goals').where('id', id).where('user_id', auth.getUserOrFail().id).update({
+      name: input.name, target_cents: parseSgdAmount(input.target),
+      saved_cents: parseSgdAmount(input.saved), target_date: input.targetDate,
+    })
+    return response.redirect().toRoute('dashboard')
+  }
+
+  async deleteGoal({ params, auth, response }: HttpContext) {
+    const id = Number(params.id)
+    if (!Number.isSafeInteger(id) || id < 1) return response.badRequest('Invalid goal')
+    await db.from('financial_goals').where('id', id).where('user_id', auth.getUserOrFail().id).delete()
     return response.redirect().toRoute('dashboard')
   }
 }
