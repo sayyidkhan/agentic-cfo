@@ -1,5 +1,6 @@
 import { CFO_TOOLS, runFinancialTool } from './financial_tools.js'
 import type { CfoSnapshot, ModelResponse, ReadOnlyToolCall } from './types.js'
+import { cfoModelConfigured, resolveCfoModelGateway } from './model_gateway.js'
 
 export interface HistoryMessage {
   role: 'user' | 'assistant'
@@ -15,19 +16,16 @@ export class CfoProviderUnavailableError extends Error {}
 export class CfoProviderRequestError extends Error {}
 
 export function cfoProviderConfigured() {
-  return Boolean(process.env.CFO_AI_API_KEY?.trim() && process.env.CFO_AI_MODEL?.trim())
+  return cfoModelConfigured()
 }
 
 function providerSettings() {
-  const apiKey = process.env.CFO_AI_API_KEY?.trim()
-  const model = process.env.CFO_AI_MODEL?.trim()
-  if (!apiKey || !model) throw new CfoProviderUnavailableError('CFO provider not configured')
-  // Environment-configured only; never let users or tool calls set a model endpoint.
-  const baseUrl = (process.env.CFO_AI_BASE_URL || 'https://api.openai.com/v1').replace(/\/+$/, '')
-  if (!/^https:\/\//.test(baseUrl) && !(/^http:\/\/localhost(?::\d+)?(?:\/|$)/.test(baseUrl))) {
-    throw new CfoProviderUnavailableError('Use an HTTPS provider endpoint')
+  try {
+    return resolveCfoModelGateway()
+  } catch {
+    // Do not include raw environment values in browser errors or logs.
+    throw new CfoProviderUnavailableError('CFO model gateway is not correctly configured')
   }
-  return { apiKey, model, endpoint: baseUrl + '/chat/completions' }
 }
 
 const SYSTEM_INSTRUCTIONS = `You are Agentic CFO, a cautious personal financial coach for working professionals in Singapore.
