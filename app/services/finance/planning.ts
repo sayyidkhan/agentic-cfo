@@ -49,13 +49,22 @@ export function financialPlan(params: {
     if (!Number.isInteger(commitment.dueDay) || commitment.dueDay < 1 || commitment.dueDay > 28) {
       throw new Error('Due day must be from 1 to 28')
     }
-    if (commitment.lastPaidMonth === month || commitment.dueDay < day) return []
+    if (commitment.lastPaidMonth === month) return []
     return [{ ...commitment, dueOn: `${month}-${String(commitment.dueDay).padStart(2, '0')}` }]
   }).sort((a, b) => a.dueOn.localeCompare(b.dueOn))
   const upcomingTotalCents = upcoming.reduce((sum, c) => sum + c.amountCents, 0)
   if (!Number.isSafeInteger(upcomingTotalCents)) throw new Error('Upcoming total exceeds safe integer')
   const cashAfterUpcomingCents = availableCashCents - upcomingTotalCents
   const insights: FinancialInsight[] = []
+  const overdue = upcoming.filter(c => c.dueDay < day)
+  if (overdue.length) {
+    insights.push({
+      code: 'past_due_bills',
+      severity: 'warning',
+      title: 'Check unpaid bills from earlier this month',
+      detail: `${overdue.length} monthly commitment(s) have passed their scheduled due day without being marked paid. Confirm whether they were settled.`,
+    })
+  }
 
   if (upcomingTotalCents > 0 && cashAfterUpcomingCents < 0) {
     insights.push({
