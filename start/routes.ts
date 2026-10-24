@@ -11,6 +11,8 @@ import { middleware } from '#start/kernel'
 import { controllers } from '#generated/controllers'
 import router from '@adonisjs/core/services/router'
 
+const FinanceController = () => import('#controllers/finance_controller')
+
 router.on('/').renderInertia('home', {}).as('home')
 
 router
@@ -25,12 +27,12 @@ router
 
 router
   .group(() => {
-    router.get('/dashboard', [controllers.Finance, 'index']).as('dashboard')
-    router.post('/finance/accounts', [controllers.Finance, 'storeAccount']).as('finance.accounts.store')
-    router.post('/finance/categories', [controllers.Finance, 'storeCategory']).as('finance.categories.store')
-    router.post('/finance/transactions', [controllers.Finance, 'storeTransaction']).as('finance.transactions.store')
-    router.post('/finance/budgets', [controllers.Finance, 'storeBudget']).as('finance.budgets.store')
-    router.post('/finance/valuations', [controllers.Finance, 'storeValuation']).as('finance.valuations.store')
+    router.get('/dashboard', [FinanceController, 'index']).as('dashboard')
+    router.post('/finance/accounts', [FinanceController, 'storeAccount']).as('finance.accounts.store')
+    router.post('/finance/categories', [FinanceController, 'storeCategory']).as('finance.categories.store')
+    router.post('/finance/transactions', [FinanceController, 'storeTransaction']).as('finance.transactions.store')
+    router.post('/finance/budgets', [FinanceController, 'storeBudget']).as('finance.budgets.store')
+    router.post('/finance/valuations', [FinanceController, 'storeValuation']).as('finance.valuations.store')
     router.post('logout', [controllers.Session, 'destroy'])
   })
   .use(middleware.auth())
