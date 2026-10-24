@@ -2,6 +2,8 @@ import { Form } from '@adonisjs/inertia/react'
 import { useState } from 'react'
 import Page from '~/components/page'
 import AppLayout from '~/layouts/app'
+import FinancialPlanning, { type Commitment, type Goal, type Planning } from '~/components/financial_planning'
+import { TransactionManager, ValuationManager, type FinanceTransaction, type ManualValuation } from '~/components/financial_record_editor'
 
 interface DashboardProps {
   accounts: { id: number; name: string; kind: 'asset' | 'liability' }[]
@@ -12,8 +14,12 @@ interface DashboardProps {
   expenseCents: number
   financialPosition: { assetsCents: number; liabilitiesCents: number; netWorthCents: number }
   budgetStatus: { id: string; categoryId: string; limitCents: number; spentCents: number; remainingCents: number; percentUsed: number }[]
-  valuations: { id: number; name: string; kind: string; valueCents: number; asOf: string }[]
-  recentTransactions: { id: number; bookedOn: string; kind: string; amountCents: number; note: string | null; categoryId: number | null }[]
+  valuations: ManualValuation[]
+  recentTransactions: FinanceTransaction[]
+  availableCashCents: number
+  commitments: Commitment[]
+  goals: Goal[]
+  planning: Planning
 }
 
 const money = (cents: number) =>
@@ -25,7 +31,7 @@ const gridStyle = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minm
 
 export default function Dashboard({
   accounts, categories, currentDate, month, incomeCents, expenseCents,
-  financialPosition, budgetStatus, valuations, recentTransactions,
+  financialPosition, budgetStatus, valuations, recentTransactions, availableCashCents, commitments, goals, planning,
 }: DashboardProps) {
   const [transactionKind, setTransactionKind] = useState<'income' | 'expense' | 'transfer'>('expense')
   const assets = accounts.filter((a) => a.kind === 'asset')
@@ -132,22 +138,12 @@ export default function Dashboard({
               <button className="btn btn--primary" type="submit" disabled={processing}>Save valuation</button>
             </div>}
           </Form>
-          {valuations.length > 0 && <ul style={{ marginTop: 12 }}>{valuations.map((v) => <li key={v.id}>{v.name}: {money(v.valueCents)} ({v.kind}, as of {v.asOf})</li>)}</ul>}
         </section>
       </div>
 
-      <section style={sectionStyle}>
-        <h2>Recent transactions</h2>
-        {recentTransactions.length === 0 ? <p>No transactions recorded yet.</p> :
-          <div style={{ display: 'grid', gap: 8 }}>
-            {recentTransactions.map((t) => (
-              <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
-                <span>{t.bookedOn} · {t.note || categoryName(t.categoryId)} · {t.kind}</span>
-                <strong>{money(t.amountCents)}</strong>
-              </div>
-            ))}
-          </div>}
-      </section>
+      <FinancialPlanning commitments={commitments} goals={goals} planning={planning} month={month} currentDate={currentDate} availableCashCents={availableCashCents}/>
+      <TransactionManager transactions={recentTransactions} accounts={accounts} categories={categories}/>
+      <ValuationManager valuations={valuations}/>
       <small>All figures are SGD. Wealth estimates depend on the balances and valuation dates you provide. No payments are initiated.</small>
     </Page>
   )
