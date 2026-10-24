@@ -1,0 +1,68 @@
+name: One-time verify Agentic CFO foundation
+on:
+  push:
+    paths:
+      - '.github/workflows/verify-initial-mvp.yml'
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+      - name: Install dependencies
+        id: install
+        run: npm ci
+      - name: Run migrations, tests, typechecks and build; write report
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p docs
+          {
+            echo "# Initial Foundation Verification"
+            echo ""
+            echo "Automated checks performed by GitHub Actions on $(date -u +'%Y-%m-%d %H:%M UTC')."
+            echo ""
+          } > docs/CI_VERIFICATION.md
+          function check() {
+            local label="$1"; shift
+            local output="/tmp/verify-$(echo "$label" | tr ' ' '-').log"
+            if "$@" >"$output" 2>&1; then
+              echo "- **$label:** PASS" >> docs/CI_VERIFICATION.md
+            else
+              echo "- **$label:** FAIL" >> docs/CI_VERIFICATION.md
+              echo "" >> docs/CI_VERIFICATION.md
+              echo "<details><summary>$label logs</summary>" >> docs/CI_VERIFICATION.md
+              echo "" >> docs/CI_VERIFICATION.md
+              echo '\`\`\`' >> docs/CI_VERIFICATION.md
+              tail -n 70 "$output" >> docs/CI_VERIFICATION.md
+              echo '\`\`\`' >> docs/CI_VERIFICATION.md
+              echo "</details>" >> docs/CI_VERIFICATION.md
+              echo "" >> docs/CI_VERIFICATION.md
+            fi
+          }
+          if [ -f node_modules/.package-lock.json ]; then
+            cp .env.example .env
+            check 'Generate app key' node ace generate:key
+            check 'Run migrations' node ace migration:run
+            check 'Typecheck' npm run typecheck
+            check 'Unit tests' npm test -- --suite=unit
+            check 'Production build' npm run build
+          else
+            echo '- **Dependency installation:** FAIL; no subsequent checks run.' >> docs/CI_VERIFICATION.md
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/CI_VERIFICATION.md
+          git commit -m "ci: record MVP verification outcome [skip ci]" || true
+          git push origin main
