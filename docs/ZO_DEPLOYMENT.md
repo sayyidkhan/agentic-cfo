@@ -1,52 +1,93 @@
-# Zo Computer deployment handoff (AdonisJS + SQLite)
+# Deploy Agentic CFO to Zo Computer — Node Service, no Docker
 
-**Status:** Deployment configuration and backup tooling committed; **not deployed to Zo yet**. No Zo account/session or AI keys have been accessed.
+**Status:** Repo contains a deployable Node/AdonisJS application and preparation script. Actual Zo instance not deployed or accessed in this conversation.
 
-## Prerequisites
-A Zo Computer environment that can run Docker Compose and persist Docker volumes, with a secure HTTPS reverse proxy/hostname. If Docker isn't supported in your Zo plan, use the same Node 24 build directly and set `DB_FILE` to a persistent writable path.
+## Recommended target
 
-The app requires Node.js **24+**. It serves React/Inertia and backend API routes in **one process**, without a separate frontend server or managed database.
+Use **Zo Computer → Services → HTTP service** for the AdonisJS Node server, rather than Zo Sites (which favours Hono/Bun-based projects). Zo Services supports long-running programs with an entrypoint, working directory and port. You can initially keep the service **private**.
 
-## Deploy with Docker Compose
-1. Clone `https://github.com/sayyidkhan/agentic-cfo` in your Zo environment.
-2. Copy `.env.example` to `.env` and set your real `APP_KEY` (generate with `node ace generate:key` on a trusted machine or use a securely generated compatible key), `APP_URL`, and other required values. Never commit `.env`.
-3. Set `APP_URL` to the actual HTTPS origin users will browse; configure Zo's proxy to forward to local TCP port 3333. Compose listens on `127.0.0.1:3333` by default and assumes an external TLS proxy.
-5. Build the container, run migrations, then start the service:
+Zo documentation: https://www.zo.computer/guide/hosting
+
+## Required runtime
+- Node.js 24+ and npm, with ability to run native better-sqlite3 dependency.
+- One Node server and one *persistent writable folder* for the SQLite database; no Docker, VPS or separate database server.
+- A Zo HTTPS URL mapped to the service, with an appropriately configured APP_URL.
+- Server-only environment variables for APP_KEY, credentials, DB_FILE and other settings.
+
+## Initial setup
+
+1. Clone or pull `https://github.com/sayyidkhan/agentic-cfo` on your Zo computer.
+2. Confirm Node.js 24+, then run from the repository root:
 
 ```bash
-docker compose build
-docker compose run --rm cfo node ace migration:run --force
-docker compose up -d
-docker compose ps
+bash scripts/zo-build.sh
 ```
 
-If the app is already running, back up the database **before** a migration. Avoid concurrent migrations or two app instances writing the same SQLite database.
+This installs dependencies, typechecks, compiles the standalone build and installs its production-only dependencies. Use the `build/` output for the **running** process.
 
-## Persistence
-The `cfo-data` Docker volume holds `/data/agentic-cfo.sqlite` (plus its WAL and SHM files). Do not remove that volume during upgrades; `docker compose down --volumes` will delete it.
+3. Create a persistent data directory outside the repository and build folder, for example `$HOME/agentic-cfo-data`:
 
-`cfo-backups` is a separate named volume containing `/backups` for consistent online snapshots.
-
-Backup while the app is running:
 ```bash
-docker compose exec cfo node scripts/backup-sqlite.mjs
+mkdir -p "$HOME/agentic-cfo-data" "$HOME/agentic-cfo-backups"
 ```
 
-Copy a backup off the host; a backup on the same machine is **not** disaster recovery:
+4. In the Zo Service configuration, provide secrets and settings **as environment variables** (do not commit `.env`):
+
+```env
+NODE_ENV=production
+HOST=0.0.0.0
+PORT=3333
+APP_URL=https://<your-zo-https-domain>
+APP_KEY=<random-generated-and-kept-secret>
+SESSION_DRIVER=cookie
+DB_FILE=/absolute/persistent/path/agentic-cfo.sqlite
+CFO_ALLOW_SIGNUP=false
+# Optional, only when enabling CFO chat:
+CFO_AI_API_KEY=
+CFO_AI_MODEL=
+CFO_AI_BASE_URL=https://api.openai.com/v1
+```
+
+Replace sample paths and hostnames. Set `DB_FILE` to an **absolute path** in Zo's persistent storage, not inside `build`, `tmp`, or a folder Zo deletes/recreates. Run `node ace generate:key` in a trusted local/source setup to obtain APP_KEY; keep the same key across redeployments.
+
+5. Before first startup, run schema migrations in the *compiled* build directory with the same server environment:
+
 ```bash
-# Replace timestamped filename using output from the backup command.
-docker compose cp cfo:/backups/agentic-cfo-YYYY-MM-DDTHH-MM-SS-MMMZ.sqlite ./agentic-cfo-backup.sqlite
+cd build
+NODE_ENV=production node ace migration:run --force
 ```
 
-For restoration, stop the app first, preserve the existing DB file separately, replace `/data/agentic-cfo.sqlite` with a verified backup, ensure permissions are correct, then restart. Test restoration in a separate environment before relying on this process.
+6. Register a Zo **HTTP Service**:
+   - **Working directory:** absolute path to `agentic-cfo/build`
+   - **Entrypoint/command:** `node bin/server.js`
+   - **Port:** `3333` (or match PORT)
+   - **Access:** private at first
+   - **Restart policy:** managed by Zo Services
 
-## AI conversation (optional)
-Set `CFO_AI_API_KEY`, `CFO_AI_MODEL`, and optionally `CFO_AI_BASE_URL` in the server's secret environment. The model must support Chat Completions function calling.
+Zo handles the service lifecycle. No `pm2`, `nohup`, Docker or extra proxy is assumed. Configure APP_URL to the actual HTTPS host Zo assigns.
 
-Without these values, the budgeting, wealth, goals and financial-risk views work, but CFO chat is disabled. The key never belongs in the frontend. Financial snapshots and chats are sent to the selected model provider when chat is enabled; assess provider privacy terms before entering real data.
+7. To create your **first account**, temporarily set `CFO_ALLOW_SIGNUP=true`, restart the service, complete registration, then switch it back to `false` and restart. Until browser/security review is complete, do not use genuine sensitive financial data.
 
-## Boundaries
-- Each deployment keeps its own independent SQLite database; there is no built-in sync between ChatGPT-assisted development and Zo.
-- Disable public access while completing security review, browser verification and backups.
-- Do not assume Zo automatically exposes a durable volume, sends backups off host, or supports custom Docker images; validate these features in that specific environment.
-- This document is a repeatable deployment recipe, **not a claim that Zo has been deployed or tested**.
+## Updates
+
+From the repository root, back up SQLite first, pull new code, rerun `bash scripts/zo-build.sh`, stop the service, run new compiled migrations, and restart. Keep DB_FILE and APP_KEY stable. New builds do not migrate or copy financial records automatically.
+
+## Consistent SQLite backup
+
+Run in the repository root while DB_FILE points to the *same* persistent DB as the application:
+
+```bash
+DB_FILE=/absolute/path/agentic-cfo.sqlite \
+BACKUP_DIR=/absolute/path/offline-backups \
+node scripts/backup-sqlite.mjs
+```
+
+The script uses SQLite's online backup API rather than copying a live WAL database unsafely. Keep an encrypted **off-host** copy and test a restore in a separate instance. On restore, stop the Zo Service, save the existing DB elsewhere, restore a known-good backed-up SQLite file with correct permissions and restart.
+
+## ChatGPT Sites
+
+ChatGPT Sites is a different runtime from Zo's Node Services and is **not** a drop-in deployment for the current AdonisJS server. See [SITES_COMPATIBILITY.md](SITES_COMPATIBILITY.md).
+
+## Remaining release gates
+
+Browser journey and user-isolation verification, real model-provider testing, persistent-storage check on Zo, and security/privacy review still need evidence. This is a deployment **recipe**, not a claim that the service has been deployed.
