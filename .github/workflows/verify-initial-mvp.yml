@@ -4,6 +4,7 @@ on:
     paths:
       - '.github/workflows/verify-initial-mvp.yml'
       - 'app/**'
+      - 'config/**'
       - 'database/migrations/**'
       - 'inertia/**'
       - 'start/**'
