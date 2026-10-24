@@ -1,8 +1,13 @@
-name: One-time verify Agentic CFO foundation
+name: Verify Agentic CFO foundation
 on:
   push:
     paths:
       - '.github/workflows/verify-initial-mvp.yml'
+      - 'app/**'
+      - 'database/migrations/**'
+      - 'inertia/**'
+      - 'start/**'
+      - 'tests/**'
     branches: [main]
 
 permissions:
