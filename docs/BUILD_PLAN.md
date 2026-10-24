@@ -18,7 +18,7 @@ A personal CFO application for working professionals, with three MVP pillars:
 - **VineJS:** Runtime validation at every data-writing boundary; static type inference alone is insufficient.
 - **Lucid ORM:** SQLite models, migrations and transactional updates. Keep persistence behind domain services to make a future PostgreSQL migration manageable.
 - **SQLite:** Default database for development and the Zo Computer deployment. Store the DB file on persistent storage and maintain backups; PostgreSQL is a possible future adapter, not an MVP requirement.
-- **Conversational CFO (implemented):** Server-side Chat Completions-compatible provider integration with bounded read-only financial tool calls; the initial chat uses complete responses, not streaming. Model provider is configured through server environment variables.
+- **Conversational CFO (implemented):** Local guided financial reviews by default, requiring no keys. An optional direct Chat Completions API can be configured if a supported subscription-linked integration is not available; this is separate from ChatGPT plan usage. There is no LiteLLM gateway. The first chat uses complete responses rather than streaming.
 - **Responsive CSS:** Custom financial dashboard and mobile-friendly styles.
 - **Deployment:** Standalone AdonisJS build under Node.js 24+, registered as a Zo HTTP Service with a persistent SQLite directory; no containers.
 
