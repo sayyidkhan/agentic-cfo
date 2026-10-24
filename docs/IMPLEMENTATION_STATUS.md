@@ -1,23 +1,46 @@
-# Implementation Status
+# Agentic CFO — Implementation Status
 
-## First engineering increment
-The repository contains an initial **framework-independent TypeScript financial core**:
-- `app/services/finance/types.ts` — money/account/transaction/budget/valuation interfaces.
-- `app/services/finance/calculations.ts` — deterministic balance, budget, transfer and net worth calculations.
-- `tests/unit/finance.spec.ts` — regression scenarios (bank transfers, loan principal, budget utilisation, net worth, invalid transactions).
+**As of 2026-10-24:** First runnable full-stack foundation committed. See [automated verification](CI_VERIFICATION.md).
 
-This code is a **starting vertical slice**, not a running AdonisJS application. It has no database persistence, authentication, interface or chat UI yet.
+## Implemented
+- Official **AdonisJS 7 + React/Inertia** starter (Tuyau, Lucid, authentication).
+- **SQLite** migration for user-scoped accounts, categories, transactions, budgets, and dated asset/liability valuations.
+- Auth-protected dashboard using one full-stack deployment.
+- Manual account, expense, income, transfer, budget, category and valuation entry forms.
+- Deterministic balance, net-worth and monthly budget calculations in integer cents.
+- Exact SGD input parsing with validation.
+- Japa unit tests for transactions, transfers, loan principal, budget totals and input parsing.
+- CI run: migrations, typecheck after Adonis codegen, unit tests, production build.
 
-### Next actions
-1. Generate an official AdonisJS React/Inertia starter with the supported toolchain.
-2. Configure SQLite and Lucid migrations; map persisted entities to the finance service.
-3. Set up Vitest or the official Adonis test runner and execute regression tests.
-4. Build account and transaction interfaces with validation.
-5. Add budget/net worth dashboard and conversational read-only CFO.
+## Run locally
+Node.js **24+** and npm **11+** required.
 
-### Known limitations
-- SGD only; no FX conversions.
-- Non-cash valuations are manually supplied, with an as-of date.
-- Callers must not count the same asset twice as both an account and manual valuation.
-- This engine models transfers and loan principal; loan interest must be posted separately as an expense.
-- Real financial data must never be persisted without authentication and access controls.
+```bash
+npm ci
+cp .env.example .env
+node ace generate:key
+node ace migration:run
+npm run dev
+```
+
+Open `http://localhost:3333`, sign up, and open the protected `/dashboard`.
+
+To verify locally:
+```bash
+npm run typecheck
+npm test -- --suite=unit
+npm run build
+```
+
+## Running a separate copy on Zo Computer
+Set `DB_FILE` to a **writable, persistent, backed-up path**; e.g. `/data/agentic-cfo.sqlite` with the `/data` directory already created and mounted persistently. Otherwise the default is `tmp/db.sqlite3` inside the application, which is not necessarily durable on hosting systems.
+
+Each deployment has its **own SQLite file**; copies do not automatically synchronize. Keep `.env`, APP_KEY, SQLite files and personal financial data out of Git.
+
+## Important limitations
+- **No conversational CFO yet**; chat and proactive personalised coaching are next phases.
+- Initial transaction/valuation flow supports creation; full edit/delete, snapshots, reconciliations, FX and richer liability accounting are future work.
+- Manually entered valuations can be stale and must **not double-count** balances already represented by accounts. Do not enter the same asset twice.
+- Budget alerts are currently basic UI indicators, not scheduled reviews.
+- Starter authentication is present; security review, tenant isolation tests, and deployment hardening remain necessary before handling real financial records.
+- All figures use SGD and a fixed minor-unit representation. Financial totals, not language models, are the source of truth.
