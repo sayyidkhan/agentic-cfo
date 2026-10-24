@@ -1,6 +1,6 @@
 # Agentic CFO — Agreed Architecture & Build Plan
 
-**Status:** Architecture approved; implementation not started.  
+**Status:** Architecture approved; first runnable foundation implemented. See [implementation status](IMPLEMENTATION_STATUS.md).  
 **Decision date:** 2026-10-23
 
 ## Product scope
@@ -89,4 +89,4 @@ No Next.js or SvelteKit; no tRPC layer unless requirements change; no bank conne
 - Start with demo/sample accounts; add secure authentication before storing real financial information.
 - Scheduled background agent runs could eventually need a scheduler/worker; not required for initial POC.
 
-**No application code has been implemented.**
+**Implementation has started:** AdonisJS/React scaffold, SQLite migrations, finance dashboard, forms and tests are present. Conversational CFO and more advanced functionality remain future phases.
