@@ -42,7 +42,8 @@ APP_KEY=<random-generated-and-kept-secret>
 SESSION_DRIVER=cookie
 DB_FILE=/absolute/persistent/path/agentic-cfo.sqlite
 CFO_ALLOW_SIGNUP=false
-# Optional, only when enabling CFO chat:
+# No AI key is needed for guided CFO mode.
+# Optional direct API only if separately authorised and billed:
 CFO_AI_API_KEY=
 CFO_AI_MODEL=
 CFO_AI_BASE_URL=https://api.openai.com/v1
