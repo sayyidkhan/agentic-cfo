@@ -19,8 +19,8 @@ A personal CFO application for working professionals, with three MVP pillars:
 - **Lucid ORM:** SQLite models, migrations and transactional updates. Keep persistence behind domain services to make a future PostgreSQL migration manageable.
 - **SQLite:** Default database for development and the Zo Computer deployment. Store the DB file on persistent storage and maintain backups; PostgreSQL is a possible future adapter, not an MVP requirement.
 - **Conversational CFO (implemented):** Server-side Chat Completions-compatible provider integration with bounded read-only financial tool calls; the initial chat uses complete responses, not streaming. Model provider is configured through server environment variables.
-- **Tailwind CSS:** UI styling.
-- **Deployment:** Standalone AdonisJS build under Node.js 24+, registered as a Zo HTTP Service with a persistent SQLite directory; no Node.
+- **Responsive CSS:** Custom financial dashboard and mobile-friendly styles.
+- **Deployment:** Standalone AdonisJS build under Node.js 24+, registered as a Zo HTTP Service with a persistent SQLite directory; no containers.
 
 ### Logical structure
 ```text
@@ -70,7 +70,7 @@ Actual generated directories may differ with selected Adonis starter and current
 ## Build sequence
 1. **Scaffold and schema:** AdonisJS + React/Inertia, Tuyau, Lucid/SQLite; implement testable finance services.
 2. **Tracking experience:** manual entry, category budgets, accounts, assets/liabilities and dashboard.
-3. **Conversational CFO:** read-only tools and persisted conversations are implemented; streaming responses can be added later.
+3. **Conversational CFO:** read-only tools and persisted conversations are implemented; guided local mode works without API credentials, and external-model chat is available when configured. Streaming can be added later.
 4. **Proactive guidance:** deterministic warnings now implemented; AI explanations and user acknowledgment are future enhancements.
 5. **POC validation:** test arithmetic, transfers, stale valuations and representative demo scenarios.
 
