@@ -6,7 +6,7 @@ import { TuyauProvider } from '@adonisjs/inertia/react'
 import { resolvePageComponent } from '@adonisjs/inertia/helpers'
 import { createInertiaApp, type ResolvedComponent } from '@inertiajs/react'
 
-const appName = import.meta.env.VITE_APP_NAME || 'Agentic CFO'
+const appName = import.meta.env.VITE_APP_NAME || 'Acorra'
 
 createInertiaApp({
   title: (title) => (title ? `${title} - ${appName}` : appName),
