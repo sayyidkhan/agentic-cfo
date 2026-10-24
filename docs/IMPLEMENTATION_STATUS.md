@@ -17,7 +17,7 @@
 - Rules-based warnings for over-budget spending, cash shortfalls, overdue bills and overdue goals.
 - Read-only conversational CFO with server-side financial tools (cash, budgets, unpaid bills, goals and hypothetical purchases).
 - User-scoped SQLite chat history, clear-chat action and per-user request limits.
-- Configurable Chat Completions-compatible AI model provider; no additional application server.
+- Credential-free guided financial coach as the default. No LiteLLM, proxy or additional model service required. A direct API provider is optional and separate from ChatGPT plan usage.
 - Deterministic balance, net-worth and monthly budget calculations in integer cents.
 - Exact SGD input parsing with validation.
 - Japa unit tests for transactions, transfers, loan principal, budget totals and input parsing.
