@@ -18,7 +18,7 @@ A personal CFO application for working professionals, with three MVP pillars:
 - **VineJS:** Runtime validation at every data-writing boundary; static type inference alone is insufficient.
 - **Lucid ORM:** SQLite models, migrations and transactional updates. Keep persistence behind domain services to make a future PostgreSQL migration manageable.
 - **SQLite:** Default database for development and the Zo Computer deployment. Store the DB file on persistent storage and maintain backups; PostgreSQL is a possible future adapter, not an MVP requirement.
-- **AI SDK (proposed integration):** Model adapter, streaming conversational interface and tool calling, invoked by AdonisJS server endpoints. Exact integration to be validated while implementing.
+- **Conversational CFO (implemented):** Server-side Chat Completions-compatible provider integration with bounded read-only financial tool calls; the initial chat uses complete responses, not streaming. Model provider is configured through server environment variables.
 - **Tailwind CSS:** UI styling.
 - **Docker:** Optional packaging for one AdonisJS application with a persistent mounted SQLite volume.
 
@@ -70,7 +70,7 @@ Actual generated directories may differ with selected Adonis starter and current
 ## Build sequence
 1. **Scaffold and schema:** AdonisJS + React/Inertia, Tuyau, Lucid/SQLite; implement testable finance services.
 2. **Tracking experience:** manual entry, category budgets, accounts, assets/liabilities and dashboard.
-3. **Conversational CFO:** read-only tools, streaming chat and persisted conversations.
+3. **Conversational CFO:** read-only tools and persisted conversations are implemented; streaming responses can be added later.
 4. **Proactive guidance:** deterministic warnings now implemented; AI explanations and user acknowledgment are future enhancements.
 5. **POC validation:** test arithmetic, transfers, stale valuations and representative demo scenarios.
 
