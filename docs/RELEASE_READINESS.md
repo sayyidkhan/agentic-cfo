@@ -10,14 +10,14 @@
 - Responsive five-view UI and helpful empty states.
 - Production POC signup control (`CFO_ALLOW_SIGNUP=false` by default).
 - Browser journey and two-user isolation tests committed under `tests/browser`.
-- Docker Compose/SQLite deployment package, online SQLite backup script and Zo handoff instructions.
+- Native Node.js/Zo Service deployment instructions, online SQLite backup script and persistent DB path support.
 
 ## Verification gates
 - [x] Existing finance unit tests, migrations, typecheck and production build previously passed.
 - [x] Browser testing infrastructure and scenarios authored.
-- [x] Container build and migration smoke checks wired into CI.
+- [x] Native Node build and migration checks wired into CI.
 - [ ] **Fresh end-to-end Chromium result for the latest changes**; see `CI_VERIFICATION.md` and repository Actions. Do not confuse older reports with a pass for this commit.
-- [ ] **Docker image and migration smoke verified on the final commit**.
+- [ ] **Native Node build and migration smoke verified on the final commit**.
 - [ ] Real AI provider credential configured, live model interaction and answer-quality evaluation.
 - [ ] Actual Zo Computer deployment, HTTPS, persistent-volume test and off-host backup/restore.
 - [ ] Security/privacy review with synthetic and then consented data.
