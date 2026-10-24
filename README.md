@@ -34,6 +34,6 @@ Financial calculations remain deterministic and testable; AI explains and advise
 
 **Local setup:** Node.js 24+, npm 11+, then run `npm ci`, copy `.env.example` to `.env`, `node ace generate:key`, `node ace migration:run`, and `npm run dev`.
 
-**CFO chat:** Configure `CFO_AI_API_KEY`, `CFO_AI_MODEL`, and optionally `CFO_AI_BASE_URL` on the server. Chat requires a Chat Completions-compatible model with function calling; without credentials it stays disabled. See [CFO chat setup](docs/CFO_CHAT.md).
+**CFO chat:** Configure `CFO_AI_API_KEY`, `CFO_AI_MODEL`, and optionally `CFO_AI_BASE_URL` on the server. With no credentials, the CFO uses a clearly labelled local guided mode for common financial questions. A Chat Completions-compatible model with function calling enables flexible AI chat. See [CFO chat setup](docs/CFO_CHAT.md).
 
 **Zo deployment:** Build with `bash scripts/zo-build.sh`, then register a Zo Node HTTP Service with working directory `build`, command `node bin/server.js`, and an absolute persistent `DB_FILE`. See [Zo deployment guide](docs/ZO_DEPLOYMENT.md).
