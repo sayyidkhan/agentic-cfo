@@ -76,7 +76,7 @@ test.group('Acorra browser journey', (group) => {
     const page = await visit('/dashboard?view=wealth')
     await page.getByText('Bob everyday wallet').waitFor()
     await page.getByText('Alice only savings').waitFor({ state: 'detached' })
-    await page.getByRole('link', { name: /Sandy/ }).click()
+    await page.getByRole('navigation', { name: 'Financial workspace' }).getByRole('link', { name: 'Sandy' }).click()
     await page.getByRole('heading', { name: 'Meet Sandy.' }).waitFor()
     await page.getByText('Alice private chat token').waitFor({ state: 'detached' })
   })
