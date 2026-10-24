@@ -1,6 +1,5 @@
 import { CFO_TOOLS, runFinancialTool } from './financial_tools.js'
 import type { CfoSnapshot, ModelResponse, ReadOnlyToolCall } from './types.js'
-import { cfoModelConfigured, resolveCfoModelGateway } from './model_gateway.js'
 
 export interface HistoryMessage {
   role: 'user' | 'assistant'
@@ -15,17 +14,34 @@ type ProviderMessage =
 export class CfoProviderUnavailableError extends Error {}
 export class CfoProviderRequestError extends Error {}
 
+/**
+ * ChatGPT plan sign-in for Codex/Sites development is not a callable HTTP API
+ * for this application. Default to the local guided coach without credentials.
+ * A separately authorised direct API can be configured later if desired.
+ */
 export function cfoProviderConfigured() {
-  return cfoModelConfigured()
+  return Boolean(process.env.CFO_AI_API_KEY?.trim() && process.env.CFO_AI_MODEL?.trim())
 }
 
 function providerSettings() {
-  try {
-    return resolveCfoModelGateway()
-  } catch {
-    // Do not include raw environment values in browser errors or logs.
-    throw new CfoProviderUnavailableError('CFO model gateway is not correctly configured')
+  const apiKey = process.env.CFO_AI_API_KEY?.trim()
+  const model = process.env.CFO_AI_MODEL?.trim()
+  if (!apiKey || !model) {
+    throw new CfoProviderUnavailableError('Optional direct model provider is not configured')
   }
+  const baseUrl = (process.env.CFO_AI_BASE_URL || 'https://api.openai.com/v1').replace(/\/+$/, '')
+  let parsed: URL
+  try {
+    parsed = new URL(baseUrl)
+  } catch {
+    throw new CfoProviderUnavailableError('Invalid provider endpoint')
+  }
+  const loopback = ['localhost', '127.0.0.1', '::1'].includes(parsed.hostname)
+  if ((parsed.protocol !== 'https:' && !(parsed.protocol === 'http:' && loopback)) ||
+      parsed.username || parsed.password || parsed.hash || parsed.search) {
+    throw new CfoProviderUnavailableError('Provider endpoint must use HTTPS')
+  }
+  return { apiKey, model, endpoint: baseUrl + '/chat/completions' }
 }
 
 const SYSTEM_INSTRUCTIONS = `You are Agentic CFO, a cautious personal financial coach for working professionals in Singapore.
