@@ -25,9 +25,10 @@ Financial calculations remain deterministic and testable; AI explains and advise
 - [Product requirements](docs/PRD.md)
 - [Agreed architecture and build plan](docs/BUILD_PLAN.md)
 - [CFO chat setup and security](docs/CFO_CHAT.md)
+- [UI design and browser-review checklist](docs/UI_REVIEW.md)
 - [UOB challenge statements](docs/uob-challenge-statements.md)
 
-**Status:** AdonisJS/React/SQLite app, finance dashboard, planning rules and read-only conversational CFO implemented. See [implementation status](docs/IMPLEMENTATION_STATUS.md) and [CI verification](docs/CI_VERIFICATION.md).
+**Status:** Full-stack budgeting and wealth app, redesigned five-view finance interface, planning rules and read-only conversational CFO implemented. Automated tests and build pass; browser walkthrough and Zo deployment remain outstanding. See [implementation status](docs/IMPLEMENTATION_STATUS.md) and [CI verification](docs/CI_VERIFICATION.md).
 
 **Local setup:** Node.js 24+, npm 11+, then run `npm ci`, copy `.env.example` to `.env`, `node ace generate:key`, `node ace migration:run`, and `npm run dev`.
 
