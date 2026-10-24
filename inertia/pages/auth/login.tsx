@@ -5,7 +5,7 @@ export default function Login() {
   return (
     <>
       <h1 className="auth__title">Welcome back</h1>
-      <p className="auth__sub">Sign in to continue building.</p>
+      <p className="auth__sub">Sign in to continue your wealth-building journey with Acorra and Sandy.</p>
 
       <Form route="session.store">
         {({ errors, processing }) => (
