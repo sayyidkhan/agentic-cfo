@@ -1,3 +1,4 @@
+import { formatSgd } from '../../app/services/finance/money.js'
 import { Form } from '@adonisjs/inertia/react'
 import { router } from '@inertiajs/react'
 import { useState } from 'react'
@@ -23,9 +24,7 @@ export interface Planning {
   insights: { code: string; severity: 'notice' | 'warning'; title: string; detail: string }[]
 }
 
-const dollars = (cents: number) => new Intl.NumberFormat('en-SG', {
-  style: 'currency', currency: 'SGD',
-}).format(cents / 100)
+const dollars = formatSgd
 const inputStyle = { display: 'block', width: '100%', padding: 9, borderRadius: 6, border: '1px solid #aeb8c0' }
 const box = { padding: 20, border: '1px solid #d4d9dd', borderRadius: 12, marginBottom: 18 }
 

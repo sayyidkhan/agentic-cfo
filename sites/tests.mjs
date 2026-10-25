@@ -66,7 +66,7 @@ test('public build rejects anonymous and authenticated real data, even spoofed I
  assert.equal((await worker.fetch(new Request('https://acorra.test/missing'),{})).status,404)
 })
 function dbAdapter(){
- const sqlite=new DatabaseSync(':memory:');sqlite.exec(readFileSync('../drizzle/0000_financial_workspaces.sql','utf8'))
+ const sqlite=new DatabaseSync(':memory:');for(const migration of ['0000_financial_workspaces.sql','0001_storage_checks.sql'])sqlite.exec(readFileSync('../drizzle/'+migration,'utf8'))
  return {prepare(sql){return {bind(...args){return {async first(){return sqlite.prepare(sql).get(...args)},async run(){const result=sqlite.prepare(sql).run(...args);return {meta:{changes:Number(result.changes)}}}}}}}}
 }
 test('two identities isolate records; body/query IDs cannot select another workspace',async()=>{
@@ -88,4 +88,71 @@ test('bundles contain no private records, credentials, external providers or SQL
  const source=readFileSync('dist/server/index.js','utf8')
  for(const pattern of [/sk-proj-[a-zA-Z0-9]{10}/,/api\\.openai\\.com/,/Bearer [A-Za-z0-9]{20}/,/APP_KEY=/])assert.doesNotMatch(source,pattern)
  assert.doesNotMatch(source,/When an AI provider is configured/)
+})
+
+test('native session exposes an opaque account scope and safe top-level auth links',async()=>{
+ const anonymous=await(await worker.fetch(new Request('https://acorra.test/api/session'),{})).json()
+ assert.equal(anonymous.signedIn,false);assert.equal(anonymous.accountKey,null)
+ const session=async id=>(await(await worker.fetch(new Request('https://acorra.test/api/session',{headers:{'oai-authenticated-user-id':id}}),{})).json())
+ const alice=await session('alice'),same=await session('alice'),bob=await session('bob')
+ assert.equal(alice.signedIn,true);assert.equal(alice.accountKey,same.accountKey);assert.notEqual(alice.accountKey,bob.accountKey)
+ assert.match(alice.accountKey,/^[a-f0-9]{64}$/);assert.notEqual(alice.accountKey,'alice')
+ assert.equal(alice.signInPath,'/signin-with-chatgpt?return_to=%2Faccount')
+ assert.equal(alice.signOutPath,'/signout-with-chatgpt?return_to=%2Faccount')
+ assert.equal((await worker.fetch(new Request('https://acorra.test/api/session',{method:'POST'}),{})).status,405)
+})
+test('production synthetic storage check persists per identity without accepting finance input',async()=>{
+ const env={DB:dbAdapter()}
+ const req=(id,method='GET',body=null,origin='https://acorra.test')=>new Request('https://acorra.test/api/storage-check?userId=alice',{method,headers:{...(id?{'oai-authenticated-user-id':id}:{}),Origin:origin},...(body?{body}:{})})
+ assert.equal((await worker.fetch(req(null),env)).status,401)
+ assert.deepEqual(await(await worker.fetch(req('bob'),env)).json(),{record:null})
+ const a=await(await worker.fetch(req('alice','POST'),env)).json()
+ assert.match(a.record.marker,/^Garden /)
+ assert.deepEqual(await(await worker.fetch(req('alice'),env)).json(),a)
+ assert.deepEqual(await(await worker.fetch(req('alice','POST'),env)).json(),a)
+ assert.deepEqual(await(await worker.fetch(req('bob'),env)).json(),{record:null})
+ const b=await(await worker.fetch(req('bob','POST'),env)).json();assert.notEqual(a.record.marker,b.record.marker)
+ assert.equal((await worker.fetch(req('alice','POST','{"balance":12345}'),env)).status,400)
+ assert.equal((await worker.fetch(req('alice','POST',null,'https://evil.test'),env)).status,403)
+ assert.equal((await worker.fetch(req('alice','PATCH'),env)).status,405)
+ assert.equal((await worker.fetch(req('alice','DELETE'),env)).status,200)
+ assert.deepEqual(await(await worker.fetch(req('bob'),env)).json(),b)
+ assert.equal((await worker.fetch(new Request('https://acorra.test/api/workspace',{headers:{'oai-authenticated-user-id':'alice'}}),env)).status,423)
+})
+test('personal API round-trip survives clients and rejects stale writes without changing the ledger',async()=>{
+ const {loadWorkspace,saveWorkspaceAction,ApiError}=await import('./dist/api.mjs')
+ const fetch=createHandler(true),env={DB:dbAdapter()}
+ const fetcher=async(path,options={})=>fetch(new Request('https://acorra.test'+path,{...options,headers:{...options.headers,Origin:'https://acorra.test','oai-authenticated-user-id':'alice'}}),env)
+ let loaded=await loadWorkspace(fetcher);assert.equal(loaded.state.accounts.length,0)
+ loaded=await saveWorkspaceAction(loaded.revision,'/finance/accounts','POST',{name:'Synthetic own account',kind:'asset',openingBalance:'200.01'},fetcher)
+ loaded=await saveWorkspaceAction(loaded.revision,'/finance/categories','POST',{name:'Dining'},fetcher)
+ const stale=loaded.revision
+ loaded=await saveWorkspaceAction(loaded.revision,'/finance/transactions','POST',{kind:'expense',amount:'1.02',bookedOn:date,accountId:1,categoryId:2,note:'Synthetic API roundtrip'},fetcher)
+ assert.equal(derive(loaded.state,date).props.availableCashCents,19899)
+ await assert.rejects(saveWorkspaceAction(stale,'/finance/categories','POST',{name:'Outdated draft'},fetcher),e=>e instanceof ApiError&&e.status===409)
+ const reloaded=await loadWorkspace(fetcher);assert.deepEqual(reloaded,loaded)
+ const chat=await saveWorkspaceAction(loaded.revision,'/cfo/chat','POST',{message:'What is my balance?'},fetcher)
+ assert.match(chat.state.messages.at(-1).content,/198.99/)
+ assert.deepEqual(chat.state.transactions,loaded.state.transactions)
+ for(const raw of ['', ' ', '1.0', '-1','no']){
+  const response=await fetch(new Request('https://acorra.test/api/workspace',{method:'POST',headers:{Origin:'https://acorra.test','If-Match':raw,'oai-authenticated-user-id':'alice'},body:JSON.stringify({path:'/finance/categories',method:'POST',data:{name:'bad revision'}})}),env)
+  assert.equal(response.status,409)
+ }
+})
+test('client reports failures without inventing a saved state or retrying writes',async()=>{
+ const {requestJson,ApiError}=await import('./dist/api.mjs');let calls=0
+ await assert.rejects(requestJson('/api/workspace',{},async()=>{calls++;throw Error('offline')}),e=>e instanceof ApiError&&e.status===0&&/not been saved/.test(e.message))
+ assert.equal(calls,1)
+ await assert.rejects(requestJson('/api/workspace',{},async()=>new Response('upstream failure',{status:502})),e=>e.status===502)
+ for(const status of [401,409,423,503])await assert.rejects(requestJson('/api/workspace',{},async()=>Response.json({error:'Readable failure'},{status})),e=>e.status===status&&e.message==='Readable failure')
+})
+test('personal workspace navigation stays personal and explicit demo links stay demo',async()=>{
+ const {workspaceHref,isPersonal}=await import('./dist/routing.mjs')
+ assert.equal(workspaceHref('/cfo',true),'/cfo?workspace=personal')
+ assert.equal(workspaceHref('/dashboard?view=wealth',true),'/dashboard?view=wealth&workspace=personal')
+ assert.equal(workspaceHref('/dashboard?workspace=demo',true),'/dashboard?workspace=demo')
+ assert.equal(workspaceHref('/account',true),'/account')
+ assert.equal(workspaceHref('/dashboard',false),'/dashboard')
+ assert.equal(isPersonal('/cfo?workspace=personal'),true)
+ assert.equal(isPersonal('/account'),false)
 })

@@ -27,7 +27,7 @@ Financial calculations remain deterministic and testable; AI explains and advise
 
 ## ChatGPT Sites version
 
-The additive Sites implementation lives in [`sites/`](sites/README.md), reusing the existing React views, finance calculations and Sandy guided coach. The public release uses synthetic data in browser memory. Personal D1 storage is implemented behind a hard server-side release lock until live native sign-in and two-visitor isolation are verified. The Zo SQLite application and Sites deployment do not synchronize.
+The additive Sites implementation lives in [`sites/`](sites/README.md), reusing the existing React views, finance calculations and Sandy guided coach. The public release uses synthetic data in browser memory. The account screen and personal D1 workspace UI/API are implemented behind a hard server-side release lock until live native sign-in and two-visitor isolation are verified. Signed-in visitors can save a fixed synthetic test marker on the account screen without entering financial data. The Zo SQLite application and Sites deployment do not synchronize.
 
 See [Sites verification](docs/SITES_VERIFICATION.md). Build with `npm run build:sites` after installing `sites/` dependencies; test with `npm run test:sites`.
 

@@ -1,3 +1,4 @@
+import { formatSgd } from '../../app/services/finance/money.js'
 import { Form } from '@adonisjs/inertia/react'
 import { Link, usePage } from '@inertiajs/react'
 import {
@@ -67,9 +68,7 @@ const pageText: Record<View, { eyebrow: string; title: string; detail: string }>
     detail: 'Your recorded assets minus liabilities, with transparent valuation dates.',
   },
 }
-const money = (cents: number) => new Intl.NumberFormat('en-SG', {
-  style: 'currency', currency: 'SGD',
-}).format(cents / 100)
+const money = formatSgd
 
 function InlineErrors({ errors }: { errors: Record<string, string> }) {
   return <>{Object.entries(errors).map(([key, message]) =>

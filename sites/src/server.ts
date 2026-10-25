@@ -9,7 +9,30 @@ const html='<!doctype html><html lang="en-SG"><head><meta charset="utf-8"><meta 
 export function createHandler(realDataEnabled=false){return async function(request:Request,env:any){
  const url=new URL(request.url),path=url.pathname
  if(path==='/api/health')return json({ok:true,mode:realDataEnabled?'personal':'synthetic-demo',realDataEnabled})
- if(path==='/api/session')return json({signedIn:!!request.headers.get('oai-authenticated-user-id'),realDataEnabled,signInPath:'/signin-with-chatgpt?return_to=%2Fdashboard'})
+ if(path==='/api/session'){
+  if(request.method!=='GET')return json({error:'Method not allowed'},405)
+  const userId=request.headers.get('oai-authenticated-user-id')
+  const digest=userId?await crypto.subtle.digest('SHA-256',new TextEncoder().encode(userId)):null
+  const accountKey=digest?Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join(''):null
+  return json({signedIn:!!userId,accountKey,realDataEnabled,signInPath:'/signin-with-chatgpt?return_to=%2Faccount',signOutPath:'/signout-with-chatgpt?return_to=%2Faccount'})
+ }
+ if(path==='/api/storage-check'){
+  const userId=request.headers.get('oai-authenticated-user-id')
+  if(!userId)return json({error:'Sign in with ChatGPT to check saved progress'},401)
+  if(!['GET','POST','DELETE'].includes(request.method))return json({error:'Method not allowed'},405)
+  if(request.method!=='GET'&&request.headers.get('Origin')!==url.origin)return json({error:'Same-origin request required'},403)
+  if(!env.DB)return json({error:'Saved progress is temporarily unavailable. Try again later.'},503)
+  try{
+   // This endpoint accepts NO financial data, names, identifiers or chat text.
+   if(request.method==='POST'||request.method==='DELETE'){
+    if((await request.text()).length)return json({error:'The test accepts no input. Only a generated sample marker can be saved.'},400)
+   }
+   if(request.method==='POST')await env.DB.prepare('INSERT OR IGNORE INTO storage_checks (owner_id, marker, created_at) VALUES (?, ?, ?)').bind(userId,'Garden '+crypto.randomUUID(),new Date().toISOString()).run()
+   if(request.method==='DELETE'){await env.DB.prepare('DELETE FROM storage_checks WHERE owner_id = ?').bind(userId).run();return json({record:null})}
+   const record=await env.DB.prepare('SELECT marker, created_at FROM storage_checks WHERE owner_id = ?').bind(userId).first()
+   return json({record:record?{marker:record.marker,createdAt:record.created_at}:null})
+  }catch{return json({error:'Saved progress is temporarily unavailable. Try again later.'},503)}
+ }
  if(path.startsWith('/api/')){
   const userId=request.headers.get('oai-authenticated-user-id')
   if(!userId)return json({error:'Sign in with ChatGPT to access personal records'},401)
@@ -22,7 +45,8 @@ export function createHandler(realDataEnabled=false){return async function(reque
    if(request.method!=='GET'&&request.headers.get('Origin')!==url.origin)return json({error:'Same-origin request required'},403)
    const stored=await env.DB.prepare('SELECT payload, revision FROM financial_workspaces WHERE owner_id = ?').bind(userId).first()
    if(request.method==='GET')return json({state:stored?JSON.parse(stored.payload):emptyState(),revision:stored?.revision||0})
-   const expected=Number(request.headers.get('If-Match'))
+   const expectedHeader=request.headers.get('If-Match')
+   const expected=expectedHeader&&/^\d+$/.test(expectedHeader)?Number(expectedHeader):NaN
    if(!request.headers.has('If-Match')||!Number.isSafeInteger(expected)||expected<0||expected!==(stored?.revision||0))return json({error:'Records changed. Refresh before trying again.'},409)
    if(request.method==='DELETE'){
     if(stored){const deleted=await env.DB.prepare('DELETE FROM financial_workspaces WHERE owner_id = ? AND revision = ?').bind(userId,expected).run();if(!deleted.meta.changes)return json({error:'Records changed. Refresh and retry.'},409)}
@@ -44,7 +68,7 @@ export function createHandler(realDataEnabled=false){return async function(reque
  if(!['GET','HEAD'].includes(request.method))return json({error:'Method not allowed'},405)
  const assets:any={'/app.js':[script,'text/javascript; charset=utf-8'],'/style.css':[css,'text/css; charset=utf-8'],'/favicon.svg':['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><rect width="40" height="40" rx="12" fill="#174c3c"/><path d="M12 29C9 13 20 9 30 9c0 12-5 20-18 20m0 0 12-13" fill="none" stroke="#e4d1a8" stroke-width="2.5"/></svg>','image/svg+xml']}
  if(assets[path])return new Response(request.method==='HEAD'?null:assets[path][0],{headers:{...security,'Content-Type':assets[path][1]}})
- if(!['/','/dashboard','/cfo'].includes(path))return new Response('Not found',{status:404,headers:security})
+ if(!['/','/dashboard','/cfo','/account'].includes(path))return new Response('Not found',{status:404,headers:security})
  return new Response(request.method==='HEAD'?null:html,{headers:{...security,'Content-Type':'text/html; charset=utf-8'}})
 }}
 export default {fetch:createHandler(REAL_DATA_ENABLED)}

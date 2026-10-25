@@ -1,0 +1,7 @@
+import React from 'react'
+import {CloudOff,LockKeyhole,ShieldCheck,ArrowLeft} from 'lucide-react'
+import {Link,usePage,Head} from './bridge'
+export default function WorkspaceStatus(){const page=usePage(),status=page.workspaceStatus
+ return <section className="cfo-card workspace-status" aria-live="polite"><Head title="My workspace"/>{status==='loading'?<><ShieldCheck size={32}/><h1>Loading your saved records…</h1><p>Your public demo records are kept separate.</p></>:status==='signin'?<><LockKeyhole size={32}/><h1>Sign in to your own workspace.</h1><p>No personal records are loaded while you’re signed out.</p><a href={page.session?.signInPath||'/signin-with-chatgpt?return_to=%2Faccount'} target="_top" className="btn btn--primary">Sign in with ChatGPT</a></>:status==='locked'?<><LockKeyhole size={32}/><h1>Your personal workspace is not open yet.</h1><p>We’re checking live authentication and account isolation before enabling personal finance entry. You can explore fictional finances or test saved progress with your signed-in account.</p><Link href="/account" className="btn btn--primary">Go to account checks</Link></>:<><CloudOff size={32}/><h1>Your records couldn’t be loaded.</h1><p role="alert">{page.workspaceError||'Please try again. No saved records have been changed.'}</p><button className="btn btn--primary" onClick={page.reloadWorkspace}>Try loading again</button></>}
+ <Link className="btn btn--secondary" href="/dashboard?workspace=demo"><ArrowLeft size={15}/> Explore the public demo</Link></section>
+}

@@ -30,7 +30,11 @@ D1 migration `drizzle/0000_financial_workspaces.sql` stores one aggregate financ
 
 `REAL_DATA_ENABLED` is hardcoded **false** in the shipped server. Even a signed-in caller receives 423 for personal storage. There is no environment-variable override. Automated API tests verify isolation with two simulated identities against a real in-memory SQLite database, but these do not establish that production dispatch strips forged identity headers or that two actual signed-in visitors remain isolated. The public build therefore cannot collect or persist real finances.
 
-Before a personal-data release: verify native sign-in and identity-header stripping on the actual public Site with two independent visitors; verify anonymous denial, record-ID tampering, chat isolation, cross-origin rejection and concurrent write conflict handling. Connect the UI to the protected API (currently it deliberately runs only the synthetic session), then change the release lock in a reviewed source revision and repeat browser tests. Do not treat the demo as a verified personal finance service.
+The UI is now connected to the protected workspace API behind that same server-side release gate. `workspace=personal` URLs preserve workspace selection across the five views; empty personal accounts never inherit demo records. Create/edit/delete and chat use server responses and exact revision checks, with explicit loading, signed-out, locked, unavailable and stale-write states. Refreshing after a conflict preserves form drafts. Session changes invalidate pending responses and clear cached personal state; an opaque hashed account scope is used only to detect browser identity changes, never for authorization.
+
+`/account` provides native top-level sign-in/sign-out anchors and a fixed synthetic storage check. `/api/storage-check` accepts no financial/user content: it only creates, reads or removes a server-generated marker for the authenticated identity in the separate `storage_checks` table. This lets two real visitors check persistence without enabling personal finance entry.
+
+Before a personal-data release: verify native sign-in and identity-header stripping on the actual public Site with two independent visitors; verify anonymous denial, record-ID tampering, chat isolation, cross-origin rejection and concurrent write conflict handling. Only then change the release lock in a reviewed source revision and repeat the connected UI tests. Do not treat the demo as a verified personal finance service.
 
 ## Product details
 
@@ -39,4 +43,10 @@ Before a personal-data release: verify native sign-in and identity-header stripp
 - Savings progress does not add to net worth; marking a bill paid does not post an expense.
 - One current dated valuation per named item; case-insensitive duplicate prevention across accounts and valuations. Differently named duplicates remain a manual review responsibility, as in the original product.
 - Sandy is read-only guided mode, not a generative AI model. No external inference, mutations, payments or trades.
-- The original Adonis implementation and its database remain separate and unchanged except for additive npm scripts and documentation.
+- The original Adonis implementation and its database remain separate. Compiler exclusions isolate Sites code from the Adonis build; shared exact SGD formatting is now explicit and locale-independent. Existing route registries were regenerated.
+
+## Local two-visitor browser QA
+
+The development server offers `/__qa/visitors`, with disposable Alice/Bob/anonymous fixtures. These are **local test identities**, not evidence of ChatGPT authentication. It stores only synthetic test records in ignored `sites/.qa/preview.sqlite`, and locally enables the workspace API for those fixtures. The deployed Worker never imports this preview server, fixture route, cookie or database. The public real-data gate remains false.
+
+Use `/__qa/mobile` for a 390px iframe viewport on the account screen. Local migrations are copied from the authoritative schema migrations into an ignored build-only preview bundle; request handlers never create database tables.

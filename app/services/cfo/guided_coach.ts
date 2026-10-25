@@ -1,10 +1,8 @@
 import type { CfoSnapshot } from './types.js'
 import { runFinancialTool } from './financial_tools.js'
-import { parseSgdAmount } from '#services/finance/money'
+import { parseSgdAmount, formatSgd } from '#services/finance/money'
 
-const money = (amountCents: number) => new Intl.NumberFormat('en-SG', {
-  style: 'currency', currency: 'SGD',
-}).format(amountCents / 100)
+const money = formatSgd
 
 /**
  * Credential-free guided POC. This is NOT an LLM and must not be presented as one.

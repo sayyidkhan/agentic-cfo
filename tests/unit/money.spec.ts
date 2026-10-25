@@ -16,6 +16,8 @@ test.group('exact SGD parsing', () => {
   })
 
   test('formats money', ({ assert }) => {
-    assert.include(formatSgd(1230), '12.30')
+    assert.equal(formatSgd(1230), 'S$12.30')
+    assert.equal(formatSgd(-1230), '-S$12.30')
+    assert.equal(formatSgd(Number.MAX_SAFE_INTEGER), 'S$90,071,992,547,409.91')
   })
 })

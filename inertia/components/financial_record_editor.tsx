@@ -1,3 +1,4 @@
+import { formatSgd } from '../../app/services/finance/money.js'
 import { Form } from '@adonisjs/inertia/react'
 import { router } from '@inertiajs/react'
 import { useState } from 'react'
@@ -21,8 +22,7 @@ export interface ManualValuation {
   valueCents: number
   asOf: string
 }
-const price = (cents: number) =>
-  new Intl.NumberFormat('en-SG', {style:'currency',currency:'SGD'}).format(cents/100)
+const price = formatSgd
 const inputStyle = { padding: '8px', border: '1px solid #aeb8c0', borderRadius: 6, width: '100%' }
 const section = { border: '1px solid #d4d9dd', padding: 20, borderRadius: 12, marginBottom: 18 }
 
