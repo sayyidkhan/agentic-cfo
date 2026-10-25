@@ -53,4 +53,4 @@ Pure domain files to consider porting:
 
 ## Status
 
-**This brief is preparation, not evidence of deployment.** The user must launch @Sites in a ChatGPT Work session with appropriate account permissions, because the ordinary chat connector context used to author this brief has no Sites create/deploy/share action.
+This brief originally described preparation. The additive Sites runtime and labelled synthetic-data demo have now been implemented in `sites/`. See `docs/SITES_VERIFICATION.md` for the tested scope and remaining real-data release gate. Source files alone do not establish deployment; the native Sites saved-version and deployment records are authoritative.

@@ -36,3 +36,6 @@ yarn-error.log
 *.sqlite-shm
 *.sqlite3-wal
 *.sqlite3-shm
+
+# ChatGPT Sites deployment build output
+/dist/

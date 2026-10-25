@@ -16,11 +16,11 @@ OpenAI documentation:
 - [Using your ChatGPT plan in other apps](https://help.openai.com/en/articles/20001542-using-your-chatgpt-plan-in-other-apps-and-sites)
 - [Sign in with ChatGPT](https://help.openai.com/en/articles/20001410-sign-in-with-chatgpt)
 
-## Sites deployment limitation
+## Sites runtime adaptation
 
-The AdonisJS + Lucid + local SQLite server cannot simply be deployed unchanged to ChatGPT Sites. A separate Sites-compatible runtime and data adapter would be required (for example, a compatible frontend/backend and D1 records). Pure calculation services can be reused where the runtime supports them.
+The AdonisJS + Lucid + local SQLite server cannot simply be deployed unchanged to ChatGPT Sites. The additive `sites/` application now adapts the frontend to a React/Cloudflare Worker bundle and reuses the pure calculation services. Its authenticated D1 workspace API and schema are implemented behind a fail-closed release lock.
 
-We have **not** created this separate Sites application or connected its records to Zo. No automatic data sync exists.
+The public release is an explicitly labelled synthetic-data demo. Real financial record persistence remains disabled pending live native authentication and two-visitor isolation verification. No records were imported from Zo, and no automatic data sync exists. See `sites/README.md` and `docs/SITES_VERIFICATION.md`.
 
 ## If live model responses are required later
 

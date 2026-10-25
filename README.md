@@ -25,6 +25,12 @@ A personal finance application helping **working professionals** manage monthly 
 
 Financial calculations remain deterministic and testable; AI explains and advises, with no autonomous payments.
 
+## ChatGPT Sites version
+
+The additive Sites implementation lives in [`sites/`](sites/README.md), reusing the existing React views, finance calculations and Sandy guided coach. The public release uses synthetic data in browser memory. Personal D1 storage is implemented behind a hard server-side release lock until live native sign-in and two-visitor isolation are verified. The Zo SQLite application and Sites deployment do not synchronize.
+
+See [Sites verification](docs/SITES_VERIFICATION.md). Build with `npm run build:sites` after installing `sites/` dependencies; test with `npm run test:sites`.
+
 ## Documentation
 - [Product requirements](docs/PRD.md)
 - [Agreed architecture and build plan](docs/BUILD_PLAN.md)
