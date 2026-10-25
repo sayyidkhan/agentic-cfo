@@ -35,4 +35,4 @@ For every variant, the base image is supplied as an identity reference. Preserve
 
 ## Motion and limits
 
-The selected artwork moves with CSS transforms; thumbnails are still. The rendered illustrations are not a live rig, and the motion does not animate individual facial features. Alarm shaking plays briefly, other movements remain gentle and silent. Pause preference is browser-local; reduced-motion settings suppress animation. Automatic selection based on real finances is not enabled.
+The selected artwork now uses a calibrated 2D deformation rig. Head tilts, tail swishes, breathing and paw movement act independently; open-eyed moods blink using local eyelid compression and a brief eyelash overlay. Thumbnails remain still. Larger chat/account avatars share the animation. The artwork is not a skeletal 3D model. Alarm shaking plays briefly, other movements remain gentle and silent. Pause preference is browser-local; reduced-motion settings suppress animation and remove the deformation filter. Offscreen/background animations stop drawing, and observers/frame callbacks are cleaned up on navigation. Automatic selection based on real finances is not enabled.

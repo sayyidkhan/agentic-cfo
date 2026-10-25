@@ -169,3 +169,19 @@ test('Sandy artwork is served intact with safe methods and immutable versioned U
  }
  assert.equal((await worker.fetch(new Request('https://acorra.test/assets/sandy/v2/missing.webp'),{})).status,404)
 })
+
+test('Sandy’s motion keeps feet anchored and independently animates face, tail and paws',async()=>{
+ const {createMotionRig,blinkAt}=await import('./dist/sandy-motion.mjs')
+ assert.equal(blinkAt(0),0);assert.equal(blinkAt(1.25),1);assert.equal(blinkAt(2),0)
+ const size=100,index=(x,y)=>(Math.floor(y*size)*size+Math.floor(x*size))*4
+ const a=index(.4,.96),b=index(.78,.96),tail=index(.2,.25),paw=index(.64,.555),eye=index(.57,.265)
+ for(const mood of ['curious','calm','watchful','concerned','screaming','celebrating','relieved']){
+  const rig=createMotionRig(mood,size),first=Uint8Array.from(rig.frame(0)),moving=rig.frame(1.25)
+  for(const foot of [a,b])for(const channel of [0,1])assert.ok(Math.abs(moving[foot+channel]-128)<=1,'feet must not drift')
+  assert.notDeepEqual(moving,first);assert.ok(moving.every(Number.isFinite))
+  assert.notEqual(moving[tail],first[tail]);assert.equal(moving[3],255)
+ }
+ const rig=createMotionRig('curious',size),before=Uint8Array.from(rig.frame(0)),blink=rig.frame(1.25)
+ assert.ok(Math.abs(blink[eye+1]-before[eye+1])>15,'blink must affect the eye')
+ assert.notEqual(blink[paw+1],before[paw+1],'paw motion must be distinct from still feet')
+})

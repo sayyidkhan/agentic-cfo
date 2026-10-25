@@ -38,3 +38,7 @@ body{margin:0;background:#f8f6ef}button,a,input,select,textarea{-webkit-tap-high
 @media(prefers-reduced-motion:reduce){.sandy-artwork.is-animated .sandy-artwork-image,.sandy-artwork.is-animated .sandy-artwork-reaction{animation:none!important}}
 @media(max-width:600px){.sandy-preview-art .sandy-artwork{max-width:290px}.sandy-sketch-label{font-size:8px;letter-spacing:1.4px}}
 .sandy-preview-art{padding-bottom:48px}.sandy-preview-art .sandy-artwork{margin-top:4px}
+.sandy-puppet{width:100%;height:100%;display:block;overflow:visible;filter:drop-shadow(0 12px 10px #6b4d2418)}.sandy-artwork:has(.sandy-puppet){touch-action:pan-y}
+.sandy-avatar>.sandy-character{max-width:none;width:100%;height:100%;flex-shrink:0;transform:scale(2) translate(-8%,16%)}.sandy-avatar .sandy-artwork-image{filter:none;transform:none}.sandy-avatar .sandy-puppet{filter:none}
+.sandy-avatar .sandy-puppet{width:100%;height:100%}
+.sandy-preview-art .sandy-character .sandy-puppet{max-width:none}
