@@ -54,3 +54,9 @@ Use `/__qa/mobile` for a 390px iframe viewport on the account screen. Local migr
 ## Sandy’s state library
 
 Settings (`/settings`) permanently includes the seven agreed states: Curious, Calm, Watchful, Concerned, Screaming, Celebrating and Relieved. `src/sandy_states.ts` is the shared reference catalogue of triggers, dialogue, tone and suggested actions. Each card opens a large temporary vector expression sketch. State-specific URLs retain the selected preview after refresh, and unknown state IDs fall back to Curious. Previews are silent and do not change financial records or enable automatic emotional reactions. Final mascot artwork remains deferred.
+
+### Sandy’s animated 3D studies
+
+Settings renders the seven agreed states from an original procedural Three.js rig (`src/sandy3d.ts`). The selected character breathes, blinks, sways its tail and reacts to the chosen mood; alarm shaking ends after the initial reaction. Pause/play is saved on this browser, and replay restarts the reaction. System reduced-motion preferences suppress animation. Offscreen/background previews stop drawing; thumbnails are rendered once and share a renderer. GPU resources are released when the preview changes. No external model, image, AI service or credentials are used.
+
+When WebGL is unavailable, `src/sandy_software.ts` projects and shades the same mesh using Canvas 2D with a depth buffer. The previous SVG remains a final fallback. Browser QA in this environment exercised the software path (WebGL is disabled), all seven states, mobile selection, replay, pause and preference persistence. The accelerated path could not be visually verified here. The character remains a design study; automatic financial state selection is still disabled.
