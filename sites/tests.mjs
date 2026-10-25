@@ -185,3 +185,18 @@ test('Sandy’s motion keeps feet anchored and independently animates face, tail
  assert.ok(Math.abs(blink[eye+1]-before[eye+1])>15,'blink must affect the eye')
  assert.notEqual(blink[paw+1],before[paw+1],'paw motion must be distinct from still feet')
 })
+
+test('Sandy frames preserve transparent fur without coloured fringes or image reloads',async()=>{
+ const {paintSandyFrame}=await import('./dist/sandy-raster.mjs')
+ const source={width:2,height:2,data:new Uint8ClampedArray([100,60,30,255,255,0,200,0,100,60,30,255,0,255,0,0])}
+ const field=new Uint8ClampedArray(4*4*4);for(let i=0;i<field.length;i+=4){field[i]=field[i+1]=128;field[i+3]=255}
+ const out={width:4,height:4,data:new Uint8ClampedArray(4*4*4)}
+ paintSandyFrame(source,field,4,out)
+ let translucent=0
+ for(let i=0;i<out.data.length;i+=4){if(out.data[i+3]>0){assert.equal(out.data[i],100);assert.equal(out.data[i+1],60);assert.equal(out.data[i+2],30)}if(out.data[i+3]>0&&out.data[i+3]<255)translucent++}
+ assert.ok(translucent>0)
+ const component=readFileSync('src/SandyCharacter.tsx','utf8')
+ assert.doesNotMatch(component,/toDataURL|feImage|feDisplacementMap|clearRect/)
+ assert.match(component,/await image.decode\(\)/)
+ assert.ok(component.indexOf('back.putImageData')<component.indexOf('front.drawImage'))
+})

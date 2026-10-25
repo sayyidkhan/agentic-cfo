@@ -23,6 +23,7 @@ await copyFile('dist/.openai/hosting.json','../dist/.openai/hosting.json')
 // Separate build for domain tests uses exactly the production module graph.
 await build({...common,entryPoints:['src/domain.ts'],outfile:'dist/domain.mjs',platform:'node',format:'esm'})
 
+await build({...common,entryPoints:['src/sandy_raster.ts'],outfile:'dist/sandy-raster.mjs',platform:'node',format:'esm'})
 await build({...common,entryPoints:['src/sandy_motion.ts'],outfile:'dist/sandy-motion.mjs',platform:'node',format:'esm'})
 await build({...common,entryPoints:['src/api.ts'],outfile:'dist/api.mjs',platform:'node',format:'esm'})
 await build({...common,entryPoints:['src/routing.ts'],outfile:'dist/routing.mjs',platform:'node',format:'esm'})

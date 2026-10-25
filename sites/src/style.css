@@ -42,3 +42,5 @@ body{margin:0;background:#f8f6ef}button,a,input,select,textarea{-webkit-tap-high
 .sandy-avatar>.sandy-character{max-width:none;width:100%;height:100%;flex-shrink:0;transform:scale(2) translate(-8%,16%)}.sandy-avatar .sandy-artwork-image{filter:none;transform:none}.sandy-avatar .sandy-puppet{filter:none}
 .sandy-avatar .sandy-puppet{width:100%;height:100%}
 .sandy-preview-art .sandy-character .sandy-puppet{max-width:none}
+/* Keep decoded artwork visible until the persistent canvas has a complete frame. */
+.sandy-artwork-reaction{position:relative}.sandy-stable-image{animation:none!important}.sandy-stable-canvas{position:absolute;inset:0;opacity:0;pointer-events:none}.sandy-stable-canvas.is-ready{opacity:1}.sandy-stable-image.is-covered{visibility:hidden}.sandy-avatar .sandy-stable-image{transform:none}
