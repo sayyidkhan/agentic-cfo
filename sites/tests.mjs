@@ -156,3 +156,16 @@ test('personal workspace navigation stays personal and explicit demo links stay 
  assert.equal(isPersonal('/cfo?workspace=personal'),true)
  assert.equal(isPersonal('/account'),false)
 })
+
+test('Sandy artwork is served intact with safe methods and immutable versioned URLs',async()=>{
+ for(const mood of ['curious','calm','watchful','concerned','screaming','celebrating','relieved']){
+  const url='https://acorra.test/assets/sandy/v2/'+mood+'.webp'
+  const response=await worker.fetch(new Request(url),{})
+  assert.equal(response.status,200);assert.equal(response.headers.get('content-type'),'image/webp')
+  assert.match(response.headers.get('cache-control'),/immutable/)
+  assert.deepEqual(Buffer.from(await response.arrayBuffer()),readFileSync('assets/sandy/'+mood+'.webp'))
+  const head=await worker.fetch(new Request(url,{method:'HEAD'}),{});assert.equal(head.status,200);assert.equal((await head.arrayBuffer()).byteLength,0)
+  assert.equal((await worker.fetch(new Request(url,{method:'POST'}),{})).status,405)
+ }
+ assert.equal((await worker.fetch(new Request('https://acorra.test/assets/sandy/v2/missing.webp'),{})).status,404)
+})

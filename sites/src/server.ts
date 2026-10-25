@@ -1,5 +1,7 @@
 import script from './generated-client.js.txt'
 import css from './generated-style.css.txt'
+import sandyArtSource from './generated-sandy-assets.txt'
+const sandyArt:Record<string,string>=JSON.parse(sandyArtSource)
 import {applyAction,emptyState} from './domain'
 // Fail closed. Turn on only in a reviewed source revision after live two-visitor QA.
 export const REAL_DATA_ENABLED = false
@@ -66,6 +68,8 @@ export function createHandler(realDataEnabled=false){return async function(reque
   }catch(e:any){return json({error:e instanceof SyntaxError?'Invalid request data':e.message||'Unable to process request'},400)}
  }
  if(!['GET','HEAD'].includes(request.method))return json({error:'Method not allowed'},405)
+ const artworkMatch=path.match(/^\/assets\/sandy\/v2\/([a-z]+)\.webp$/)
+ if(artworkMatch&&Object.hasOwn(sandyArt,artworkMatch[1]))return new Response(request.method==='HEAD'?null:Uint8Array.from(atob(sandyArt[artworkMatch[1]]),c=>c.charCodeAt(0)),{headers:{...security,'Content-Type':'image/webp','Cache-Control':'public, max-age=31536000, immutable'}})
  const assets:any={'/app.js':[script,'text/javascript; charset=utf-8'],'/style.css':[css,'text/css; charset=utf-8'],'/favicon.svg':['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><rect width="40" height="40" rx="12" fill="#174c3c"/><path d="M12 29C9 13 20 9 30 9c0 12-5 20-18 20m0 0 12-13" fill="none" stroke="#e4d1a8" stroke-width="2.5"/></svg>','image/svg+xml']}
  if(assets[path])return new Response(request.method==='HEAD'?null:assets[path][0],{headers:{...security,'Content-Type':assets[path][1]}})
  if(!['/','/dashboard','/cfo','/account','/settings'].includes(path))return new Response('Not found',{status:404,headers:security})
