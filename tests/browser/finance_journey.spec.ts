@@ -43,7 +43,7 @@ test.group('Acorra browser journey', (group) => {
     await page.getByRole('button', { name: 'Save transaction' }).click()
     await page.getByText('S$425.00').first().waitFor()
 
-    await page.getByRole('link', { name: /Overview/ }).click()
+    await page.getByRole('navigation', { name: 'Financial workspace' }).getByRole('link', { name: 'Overview', exact: true }).click()
     await page.getByRole('heading', { name: 'Your money, in focus.' }).waitFor()
     await page.getByText('S$425.00').first().waitFor()
 
