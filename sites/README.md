@@ -50,3 +50,7 @@ Before a personal-data release: verify native sign-in and identity-header stripp
 The development server offers `/__qa/visitors`, with disposable Alice/Bob/anonymous fixtures. These are **local test identities**, not evidence of ChatGPT authentication. It stores only synthetic test records in ignored `sites/.qa/preview.sqlite`, and locally enables the workspace API for those fixtures. The deployed Worker never imports this preview server, fixture route, cookie or database. The public real-data gate remains false.
 
 Use `/__qa/mobile` for a 390px iframe viewport on the account screen. Local migrations are copied from the authoritative schema migrations into an ignored build-only preview bundle; request handlers never create database tables.
+
+## Sandy’s state library
+
+Settings (`/settings`) permanently includes the seven agreed states: Curious, Calm, Watchful, Concerned, Screaming, Celebrating and Relieved. `src/sandy_states.ts` is the shared reference catalogue of triggers, dialogue, tone and suggested actions. Each card opens a large temporary vector expression sketch. State-specific URLs retain the selected preview after refresh, and unknown state IDs fall back to Curious. Previews are silent and do not change financial records or enable automatic emotional reactions. Final mascot artwork remains deferred.

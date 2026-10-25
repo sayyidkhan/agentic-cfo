@@ -68,7 +68,7 @@ export function createHandler(realDataEnabled=false){return async function(reque
  if(!['GET','HEAD'].includes(request.method))return json({error:'Method not allowed'},405)
  const assets:any={'/app.js':[script,'text/javascript; charset=utf-8'],'/style.css':[css,'text/css; charset=utf-8'],'/favicon.svg':['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><rect width="40" height="40" rx="12" fill="#174c3c"/><path d="M12 29C9 13 20 9 30 9c0 12-5 20-18 20m0 0 12-13" fill="none" stroke="#e4d1a8" stroke-width="2.5"/></svg>','image/svg+xml']}
  if(assets[path])return new Response(request.method==='HEAD'?null:assets[path][0],{headers:{...security,'Content-Type':assets[path][1]}})
- if(!['/','/dashboard','/cfo','/account'].includes(path))return new Response('Not found',{status:404,headers:security})
+ if(!['/','/dashboard','/cfo','/account','/settings'].includes(path))return new Response('Not found',{status:404,headers:security})
  return new Response(request.method==='HEAD'?null:html,{headers:{...security,'Content-Type':'text/html; charset=utf-8'}})
 }}
 export default {fetch:createHandler(REAL_DATA_ENABLED)}
