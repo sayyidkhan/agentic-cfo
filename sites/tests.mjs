@@ -229,3 +229,35 @@ test('Sandy’s authored gestures hold, settle and loop without pose jumps',asyn
  assert.equal(sampleSandyPose('screaming',5).head,0)
  const code=readFileSync('src/SandyCharacter.tsx','utf8');assert.match(code,/elapsed=playhead.current.elapsed/)
 })
+
+test('Painted blinks change eyelid texture only, without warping the face or rapid pulses',async()=>{
+ const {createPaintedBlink,blinkAmount,hasPaintedBlink}=await import('./dist/sandy-blink.mjs')
+ const make=(r,g,b)=>({width:200,height:200,data:new Uint8ClampedArray(Array.from({length:40000},()=>[r,g,b,255]).flat())})
+ const open=make(120,80,40),closed=make(180,140,100),snapshot=Uint8ClampedArray.from(open.data)
+ const rig=createPaintedBlink(open,closed,'curious')
+ assert.equal(rig.frame(0),open)
+ const result=rig.frame(1);let changed=0
+ for(let i=0;i<result.data.length;i+=4){assert.equal(result.data[i+3],255);if(result.data[i]!==open.data[i])changed++}
+ assert.ok(changed>200&&changed<2400,'only local eyelid patches should change')
+ assert.deepEqual(open.data,snapshot);assert.deepEqual(rig.frame(0).data,snapshot)
+ const mouth=(Math.floor(.39*200)*200+Math.floor(.65*200))*4;assert.equal(result.data[mouth],open.data[mouth])
+ assert.equal(hasPaintedBlink('calm'),false);assert.equal(hasPaintedBlink('relieved'),false)
+ assert.equal(blinkAmount(0),0);assert.equal(blinkAmount(1.33),1);assert.equal(blinkAmount(1.6),0);assert.equal(blinkAmount(5.06),0);assert.equal(blinkAmount(7.73),1)
+})
+
+test('Sandy’s gestures are visible while head rotation preserves facial proportions',async()=>{
+ const {sampleSandyPose}=await import('./dist/sandy-motion.mjs')
+ assert.ok(sampleSandyPose('curious',2).head>=.085)
+ assert.ok(Math.abs(sampleSandyPose('curious',5.8).paw)>=.029)
+ assert.ok(Math.abs(sampleSandyPose('celebrating',.85).hop)>=.039)
+ const code=readFileSync('src/SandyCharacter.tsx','utf8')
+ assert.ok(code.indexOf('eyelids?.frame(blink)')<code.indexOf('back.putImageData'))
+})
+
+test('Automatic blinking always presents a closed-eye frame even with dropped frames',async()=>{
+ const {createBlinkClock}=await import('./dist/sandy-blink.mjs')
+ const slow=createBlinkClock();assert.equal(slow.sample(0),0);assert.equal(slow.sample(1300),0);assert.equal(slow.sample(2300),1);assert.equal(slow.sample(3300),0);assert.equal(slow.count,1)
+ const normal=createBlinkClock();let closed=0
+ for(let t=0;t<14000;t+=33.33)if(normal.sample(t)>.99)closed++
+ assert.ok(normal.count>=2);assert.ok(closed>=normal.count)
+})

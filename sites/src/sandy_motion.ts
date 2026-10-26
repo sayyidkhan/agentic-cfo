@@ -6,13 +6,13 @@ const key=(at:number,pose:Partial<SandyPose>={}):Key=>({at,pose})
 const neutral:SandyPose={head:0,x:0,y:0,paw:0,tail:0,hop:0,breath:0,phase:'rest'}
 /** Authored beats: anticipation, gesture, hold, follow-through, then a quiet rest. */
 const sequences:Record<SandyStateId,{duration:number,keys:Key[]}>= {
- curious:{duration:9.6,keys:[key(0),key(.6,{head:-.012,phase:'notice'}),key(1.6,{head:.055,x:.003,y:-.004,tail:.018,phase:'listen'}),key(2.8,{head:.055,x:.003,y:-.004,tail:.018,phase:'listen'}),key(3.8,{head:-.012,phase:'settle'}),key(4.6),key(5.5,{paw:-.017,head:-.016,phase:'acorn lift'}),key(6.3,{paw:-.017,head:-.016,phase:'acorn lift'}),key(7.4),key(9.6)]},
+ curious:{duration:9.6,keys:[key(0),key(.6,{head:-.012,phase:'notice'}),key(1.6,{head:.09,x:.003,y:0,tail:.04,phase:'listen'}),key(2.8,{head:.09,x:.003,y:0,tail:.04,phase:'listen'}),key(3.8,{head:-.012,phase:'settle'}),key(4.6),key(5.5,{paw:-.03,head:-.016,phase:'acorn lift'}),key(6.3,{paw:-.03,head:-.016,phase:'acorn lift'}),key(7.4),key(9.6)]},
  calm:{duration:10.4,keys:[key(0),key(2.2),key(3.1,{head:-.018,y:.004,phase:'gentle nod'}),key(4.1,{head:.009,tail:.012,phase:'settle'}),key(5.2),key(10.4)]},
- watchful:{duration:9.2,keys:[key(0),key(.8,{head:.012,phase:'notice'}),key(1.8,{head:-.04,x:.004,y:-.004,paw:-.007,tail:-.018,phase:'consider'}),key(3.2,{head:-.04,x:.004,y:-.004,paw:-.007,tail:-.018,phase:'consider'}),key(4.5,{head:.01,tail:.009,phase:'settle'}),key(5.5),key(9.2)]},
- concerned:{duration:11,keys:[key(0),key(1.2),key(2.6,{head:.033,y:.006,paw:-.008,phase:'reassure'}),key(4,{head:.033,y:.006,paw:-.008,phase:'reassure'}),key(5.7,{head:-.008,tail:.013,phase:'settle'}),key(7),key(11)]},
- screaming:{duration:10,keys:[key(0),key(.18,{y:.003,phase:'anticipate'}),key(.5,{head:-.035,y:-.008,paw:-.014,tail:-.03,phase:'startle'}),key(.85,{head:.018,paw:-.006,tail:.018,phase:'recover'}),key(1.5,{head:-.006,phase:'settle'}),key(2.4),key(10)]},
- celebrating:{duration:8.8,keys:[key(0),key(.35,{y:.003,paw:.004,phase:'anticipate'}),key(.85,{head:-.025,paw:-.025,hop:-.025,tail:.028,phase:'celebrate'}),key(1.3,{head:.012,paw:-.014,phase:'land'}),key(1.65,{head:-.014,paw:-.02,hop:-.012,tail:.016,phase:'little hop'}),key(2.3,{head:.008,paw:-.007,phase:'settle'}),key(3.2),key(8.8)]},
- relieved:{duration:12,keys:[key(0),key(1.4,{y:-.005,breath:.005,phase:'breathe in'}),key(3.4,{head:.018,y:.007,paw:-.009,breath:-.002,phase:'breathe out'}),key(4.6,{head:.018,y:.007,paw:-.009,phase:'relax'}),key(6.2,{head:-.005,tail:.015,phase:'settle'}),key(7.7),key(12)]},
+ watchful:{duration:9.2,keys:[key(0),key(.8,{head:.012,phase:'notice'}),key(1.8,{head:-.068,x:.004,y:-.004,paw:-.024,tail:-.018,phase:'consider'}),key(3.2,{head:-.068,x:.004,y:-.004,paw:-.024,tail:-.018,phase:'consider'}),key(4.5,{head:.01,tail:.009,phase:'settle'}),key(5.5),key(9.2)]},
+ concerned:{duration:11,keys:[key(0),key(1.2),key(2.6,{head:.052,y:.006,paw:-.016,phase:'reassure'}),key(4,{head:.052,y:.006,paw:-.016,phase:'reassure'}),key(5.7,{head:-.008,tail:.013,phase:'settle'}),key(7),key(11)]},
+ screaming:{duration:10,keys:[key(0),key(.18,{y:.003,phase:'anticipate'}),key(.5,{head:-.055,y:-.008,paw:-.024,tail:-.03,phase:'startle'}),key(.85,{head:.018,paw:-.006,tail:.018,phase:'recover'}),key(1.5,{head:-.006,phase:'settle'}),key(2.4),key(10)]},
+ celebrating:{duration:8.8,keys:[key(0),key(.35,{y:.003,paw:.004,phase:'anticipate'}),key(.85,{head:-.025,paw:-.04,hop:-.04,tail:.028,phase:'celebrate'}),key(1.3,{head:.012,paw:-.024,phase:'land'}),key(1.65,{head:-.014,paw:-.02,hop:-.022,tail:.016,phase:'little hop'}),key(2.3,{head:.008,paw:-.024,phase:'settle'}),key(3.2),key(8.8)]},
+ relieved:{duration:12,keys:[key(0),key(1.4,{y:-.005,breath:.005,phase:'breathe in'}),key(3.4,{head:.034,y:.007,paw:-.018,breath:-.002,phase:'breathe out'}),key(4.6,{head:.034,y:.007,paw:-.018,phase:'relax'}),key(6.2,{head:-.005,tail:.015,phase:'settle'}),key(7.7),key(12)]},
 }
 const smooth=(lo:number,hi:number,v:number)=>{const t=Math.max(0,Math.min(1,(v-lo)/(hi-lo)));return t*t*(3-2*t)}
 export function sampleSandyPose(mood:SandyStateId,seconds:number):SandyPose{
@@ -37,7 +37,7 @@ export function createMotionRig(mood:SandyStateId,size=160){
  }
  return {size,frame(seconds:number){
   const pose=sampleSandyPose(mood,seconds),follow=sampleSandyPose(mood,seconds-.32),cycle=seconds/duration*Math.PI*2
-  const head=pose.head+Math.sin(cycle)*.003,tail=follow.tail+follow.head*.25+Math.sin(cycle*2)*.008,breath=Math.sin(cycle*3)*.003+pose.breath
+  const head=pose.head+Math.sin(cycle)*.003,rawTail=follow.tail+follow.head*.3+Math.sin(cycle*2)*.012,tail=rawTail<0?-.024*Math.tanh(-rawTail/.024):rawTail,breath=Math.sin(cycle*3)*.003+pose.breath
   const ch=Math.cos(head)-1,sh=Math.sin(head),ct=Math.cos(tail)-1,st=Math.sin(tail)
   for(let py=0;py<size;py++)for(let px=0;px<size;px++){
    const x=(px+.5)/size,y=(py+.5)/size,i=(py*size+px)*4,k=(py*size+px)*2
