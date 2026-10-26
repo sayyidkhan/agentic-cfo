@@ -3,7 +3,7 @@ import {Head,Link,usePage} from './bridge'
 import {sandyStates,sandyState} from './sandy_states'
 import SandyCharacter from './SandyCharacter'
 import SandyStage from './SandyStage'
-import {BookOpen,Heart,VolumeX,Pause,Play,RotateCcw} from 'lucide-react'
+import {BookOpen,Pause,Play,RotateCcw} from 'lucide-react'
 export default function Settings(){
  const [motion,setMotion]=useState(()=>{try{return localStorage.getItem('acorra-sandy-motion')!=='off'}catch{return true}}),[replay,setReplay]=useState(0)
  const toggleMotion=()=>setMotion(value=>{try{localStorage.setItem('acorra-sandy-motion',value?'off':'on')}catch{}return !value})
@@ -19,6 +19,6 @@ export default function Settings(){
  <div className="sandy-preview-copy"><div className="sandy-animation-controls"><button type="button" onClick={toggleMotion} aria-pressed={motion}>{motion?<Pause size={13}/>:<Play size={13}/>} {motion?'Pause animation':'Play animation'}</button><button type="button" onClick={()=>{setMotion(true);setReplay(n=>n+1)}}><RotateCcw size={13}/> Replay reaction</button></div><div className="sandy-performance-options"><button onClick={hello} aria-pressed={greeting}>👋 Wave hello</button><button onClick={()=>{setGreeting(false);setMotion(true);setReplay(n=>n+1)}} aria-pressed={!greeting}>✦ Mood reaction</button></div><div className="cfo-eyebrow">{selected.eyebrow}</div><h2 id="sandy-state-title" tabIndex={-1}>{selected.name} Sandy</h2><blockquote>“{selected.line}”</blockquote><dl><dt>When she appears</dt><dd>{selected.trigger}</dd><dt>What she helps you do</dt><dd>{selected.action}</dd><dt>Her tone</dt><dd>{selected.tone}</dd></dl></div>
  </section>
  <section aria-label="All Sandy states"><div className="cfo-card-header"><h2>Meet every mood</h2><span className="cfo-subtle">Choose a state to preview</span></div><div className="sandy-state-grid">{sandyStates.map(s=><Link key={s.id} href={'/settings?sandy='+s.id} className={'sandy-state-card'+(selected.id===s.id?' is-selected':'')} aria-current={selected.id===s.id?'true':undefined} aria-label={'Preview '+s.name+' Sandy'}><div className="sandy-state-art" style={{background:s.color}}><SandyCharacter mood={s.id}/><span aria-hidden="true">{s.symbol}</span></div><strong>{s.name}</strong><p>{s.trigger}</p><span className="sandy-preview-link">{selected.id===s.id?'Previewing':'View expression'} →</span></Link>)}</div></section>
- <section className="cfo-card sandy-library-note"><div><Heart size={19}/><h2>On your side, through every season.</h2></div><p>Sandy celebrates progress and recovery. Incomplete records call for curiosity; concerned expressions should always lead to a useful next step. A small savings milestone counts as a win, too.</p><p><VolumeX size={15}/> Tap Sandy for a hello. Her greeting has a moving forearm, blinking eyes and a playful lean; choose Mood reaction to explore each financial expression. These previews are silent. Reduced-motion preferences are respected. Screaming Sandy is an occasional urgent expression, with the screaming marmot as inspiration.</p><small>This library preserves the agreed states, triggers and dialogue. The character artwork is evolving, and automatic financial-state selection is not enabled yet. Previewing a state does not change your financial records or Sandy’s active behaviour.</small></section>
+
  </div>
 }
