@@ -171,23 +171,23 @@ test('Sandy artwork is served intact with safe methods and immutable versioned U
 })
 
 test('Sandy’s motion keeps feet anchored and independently animates face, tail and paws',async()=>{
- const {createMotionRig}=await import('./dist/sandy-motion.mjs')
- const size=100,index=(x,y)=>(Math.floor(y*size)*size+Math.floor(x*size))*4
+ const {createMotionRig,sampleSandyPose}=await import('./dist/sandy-motion.mjs')
+ const size=100,index=(x,y)=>(Math.floor(y*size)*size+Math.floor(x*size))*2
  const a=index(.4,.96),b=index(.78,.96),tail=index(.2,.25),paw=index(.64,.555)
  for(const mood of ['curious','calm','watchful','concerned','screaming','celebrating','relieved']){
-  const rig=createMotionRig(mood,size),first=Uint8Array.from(rig.frame(0)),moving=rig.frame(1.25)
-  for(const foot of [a,b])for(const channel of [0,1])assert.ok(Math.abs(moving[foot+channel]-128)<=1,'feet must not drift')
+  const rig=createMotionRig(mood,size),first=Float32Array.from(rig.frame(0)),moving=rig.frame(1.25)
+  for(const foot of [a,b]){assert.ok(Math.abs(moving[foot])<.00001);assert.ok(Math.abs(moving[foot+1])<.00002,'feet stay planted within each complete frame')}
   assert.notDeepEqual(moving,first);assert.ok(moving.every(Number.isFinite))
-  assert.notEqual(moving[tail],first[tail]);assert.equal(moving[3],255)
+  assert.notEqual(moving[tail],first[tail])
  }
- const rig=createMotionRig('curious',size),before=Uint8Array.from(rig.frame(0)),moving=rig.frame(1.25)
+ const rig=createMotionRig('curious',size),before=Float32Array.from(rig.frame(0)),moving=rig.frame(5.8)
  assert.notEqual(moving[paw+1],before[paw+1],'paw motion must be distinct from still feet')
 })
 
 test('Sandy frames preserve transparent fur without coloured fringes or image reloads',async()=>{
  const {paintSandyFrame}=await import('./dist/sandy-raster.mjs')
  const source={width:2,height:2,data:new Uint8ClampedArray([100,60,30,255,255,0,200,0,100,60,30,255,0,255,0,0])}
- const field=new Uint8ClampedArray(4*4*4);for(let i=0;i<field.length;i+=4){field[i]=field[i+1]=128;field[i+3]=255}
+ const field=new Float32Array(4*4*2)
  const out={width:4,height:4,data:new Uint8ClampedArray(4*4*4)}
  paintSandyFrame(source,field,4,out)
  let translucent=0
@@ -202,7 +202,7 @@ test('Sandy frames preserve transparent fur without coloured fringes or image re
 test('Sandy preserves eye shapes throughout the former blink cycle',async()=>{
  const {createMotionRig}=await import('./dist/sandy-motion.mjs')
  const size=200,rig=createMotionRig('curious',size)
- function point(field,x,y){const i=(Math.floor(y*size)*size+Math.floor(x*size))*4;return [x*800+(field[i]-127.5)/255*128,y*800+(field[i+1]-127.5)/255*128]}
+ function point(field,x,y){const i=(Math.floor(y*size)*size+Math.floor(x*size))*2;return [x*800+field[i]*800,y*800+field[i+1]*800]}
  for(const t of [0,1.12,1.25,1.38,4.75,5.06,7.05]){
   const field=rig.frame(t)
   for(const [x,y] of [[.57,.255],[.724,.321]]){
@@ -213,4 +213,19 @@ test('Sandy preserves eye shapes throughout the former blink cycle',async()=>{
   }
  }
  assert.doesNotMatch(readFileSync('src/SandyCharacter.tsx','utf8'),/blinkAt|sandyEyes|quadraticCurveTo/)
+})
+
+test('Sandy’s authored gestures hold, settle and loop without pose jumps',async()=>{
+ const {sampleSandyPose,createMotionRig}=await import('./dist/sandy-motion.mjs')
+ const at=sampleSandyPose('curious',1.8),hold=sampleSandyPose('curious',2.6)
+ assert.equal(at.head,hold.head);assert.equal(at.paw,hold.paw)
+ assert.equal(sampleSandyPose('curious',8).phase,'rest')
+ for(const [mood,duration] of Object.entries({curious:9.6,calm:10.4,watchful:9.2,concerned:11,screaming:10,celebrating:8.8,relieved:12})){
+  const rig=createMotionRig(mood,60),begin=Float32Array.from(rig.frame(.0001)),end=rig.frame(duration-.0001)
+  for(let i=0;i<begin.length;i++)assert.ok(Math.abs(begin[i]-end[i])<.0001,'loop seam must be smooth')
+ }
+ assert.ok(sampleSandyPose('celebrating',.85).hop<0)
+ assert.equal(sampleSandyPose('celebrating',4).hop,0)
+ assert.equal(sampleSandyPose('screaming',5).head,0)
+ const code=readFileSync('src/SandyCharacter.tsx','utf8');assert.match(code,/elapsed=playhead.current.elapsed/)
 })

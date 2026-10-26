@@ -44,3 +44,6 @@ body{margin:0;background:#f8f6ef}button,a,input,select,textarea{-webkit-tap-high
 .sandy-preview-art .sandy-character .sandy-puppet{max-width:none}
 /* Keep decoded artwork visible until the persistent canvas has a complete frame. */
 .sandy-artwork-reaction{position:relative}.sandy-stable-image{animation:none!important}.sandy-stable-canvas{position:absolute;inset:0;opacity:0;pointer-events:none}.sandy-stable-canvas.is-ready{opacity:1}.sandy-stable-image.is-covered{visibility:hidden}.sandy-avatar .sandy-stable-image{transform:none}
+
+/* Reactions now share one authored timeline with the internal character motion. */
+.sandy-artwork.is-animated .sandy-artwork-reaction{animation:none!important}

@@ -1,6 +1,6 @@
 import React,{useEffect,useRef,useState} from 'react'
 import SandyExpression from './SandyExpression'
-import {createMotionRig} from './sandy_motion'
+import {createMotionRig,sampleSandyPose} from './sandy_motion'
 import {paintSandyFrame,type SandyPixels} from './sandy_raster'
 import type {SandyStateId} from './sandy_states'
 const artworkCache=new Map<string,Promise<SandyPixels>>()
@@ -11,21 +11,23 @@ function decodedArtwork(url:string){
 }
 /** A stable bitmap is presented only after its complete frame has been painted. */
 export default function SandyCharacter({mood,animated=false,replay=0}:{mood:SandyStateId,animated?:boolean,replay?:number}){
+ const playhead=useRef({mood,replay,elapsed:0})
  const [failed,setFailed]=useState(false),[ready,setReady]=useState(false),canvasRef=useRef<HTMLCanvasElement>(null),url=`/assets/sandy/v2/${mood}.webp`
  useEffect(()=>{setReady(false);setFailed(false)},[mood])
  useEffect(()=>{
   const canvas=canvasRef.current;if(!canvas)return;if(!animated){canvas.dataset.motion='paused';return}
-  const preference=matchMedia('(prefers-reduced-motion: reduce)');let dead=false,frame=0,visible=true,last=0,elapsed=0,count=0,loading=false,presented=false
+  if(playhead.current.mood!==mood||playhead.current.replay!==replay)playhead.current={mood,replay,elapsed:0}
+  const preference=matchMedia('(prefers-reduced-motion: reduce)');let dead=false,frame=0,visible=true,last=0,elapsed=playhead.current.elapsed,count=0,loading=false,presented=false
   let source:SandyPixels|undefined,pixels:ImageData|undefined,buffer:HTMLCanvasElement|undefined,back:CanvasRenderingContext2D|null=null
   const front=canvas.getContext('2d');const rig=createMotionRig(mood)
-  const render=()=>{if(dead||!source||!pixels||!back||!buffer||!front)return
+  const render=()=>{const started=performance.now();if(dead||!source||!pixels||!back||!buffer||!front)return
    paintSandyFrame(source,rig.frame(elapsed/1000),rig.size,pixels);back.putImageData(pixels,0,0)
    // Resizing/clearing the visible canvas is avoided between frames. 'copy' replaces
    // all transparent pixels in one synchronous draw, so there is no blank interval.
    if(canvas.width!==buffer.width||canvas.height!==buffer.height){canvas.width=buffer.width;canvas.height=buffer.height}
-   front.globalCompositeOperation='copy';front.drawImage(buffer,0,0);front.globalCompositeOperation='source-over';canvas.dataset.frame=String(++count);if(!presented){presented=true;setReady(true)}
+   front.globalCompositeOperation='copy';front.drawImage(buffer,0,0);front.globalCompositeOperation='source-over';canvas.dataset.frame=String(++count);const pose=sampleSandyPose(mood,elapsed/1000);canvas.dataset.pose=pose.phase;canvas.style.transform=`translateY(${pose.hop*canvas.clientWidth}px)`;canvas.dataset.renderMs=(performance.now()-started).toFixed(1);canvas.dataset.time=elapsed.toFixed(0);if(!presented){presented=true;setReady(true)}
   }
-  const tick=(now:number)=>{if(dead)return;frame=requestAnimationFrame(tick);if(!visible||document.hidden){last=0;return}if(!last)last=now;if(now-last<50)return;elapsed+=now-last;last=now;render()}
+  const tick=(now:number)=>{if(dead)return;frame=requestAnimationFrame(tick);if(!visible||document.hidden){last=0;return}if(!last)last=now;if(now-last<32)return;elapsed+=now-last;playhead.current.elapsed=elapsed;last=now;render()}
   const start=()=>{cancelAnimationFrame(frame);last=0;if(preference.matches){canvas.dataset.motion='reduced';presented=false;setReady(false);return}canvas.dataset.motion=animated?'running':'paused';if(animated){if(source){render();frame=requestAnimationFrame(tick)}else load()}}
   const observer=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;last=0});observer.observe(canvas)
   preference.addEventListener('change',start)
