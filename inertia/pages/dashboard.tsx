@@ -1,11 +1,7 @@
 import { formatSgd } from '../../app/services/finance/money.js'
 import { Form } from '@adonisjs/inertia/react'
 import { Link, usePage } from '@inertiajs/react'
-import {
-  Activity, AlertCircle, ArrowRight, ArrowUpRight, CalendarClock,
-  ChevronRight, CircleDollarSign, Landmark, Plus, ReceiptText,
-  ShieldCheck, TrendingDown, TrendingUp, WalletCards,
-} from 'lucide-react'
+import { AlertCircle, ArrowRight, Plus, ShieldCheck } from 'lucide-react'
 import { useState } from 'react'
 import Page from '~/components/page'
 import SandyAvatar from '~/components/sandy_avatar'
@@ -97,14 +93,6 @@ function BudgetBars({ budgets, categories, count }: Pick<DashboardProps, 'catego
         </div>
       </div>
     })}
-  </div>
-}
-
-function StatCard({ name, cents, icon: Icon, foot }: { name: string; cents: number; icon: typeof WalletCards; foot: string }) {
-  return <div className="cfo-card cfo-stat cfo-span-4">
-    <div className="cfo-stat-head"><span>{name}</span><span className="cfo-stat-icon"><Icon size={18}/></span></div>
-    <div className="cfo-stat-value">{money(cents)}</div>
-    <div className="cfo-stat-foot">{foot}</div>
   </div>
 }
 
@@ -271,7 +259,7 @@ export default function Dashboard(props: DashboardProps) {
       </>}
 
       {view === 'transactions' && <div className="cfo-grid">
-        <section className="cfo-card cfo-span-12">
+        <section className="cfo-card cfo-span-12 transaction-summary">
           <div className="cfo-card-header"><div><h2>Monthly cash flow</h2><p className="cfo-card-note">Recorded income less expenses, excluding transfers</p></div><span className="cfo-pill">{month}</span></div>
           <div className="cfo-grid">
             <div className="cfo-span-4"><span className="cfo-subtle">Income</span><div className="cfo-stat-value">{money(incomeCents)}</div></div>
@@ -279,8 +267,8 @@ export default function Dashboard(props: DashboardProps) {
             <div className="cfo-span-4"><span className="cfo-subtle">Net cash flow</span><div className="cfo-stat-value">{money(incomeCents-expenseCents)}</div></div>
           </div>
         </section>
-        <div className="cfo-span-12"><details className="acorra-details cfo-card" open={recentTransactions.length===0||new URLSearchParams(url.split('?')[1]).has('add')}><summary>Add a transaction <Plus size={16}/></summary><TransactionForm accounts={accounts} categories={categories} currentDate={currentDate}/></details></div>
-        <div className="cfo-span-12"><TransactionManager transactions={recentTransactions} accounts={accounts} categories={categories}/></div>
+        <div className="cfo-span-12 transaction-entry"><details className="acorra-details cfo-card" open={recentTransactions.length===0||new URLSearchParams(url.split('?')[1]).has('add')}><summary>Add a transaction <Plus size={16}/></summary><TransactionForm accounts={accounts} categories={categories} currentDate={currentDate}/></details></div>
+        <div className="cfo-span-12 transaction-records"><TransactionManager transactions={recentTransactions} accounts={accounts} categories={categories}/></div>
       </div>}
 
       {view === 'budget' && <>

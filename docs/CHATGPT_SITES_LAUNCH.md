@@ -66,3 +66,16 @@ forms and transaction entry are similarly expandable; Record spending opens the
 transaction form directly. Settings is available through the header gear. Demo
 privacy labelling and the real-data lock remain in force. Shared finance components
 retain their original default behaviour outside the focused planning view.
+
+
+### Mobile-first workspace — 26 October 2026
+The phone layout has a five-item fixed bottom navigation (Home, Activity, Plan,
+Wealth, Sandy), safe-area padding, a compact sticky header and single-column
+forms. Inputs use 16px text and decimal keyboards for money. Touch controls have
+44px minimum targets; transaction entry appears before its cash-flow summary on
+phones. Ledger rows keep amounts readable and actions on their own line. Wide
+screens progressively restore the top navigation and multi-column workspace.
+Browser QA used 390px and 320px iframe viewports: overview, planning/goals, wealth,
+and chat fit without horizontal overflow. A sample S$8.75 expense saved through
+the phone form and changed monthly spending from S$2,190 to S$2,198.75. These are
+browser viewport checks, not a physical iPhone or software-keyboard certification.

@@ -52,7 +52,7 @@ browser / Acorra browser journey (tests/browser/finance_journey.spec.ts)
 ❯ Already up to date
 [ success ] Truncated tables successfully
   ✔ logged-in users only see their own bank and chat records (619.27ms)
- ERRORS 
+ ERRORS
 
 ❯ Acorra browser journey / a working professional can build a budget and move through the financial workspace
 
@@ -71,7 +71,7 @@ Call log:
  [41m❯ 20 ┃      await page.getByRole('heading', { name: 'Your money, in focus.' }).waitFor()[49m
    [2m21[22m [2m┃[22m      [31mawait[0m page[34m.[0m[35mgetByRole[0m([32m'link'[0m[34m,[0m { name[34m:[0m [34m/Get started/[0m })[34m.[0m[35mclick[0m()
    [2m22[22m [2m┃[22m      [31mawait[0m page[34m.[0m[35mgetByRole[0m([32m'heading'[0m[34m,[0m { name[34m:[0m [32m'Know what you own.'[0m })[34m.[0m[35mwaitFor[0m()
-   [2m23[22m [2m┃[22m  
+   [2m23[22m [2m┃[22m
    [2m24[22m [2m┃[22m      [90m// Create a real account using the React/Inertia form.
    [2m25[22m [2m┃[22m  [0m    [31mawait[0m page[34m.[0m[35mgetByLabel[0m([32m'Account name'[0m)[34m.[0m[35mfill[0m([32m'Everyday bank'[0m)
 
@@ -87,7 +87,7 @@ Call log:
  ⁃ at async TestRunnerProcess.run [33m(node_modules/@adonisjs/core/build/main-B2rXbPKm.js:158:3)[39m
 [1/1]─
 
- FAILED 
+ FAILED
 
 Tests  1 passed, 1 failed (2)
  Time  31s
@@ -97,3 +97,8 @@ Tests  1 passed, 1 failed (2)
 </details>
 
 - **Compiled Node server and SQLite smoke:** PASS
+
+Follow-up: unused dashboard imports and the obsolete StatCard were removed; local
+`npm run typecheck` now passes. Browser journey selectors now match the simplified
+headings and expandable budget form. The Adonis browser suite awaits its next
+CI run; mobile Sites journeys were separately checked in browser viewports.

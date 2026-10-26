@@ -17,9 +17,9 @@ test.group('Acorra browser journey', (group) => {
     })
     await browserContext.loginAs(user)
     const page = await visit('/dashboard')
-    await page.getByRole('heading', { name: 'Your money, in focus.' }).waitFor()
+    await page.getByRole('heading', { name: 'Overview', exact: true }).waitFor()
     await page.getByRole('link', { name: /Get started/ }).click()
-    await page.getByRole('heading', { name: 'Know what you own.' }).waitFor()
+    await page.getByRole('heading', { name: 'Wealth', exact: true }).waitFor()
 
     // Create a real account using the React/Inertia form.
     await page.getByLabel('Account name').fill('Everyday bank')
@@ -27,7 +27,8 @@ test.group('Acorra browser journey', (group) => {
     await page.getByRole('button', { name: 'Save account' }).click()
     await page.getByText('Everyday bank').first().waitFor()
     await page.getByRole('link', { name: /Budgets & goals/ }).click()
-    await page.getByRole('heading', { name: 'Spend with intention.' }).waitFor()
+    await page.getByRole('heading', { name: 'Budgets & goals', exact: true }).waitFor()
+    await page.getByText('Manage budgets & categories', { exact: true }).click()
     await page.getByLabel('New category').fill('Dining')
     await page.getByRole('button', { name: 'Add category' }).click()
     await page.getByRole('combobox', { name: 'Category', exact: true }).selectOption({ label: 'Dining' })
@@ -36,7 +37,7 @@ test.group('Acorra browser journey', (group) => {
     await page.getByText('Dining').first().waitFor()
 
     await page.getByRole('link', { name: /Transactions/ }).click()
-    await page.getByRole('heading', { name: 'Every dollar accounted for.' }).waitFor()
+    await page.getByRole('heading', { name: 'Transactions', exact: true }).waitFor()
     await page.getByLabel('Amount in Singapore dollars').fill('425.00')
     await page.getByRole('combobox', { name: 'From account', exact: true }).selectOption({ label: 'Everyday bank' })
     await page.getByRole('combobox', { name: 'Category', exact: true }).selectOption({ label: 'Dining' })
@@ -44,7 +45,7 @@ test.group('Acorra browser journey', (group) => {
     await page.getByText('S$425.00').first().waitFor()
 
     await page.getByRole('navigation', { name: 'Financial workspace' }).getByRole('link', { name: 'Overview', exact: true }).click()
-    await page.getByRole('heading', { name: 'Your money, in focus.' }).waitFor()
+    await page.getByRole('heading', { name: 'Overview', exact: true }).waitFor()
     await page.getByText('S$425.00').first().waitFor()
 
     // Screenshot contains synthetic data only; artifact available in Actions.

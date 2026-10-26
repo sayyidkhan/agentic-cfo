@@ -61,7 +61,7 @@ export default function FinancialPlanning({ commitments, goals, planning, month,
           </ul>
         )}
         <details className="acorra-details"><summary>Add a monthly bill</summary><Form route="finance.commitments.store">
-          {({ errors, processing }) => <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 10, alignItems: 'end' }}>
+          {({ errors, processing }) => <div className="finance-edit-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 10, alignItems: 'end' }}>
             <label>Bill name<input name="name" required placeholder="Rent, insurance" style={inputStyle}/></label>
             <label>Amount (S$)<input name="amount" required inputMode="decimal" placeholder="180.00" style={inputStyle}/></label>
             <label>Due day (1–28)<input name="dueDay" type="number" min="1" max="28" step="1" defaultValue="25" required style={inputStyle}/></label>
@@ -88,8 +88,8 @@ export default function FinancialPlanning({ commitments, goals, planning, month,
             {editingGoal === g.id && <Form action={`/finance/goals/${g.id}`} method="patch">
               {({ errors, processing }) => <div style={{ display: 'grid', gap: 8, marginTop: 10 }}>
                 <label>Goal<input name="name" defaultValue={g.name} required style={inputStyle}/></label>
-                <label>Target (S$)<input name="target" defaultValue={(g.targetCents/100).toFixed(2)} required style={inputStyle}/></label>
-                <label>Saved so far (S$)<input name="saved" defaultValue={(g.savedCents/100).toFixed(2)} required style={inputStyle}/></label>
+                <label>Target (S$)<input name="target" inputMode="decimal" defaultValue={(g.targetCents/100).toFixed(2)} required style={inputStyle}/></label>
+                <label>Saved so far (S$)<input name="saved" inputMode="decimal" defaultValue={(g.savedCents/100).toFixed(2)} required style={inputStyle}/></label>
                 <label>Target date<input name="targetDate" type="date" defaultValue={g.targetDate} required style={inputStyle}/></label>
                 {Object.values(errors).map((e, i) => <small key={i} role="alert">{e}</small>)}
                 <button className="btn btn--primary btn--sm" type="submit" disabled={processing}>Save goal</button>
@@ -99,7 +99,7 @@ export default function FinancialPlanning({ commitments, goals, planning, month,
         ))}
         <details className="acorra-details"><summary>Create a goal</summary>
         <Form route="finance.goals.store">
-          {({ errors, processing }) => <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(160px, 1fr))',gap:10,alignItems:'end'}}>
+          {({ errors, processing }) => <div className="finance-edit-grid" style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(160px, 1fr))',gap:10,alignItems:'end'}}>
             <label>Goal name<input name="name" placeholder="Emergency fund" required style={inputStyle}/></label>
             <label>Target (S$)<input name="target" placeholder="5000" required inputMode="decimal" style={inputStyle}/></label>
             <label>Saved so far (S$)<input name="saved" defaultValue="0" required inputMode="decimal" style={inputStyle}/></label>
