@@ -31,3 +31,5 @@ await build({...common,entryPoints:['src/routing.ts'],outfile:'dist/routing.mjs'
 
 const migrations=await Promise.all(['0000_financial_workspaces.sql','0001_storage_checks.sql'].map(async name=>({name,sql:await readFile('../drizzle/'+name,'utf8')})))
 await writeFile('dist/preview-migrations.json',JSON.stringify(migrations))
+
+await build({...common,entryPoints:['src/sandy_gpu.ts'],outfile:'dist/sandy-gpu.mjs',platform:'node',format:'esm'})

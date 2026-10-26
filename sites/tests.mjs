@@ -274,3 +274,17 @@ test('Refined lids close from above and tail/paw movement stays continuous',asyn
   for(let t=1/60;t<12;t+=1/60){const frame=rig.frame(t);for(let i=0;i<frame.length;i++)assert.ok(Math.abs(frame[i]-last[i])<.012,'no abrupt deformation steps at display cadence');last.set(frame)}
  }
 })
+
+test('GPU displacement retains subpixel precision and unsupported contexts fall back safely',async()=>{
+ const {encodeSandyField,createSandyGpu}=await import('./dist/sandy-gpu.mjs')
+ const {createMotionRig,sampleSandyPose}=await import('./dist/sandy-motion.mjs')
+ const input=new Float32Array([-.1,-.000001,0,.000001,.1]),encoded=encodeSandyField(input,new Uint8Array(input.length*2))
+ for(let i=0;i<input.length;i++){const decoded=((encoded[i*2]*256+encoded[i*2+1])/65535-.5)*.25;assert.ok(Math.abs(decoded-input[i])*800<.002,'encoding must not introduce visible pixel steps')}
+ const canvas={dataset:{},getContext:()=>null};assert.equal(createSandyGpu(canvas,160),null);assert.equal(canvas.dataset.gpuFallback,'unavailable')
+ for(const mood of ['curious','calm','watchful','concerned','screaming','celebrating','relieved']){
+  const rig=createMotionRig(mood,30);for(let t=0;t<12;t+=.1)assert.ok(rig.frame(t).every(v=>Math.abs(v)<.125),'all gestures must fit the GPU texture range')
+ }
+ assert.ok(sampleSandyPose('celebrating',.35).stretch<0,'anticipation compresses the body')
+ assert.ok(sampleSandyPose('celebrating',.85).stretch>0,'takeoff extends the body')
+ assert.ok(sampleSandyPose('celebrating',1.3).stretch<0,'landing absorbs the hop')
+})
