@@ -1,5 +1,6 @@
 import script from './generated-client.js.txt'
 import css from './generated-style.css.txt'
+import acorraMark from '../../public/acorra-mark.svg'
 import sandyArtSource from './generated-sandy-assets.txt'
 const sandyArt:Record<string,string>=JSON.parse(sandyArtSource)
 import {applyAction,emptyState} from './domain'
@@ -7,7 +8,7 @@ import {applyAction,emptyState} from './domain'
 export const REAL_DATA_ENABLED = false
 const security={'Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer','Permissions-Policy':'camera=(), microphone=(), geolocation=()','Content-Security-Policy':"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'"}
 const json=(v:any,status=200)=>new Response(JSON.stringify(v),{status,headers:{...security,'Content-Type':'application/json'}})
-const html='<!doctype html><html lang="en-SG"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Acorra — Grow your wealth, one habit at a time. Explore Sandy and your financial picture in a synthetic-data public demo."><meta name="theme-color" content="#174c3c"><title>Acorra — Grow your wealth, one habit at a time.</title><link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/style.css"></head><body><div id="root"></div><noscript>Acorra’s interactive demo requires JavaScript. All demonstration finances are fictional.</noscript><script src="/app.js" defer></script></body></html>'
+const html='<!doctype html><html lang="en-SG"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Acorra — Grow your wealth, one habit at a time. Explore Sandy and your financial picture in a synthetic-data public demo."><meta name="theme-color" content="#174c3c"><title>Acorra — Grow your wealth, one habit at a time.</title><link rel="icon" href="/acorra-mark.svg"><link rel="stylesheet" href="/style.css"></head><body><div id="root"></div><noscript>Acorra’s interactive demo requires JavaScript. All demonstration finances are fictional.</noscript><script src="/app.js" defer></script></body></html>'
 export function createHandler(realDataEnabled=false){return async function(request:Request,env:any){
  const url=new URL(request.url),path=url.pathname
  if(path==='/api/health')return json({ok:true,mode:realDataEnabled?'personal':'synthetic-demo',realDataEnabled})
@@ -70,7 +71,7 @@ export function createHandler(realDataEnabled=false){return async function(reque
  if(!['GET','HEAD'].includes(request.method))return json({error:'Method not allowed'},405)
  const artworkMatch=path.match(/^\/assets\/sandy\/v2\/([a-z]+)\.webp$/)
  if(artworkMatch&&Object.hasOwn(sandyArt,artworkMatch[1]))return new Response(request.method==='HEAD'?null:Uint8Array.from(atob(sandyArt[artworkMatch[1]]),c=>c.charCodeAt(0)),{headers:{...security,'Content-Type':'image/webp','Cache-Control':'public, max-age=31536000, immutable'}})
- const assets:any={'/app.js':[script,'text/javascript; charset=utf-8'],'/style.css':[css,'text/css; charset=utf-8'],'/favicon.svg':['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><rect width="40" height="40" rx="12" fill="#174c3c"/><path d="M12 29C9 13 20 9 30 9c0 12-5 20-18 20m0 0 12-13" fill="none" stroke="#e4d1a8" stroke-width="2.5"/></svg>','image/svg+xml']}
+ const assets:any={'/app.js':[script,'text/javascript; charset=utf-8'],'/style.css':[css,'text/css; charset=utf-8'],'/favicon.svg':[acorraMark,'image/svg+xml'],'/acorra-mark.svg':[acorraMark,'image/svg+xml']}
  if(assets[path])return new Response(request.method==='HEAD'?null:assets[path][0],{headers:{...security,'Content-Type':assets[path][1]}})
  if(!['/','/dashboard','/cfo','/account','/settings'].includes(path))return new Response('Not found',{status:404,headers:security})
  return new Response(request.method==='HEAD'?null:html,{headers:{...security,'Content-Type':'text/html; charset=utf-8'}})

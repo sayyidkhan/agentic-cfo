@@ -14,7 +14,7 @@ await writeFile('src/generated-style.css.txt',styles.join('\n'))
 const sandyArt=Object.fromEntries(await Promise.all(['curious','calm','watchful','concerned','screaming','celebrating','relieved','greeting'].map(async mood=>[mood,(await readFile('assets/sandy/'+mood+'.webp')).toString('base64')])));
 await writeFile('src/generated-sandy-assets.txt',JSON.stringify(sandyArt))
 await mkdir('dist/server',{recursive:true});await mkdir('dist/.openai',{recursive:true})
-await build({...common,entryPoints:['src/server.ts'],outfile:'dist/server/index.js',platform:'browser',format:'esm',target:'es2022',loader:{'.txt':'text'}})
+await build({...common,entryPoints:['src/server.ts'],outfile:'dist/server/index.js',platform:'browser',format:'esm',target:'es2022',loader:{'.txt':'text','.svg':'text'}})
 await copyFile('../.openai/hosting.json','.openai/hosting.json')
 await copyFile('../.openai/hosting.json','dist/.openai/hosting.json')
 await mkdir('../dist/server',{recursive:true});await mkdir('../dist/.openai',{recursive:true})
