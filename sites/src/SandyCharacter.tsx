@@ -1,6 +1,6 @@
 import React,{useEffect,useRef,useState} from 'react'
 import SandyExpression from './SandyExpression'
-import {createMotionRig,blinkAt,sandyEyes} from './sandy_motion'
+import {createMotionRig} from './sandy_motion'
 import {paintSandyFrame,type SandyPixels} from './sandy_raster'
 import type {SandyStateId} from './sandy_states'
 const artworkCache=new Map<string,Promise<SandyPixels>>()
@@ -20,8 +20,6 @@ export default function SandyCharacter({mood,animated=false,replay=0}:{mood:Sand
   const front=canvas.getContext('2d');const rig=createMotionRig(mood)
   const render=()=>{if(dead||!source||!pixels||!back||!buffer||!front)return
    paintSandyFrame(source,rig.frame(elapsed/1000),rig.size,pixels);back.putImageData(pixels,0,0)
-   const blink=blinkAt(elapsed/1000)**3
-   if(blink>0){const scale=buffer.width/800;back.save();back.scale(scale,scale);back.globalAlpha=blink;back.strokeStyle='#5b392a';back.lineWidth=6;back.lineCap='round';for(const [x,y] of sandyEyes(mood)){back.beginPath();back.moveTo(x*800-22,y*800-6);back.quadraticCurveTo(x*800,y*800+7,x*800+22,y*800+6);back.stroke()}back.restore()}
    // Resizing/clearing the visible canvas is avoided between frames. 'copy' replaces
    // all transparent pixels in one synchronous draw, so there is no blank interval.
    if(canvas.width!==buffer.width||canvas.height!==buffer.height){canvas.width=buffer.width;canvas.height=buffer.height}

@@ -171,19 +171,17 @@ test('Sandy artwork is served intact with safe methods and immutable versioned U
 })
 
 test('Sandy’s motion keeps feet anchored and independently animates face, tail and paws',async()=>{
- const {createMotionRig,blinkAt}=await import('./dist/sandy-motion.mjs')
- assert.equal(blinkAt(0),0);assert.equal(blinkAt(1.25),1);assert.equal(blinkAt(2),0)
+ const {createMotionRig}=await import('./dist/sandy-motion.mjs')
  const size=100,index=(x,y)=>(Math.floor(y*size)*size+Math.floor(x*size))*4
- const a=index(.4,.96),b=index(.78,.96),tail=index(.2,.25),paw=index(.64,.555),eye=index(.57,.265)
+ const a=index(.4,.96),b=index(.78,.96),tail=index(.2,.25),paw=index(.64,.555)
  for(const mood of ['curious','calm','watchful','concerned','screaming','celebrating','relieved']){
   const rig=createMotionRig(mood,size),first=Uint8Array.from(rig.frame(0)),moving=rig.frame(1.25)
   for(const foot of [a,b])for(const channel of [0,1])assert.ok(Math.abs(moving[foot+channel]-128)<=1,'feet must not drift')
   assert.notDeepEqual(moving,first);assert.ok(moving.every(Number.isFinite))
   assert.notEqual(moving[tail],first[tail]);assert.equal(moving[3],255)
  }
- const rig=createMotionRig('curious',size),before=Uint8Array.from(rig.frame(0)),blink=rig.frame(1.25)
- assert.ok(Math.abs(blink[eye+1]-before[eye+1])>15,'blink must affect the eye')
- assert.notEqual(blink[paw+1],before[paw+1],'paw motion must be distinct from still feet')
+ const rig=createMotionRig('curious',size),before=Uint8Array.from(rig.frame(0)),moving=rig.frame(1.25)
+ assert.notEqual(moving[paw+1],before[paw+1],'paw motion must be distinct from still feet')
 })
 
 test('Sandy frames preserve transparent fur without coloured fringes or image reloads',async()=>{
@@ -199,4 +197,20 @@ test('Sandy frames preserve transparent fur without coloured fringes or image re
  assert.doesNotMatch(component,/toDataURL|feImage|feDisplacementMap|clearRect/)
  assert.match(component,/await image.decode\(\)/)
  assert.ok(component.indexOf('back.putImageData')<component.indexOf('front.drawImage'))
+})
+
+test('Sandy preserves eye shapes throughout the former blink cycle',async()=>{
+ const {createMotionRig}=await import('./dist/sandy-motion.mjs')
+ const size=200,rig=createMotionRig('curious',size)
+ function point(field,x,y){const i=(Math.floor(y*size)*size+Math.floor(x*size))*4;return [x*800+(field[i]-127.5)/255*128,y*800+(field[i+1]-127.5)/255*128]}
+ for(const t of [0,1.12,1.25,1.38,4.75,5.06,7.05]){
+  const field=rig.frame(t)
+  for(const [x,y] of [[.57,.255],[.724,.321]]){
+   for(const [dx,dy] of [[.025,0],[0,.025]]){
+    const a=point(field,x-dx,y-dy),b=point(field,x+dx,y+dy),diameter=Math.hypot(b[0]-a[0],b[1]-a[1])
+    assert.ok(Math.abs(diameter-40)<1.5,'eye diameter must not squash or twitch')
+   }
+  }
+ }
+ assert.doesNotMatch(readFileSync('src/SandyCharacter.tsx','utf8'),/blinkAt|sandyEyes|quadraticCurveTo/)
 })
