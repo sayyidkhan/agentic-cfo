@@ -158,7 +158,7 @@ test('personal workspace navigation stays personal and explicit demo links stay 
 })
 
 test('Sandy artwork is served intact with safe methods and immutable versioned URLs',async()=>{
- for(const mood of ['curious','calm','watchful','concerned','screaming','celebrating','relieved']){
+ for(const mood of ['curious','calm','watchful','concerned','screaming','celebrating','relieved','greeting']){
   const url='https://acorra.test/assets/sandy/v2/'+mood+'.webp'
   const response=await worker.fetch(new Request(url),{})
   assert.equal(response.status,200);assert.equal(response.headers.get('content-type'),'image/webp')
@@ -170,7 +170,7 @@ test('Sandy artwork is served intact with safe methods and immutable versioned U
  assert.equal((await worker.fetch(new Request('https://acorra.test/assets/sandy/v2/missing.webp'),{})).status,404)
 })
 
-test('Sandy’s motion keeps feet anchored and independently animates face, tail and paws',async()=>{
+test('Sandy’s motion keeps feet anchored and independently animates face and tail',async()=>{
  const {createMotionRig,sampleSandyPose}=await import('./dist/sandy-motion.mjs')
  const size=100,index=(x,y)=>(Math.floor(y*size)*size+Math.floor(x*size))*2
  const a=index(.4,.96),b=index(.78,.96),tail=index(.2,.25),paw=index(.64,.555)
@@ -181,7 +181,7 @@ test('Sandy’s motion keeps feet anchored and independently animates face, tail
   assert.notEqual(moving[tail],first[tail])
  }
  const rig=createMotionRig('curious',size),before=Float32Array.from(rig.frame(0)),moving=rig.frame(5.8)
- assert.notEqual(moving[paw+1],before[paw+1],'paw motion must be distinct from still feet')
+ assert.notEqual(moving[paw+1],before[paw+1],'gentle torso breathing stays distinct from anchored feet')
 })
 
 test('Sandy frames preserve transparent fur without coloured fringes or image reloads',async()=>{
@@ -218,7 +218,7 @@ test('Sandy preserves eye shapes throughout the former blink cycle',async()=>{
 test('Sandy’s authored gestures hold, settle and loop without pose jumps',async()=>{
  const {sampleSandyPose,createMotionRig}=await import('./dist/sandy-motion.mjs')
  const at=sampleSandyPose('curious',1.8),hold=sampleSandyPose('curious',2.6)
- assert.equal(at.head,hold.head);assert.equal(at.paw,hold.paw)
+ assert.equal(at.head,hold.head)
  assert.equal(sampleSandyPose('curious',8).phase,'rest')
  for(const [mood,duration] of Object.entries({curious:9.6,calm:10.4,watchful:9.2,concerned:11,screaming:10,celebrating:8.8,relieved:12})){
   const rig=createMotionRig(mood,60),begin=Float32Array.from(rig.frame(.0001)),end=rig.frame(duration-.0001)
@@ -248,7 +248,7 @@ test('Painted blinks change eyelid texture only, without warping the face or rap
 test('Sandy’s gestures are visible while head rotation preserves facial proportions',async()=>{
  const {sampleSandyPose}=await import('./dist/sandy-motion.mjs')
  assert.ok(sampleSandyPose('curious',2).head>=.085)
- assert.ok(Math.abs(sampleSandyPose('curious',5.8).paw)>=.029)
+ assert.ok(Math.abs(sampleSandyPose('curious',5.8).body)>=.008)
  assert.ok(Math.abs(sampleSandyPose('celebrating',.85).hop)>=.039)
  const code=readFileSync('src/SandyCharacter.tsx','utf8')
  assert.ok(code.indexOf('eyelids?.frame(blink)')<code.indexOf('back.putImageData'))
@@ -287,4 +287,14 @@ test('GPU displacement retains subpixel precision and unsupported contexts fall 
  assert.ok(sampleSandyPose('celebrating',.35).stretch<0,'anticipation compresses the body')
  assert.ok(sampleSandyPose('celebrating',.85).stretch>0,'takeoff extends the body')
  assert.ok(sampleSandyPose('celebrating',1.3).stretch<0,'landing absorbs the hop')
+})
+
+test('Acorn-holding arms retain their shape instead of stretching with isolated paw motion',async()=>{
+ const {createMotionRig}=await import('./dist/sandy-motion.mjs');const size=200,rig=createMotionRig('curious',size)
+ const point=(field,x,y)=>{const i=(Math.floor(y*size)*size+Math.floor(x*size))*2;return [(x+field[i])*800,(y+field[i+1])*800]}
+ for(const t of [0,1,2,4,5.5,6,7,9]){
+  const field=rig.frame(t),elbow=point(field,.54,.56),wrist=point(field,.64,.55)
+  assert.ok(Math.abs(Math.hypot(wrist[0]-elbow[0],wrist[1]-elbow[1])-Math.hypot(.1,.01)*800)<.5,'held-acorn forearm length stays stable')
+ }
+ const {createPaintedBlink,hasPaintedBlink}=await import('./dist/sandy-blink.mjs');assert.equal(hasPaintedBlink('greeting'),true)
 })

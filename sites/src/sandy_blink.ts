@@ -1,6 +1,7 @@
 import type {SandyStateId} from './sandy_states'
 import type {SandyPixels} from './sandy_raster'
-const eyes:Partial<Record<SandyStateId,number[][]>>={
+const eyes:Partial<Record<SandyStateId|'greeting',number[][]>>={
+ greeting:[[.558,.25,.055,.065],[.706,.315,.055,.062]],
  curious:[[.57,.255,.057,.066],[.724,.321,.057,.063]],
  watchful:[[.573,.258,.057,.066],[.729,.323,.057,.064]],
  concerned:[[.583,.263,.057,.067],[.737,.33,.057,.064]],
@@ -11,10 +12,10 @@ const reference=[[.575,.27],[.739,.335]]
 const smooth=(a:number,b:number,x:number)=>{const t=Math.max(0,Math.min(1,(x-a)/(b-a)));return t*t*(3-2*t)}
 /** A single unhurried blink; no repeated twitch/double-blink pulses. */
 export function blinkAmount(seconds:number){const t=((seconds%6.4)+6.4)%6.4;if(t<1.2||t>=1.5)return 0;if(t<1.3)return smooth(1.2,1.3,t);if(t<1.36)return 1;return 1-smooth(1.36,1.5,t)}
-export const hasPaintedBlink=(mood:SandyStateId)=>!!eyes[mood]
+export const hasPaintedBlink=(mood:SandyStateId|'greeting')=>!!eyes[mood]
 /** Cached eyelid pixels from Calm Sandy are revealed over the eyes before posing.
  * Only eyelid texture changes: pupils, face geometry and surrounding artwork stay put. */
-export function createPaintedBlink(original:SandyPixels,closed:SandyPixels|undefined,mood:SandyStateId){
+export function createPaintedBlink(original:SandyPixels,closed:SandyPixels|undefined,mood:SandyStateId|'greeting'){
  if(!closed||!eyes[mood])return {frame:(_amount:number)=>original}
  const output={width:original.width,height:original.height,data:new Uint8ClampedArray(original.data.length)},patches:{index:number,edge:number,vertical:number,r:number,g:number,b:number}[]=[]
  const angle=mood==='screaming'?.15:.28,cos=Math.cos(angle),sin=Math.sin(angle),rc=Math.cos(.28),rs=Math.sin(.28)

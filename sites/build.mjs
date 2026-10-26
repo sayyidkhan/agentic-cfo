@@ -11,7 +11,7 @@ const result=await build({...common,entryPoints:['src/client.tsx'],write:false,p
 await writeFile('src/generated-client.js.txt',result.outputFiles[0].text)
 const styles=await Promise.all(['../inertia/css/app.css','../inertia/css/cfo.css','src/style.css'].map(f=>readFile(f,'utf8')))
 await writeFile('src/generated-style.css.txt',styles.join('\n'))
-const sandyArt=Object.fromEntries(await Promise.all(['curious','calm','watchful','concerned','screaming','celebrating','relieved'].map(async mood=>[mood,(await readFile('assets/sandy/'+mood+'.webp')).toString('base64')])));
+const sandyArt=Object.fromEntries(await Promise.all(['curious','calm','watchful','concerned','screaming','celebrating','relieved','greeting'].map(async mood=>[mood,(await readFile('assets/sandy/'+mood+'.webp')).toString('base64')])));
 await writeFile('src/generated-sandy-assets.txt',JSON.stringify(sandyArt))
 await mkdir('dist/server',{recursive:true});await mkdir('dist/.openai',{recursive:true})
 await build({...common,entryPoints:['src/server.ts'],outfile:'dist/server/index.js',platform:'browser',format:'esm',target:'es2022',loader:{'.txt':'text'}})

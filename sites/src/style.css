@@ -47,3 +47,31 @@ body{margin:0;background:#f8f6ef}button,a,input,select,textarea{-webkit-tap-high
 
 /* Reactions now share one authored timeline with the internal character motion. */
 .sandy-artwork.is-animated .sandy-artwork-reaction{animation:none!important}
+
+/* A compositor-animated greeting with a rigid forearm, a covered elbow, and clear acting beats. */
+.sandy-live-stage{position:relative;width:100%;max-width:440px;aspect-ratio:1;display:grid;place-items:center;isolation:isolate}
+.sandy-live-stage>.sandy-character{width:100%;max-width:440px!important}
+.sandy-stage-halo{position:absolute;width:80%;height:80%;border-radius:50%;background:radial-gradient(circle,#fff9,transparent 70%);z-index:-1}
+.sandy-stage-hit{position:absolute;inset:4% 4% 9%;border:0;background:transparent;cursor:pointer;border-radius:45%;z-index:2}
+.sandy-stage-hit:focus-visible{outline:2px solid #8a7042;outline-offset:0}
+.sandy-stage-invite{position:absolute;bottom:0;font-size:11px;color:#52634a;letter-spacing:.3px;background:#ffffffe0;border:1px solid #dce3cc;border-radius:20px;padding:7px 13px;pointer-events:none}
+.sandy-performance-options{display:flex;gap:8px;margin:-10px 0 27px}
+.sandy-performance-options button{border:1px solid #d7decd;border-radius:10px;padding:10px 14px;font-size:12px;color:#36513e;background:#fffdf6}
+.sandy-performance-options button[aria-pressed=true]{background:#214f3d;color:#fff;border-color:#214f3d;box-shadow:0 4px 12px #214f3d18}
+.sandy-greeting{max-width:440px;isolation:isolate}.sandy-greeting-scene{display:block;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 9px 7px #5a3c1412)}
+.sandy-greeting-body{transform-origin:590px 945px}.sandy-greeting-arm{transform-origin:797px 497px}.sandy-greeting-blink{opacity:0}.sandy-hello-sparkles{opacity:0;transform-origin:550px 400px}.sandy-ground-shadow{transform-origin:590px 957px}
+.sandy-greeting.is-loaded .sandy-greeting-body{animation:sandy-hello-body 6s linear infinite}
+.sandy-greeting.is-loaded .sandy-greeting-arm{animation:sandy-hello-wave 6s ease-in-out infinite}
+.sandy-greeting.is-loaded .sandy-greeting-blink{animation:sandy-hello-blink 6s linear infinite}
+.sandy-greeting.is-loaded .sandy-hello-sparkles{animation:sandy-hello-sparkle 6s ease-out infinite}
+.sandy-greeting.is-loaded .sandy-ground-shadow{animation:sandy-hello-shadow 6s ease-in-out infinite}
+.sandy-greeting:not(.is-playing) *{animation-play-state:paused!important}
+@keyframes sandy-hello-wave{0%,5%,66%,100%{transform:rotate(0deg)}12%{transform:rotate(-13deg)}20%{transform:rotate(24deg)}28%{transform:rotate(-11deg)}36%{transform:rotate(22deg)}44%{transform:rotate(-9deg)}52%{transform:rotate(14deg)}60%{transform:rotate(-3deg)}}
+@keyframes sandy-hello-body{0%,100%{transform:translateY(0) rotate(0deg) scale(1)}5%{transform:translateY(4px) rotate(1deg) scale(1.02,.98)}12%{transform:translateY(-25px) rotate(-3deg) scale(.99,1.02)}20%{transform:translateY(0) rotate(-2deg) scale(1.02,.985)}28%{transform:translateY(-7px) rotate(1.5deg) scale(1)}38%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-4px) rotate(1deg)}65%{transform:translateY(0) rotate(0deg)}83%{transform:translateY(-3px) scale(1.005,1.008)}}
+@keyframes sandy-hello-blink{0%,17%,22%,72%,77%,100%{opacity:0}19%,20%,74%,75%{opacity:1}}
+@keyframes sandy-hello-sparkle{0%,7%,54%,100%{opacity:0;transform:scale(.75)}13%,35%{opacity:.9;transform:scale(1)}50%{opacity:0;transform:scale(1.14)}}
+@keyframes sandy-hello-shadow{0%,20%,65%,100%{transform:scaleX(1);opacity:.12}12%{transform:scaleX(.75);opacity:.07}28%,50%{transform:scaleX(.92);opacity:.1}}
+.sandy-preview-art:has(.sandy-live-stage){padding:12px 8px 48px;min-height:450px}.sandy-avatar>.sandy-greeting{transform:scale(2.2) translate(-6%,18%)}
+@media(max-width:600px){.sandy-preview-art:has(.sandy-live-stage){min-height:350px;padding-top:8px}.sandy-live-stage{max-width:350px}.sandy-performance-options{margin-bottom:22px}.sandy-stage-invite{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.sandy-greeting *{animation:none!important}.sandy-greeting-blink,.sandy-hello-sparkles{opacity:0}}
+.sandy-avatar .sandy-greeting-scene{width:100%;height:100%;max-width:none;filter:none}.sandy-avatar>.sandy-greeting{transform:scale(1.8) translate(-12%,12%)}
