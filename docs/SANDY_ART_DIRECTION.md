@@ -56,3 +56,13 @@ Greeting asset was made with the built-in image-generation tool, using `curious.
 > Create an animation-ready greeting pose of exactly this Sandy squirrel, preserving her 3D animated-film fur detail, cinnamon and cream colors, hazel eyes, green neckerchief with tiny gold acorn clasp, enormous fluffy tail, proportions, camera and lighting. Full body square transparent PNG with clear margins. Tail on viewer left. Friendly delighted open smile, looking at viewer. Viewer-left paw holds one acorn at waist. Viewer-right arm extends out to the right, elbow out at shoulder level, forearm raised, open palm facing camera for a wave. Waving hand and forearm are separated from face, ear and torso by transparent space so the forearm can rotate independently around the elbow. Keep feet visible and grounded, body upright, head slightly tilted. Same premium furry Sandy. One character, no text, panels, background or drop shadow.
 
 Validation: inspected both wave extremes and a complete painted blink in browser; checked pause/resume, tap-to-wave, switching back to the mood pose and homepage framing. The held-acorn forearm has a regression check for stable length throughout the timeline. Browser QA does not establish physical iPhone performance.
+
+
+### Relieved sigh visibility fix
+Relieved Sandy now has a six-second compositor-driven, foot-anchored breath-in,
+exhale and settling gesture. It begins immediately, including while the internal
+canvas is loading, and removes the perceived long frozen interval. The original
+art, closed-eye smile and connected arms are preserved; the existing internal
+head/tail rig remains. Pause freezes the outer gesture, Play resumes it, Replay
+remounts its timeline, and reduced-motion disables it. Static library thumbnails
+remain paused at the neutral pose.

@@ -17,7 +17,7 @@ export default function SandyCharacter({mood,animated=false,replay=0}:{mood:Sand
  const blinkClock=useRef({mood,replay,clock:createBlinkClock()})
  const [failed,setFailed]=useState(false),[readyFor,setReadyFor]=useState<SandyStateId|null>(null),canvasRef=useRef<HTMLCanvasElement>(null),url=`/assets/sandy/v2/${mood}.webp`
  const ready=readyFor===mood
- useEffect(()=>{setReadyFor(null);setFailed(false)},[mood])
+ useEffect(()=>{setReadyFor(null);setFailed(false)},[mood,replay])
  useEffect(()=>{
   const canvas=canvasRef.current;if(!canvas)return;if(!animated){canvas.dataset.motion='paused';return}
   if(playhead.current.mood!==mood||playhead.current.replay!==replay){playhead.current={mood,replay,elapsed:0};blinkClock.current={mood,replay,clock:createBlinkClock()}}
@@ -43,9 +43,9 @@ export default function SandyCharacter({mood,animated=false,replay=0}:{mood:Sand
   return()=>{dead=true;cancelAnimationFrame(frame);gpu?.dispose();observer.disconnect();preference.removeEventListener('change',start)}
  },[mood,animated,replay,url,failed])
  return <div className={`sandy-character sandy-artwork sandy-artwork--${mood}${animated?' is-animated':''}`} role="img" aria-label={`${mood} Sandy${animated?' animated character':''}`}>
- {failed?<SandyExpression mood={mood}/>:<div className="sandy-artwork-reaction" key={mood}>
+ {failed?<SandyExpression mood={mood}/>:<div className={mood==='relieved'?'sandy-relieved-performance':'sandy-performance'} key={`${mood}-${replay}`} style={mood==='relieved'?{animationPlayState:animated?'running':'paused'}:undefined}><div className="sandy-artwork-reaction">
  <img className={`sandy-artwork-image sandy-stable-image${ready?' is-covered':''}`} src={url} alt="" width="800" height="800" decoding="async" loading={animated?'eager':'lazy'} draggable={false} onError={()=>setFailed(true)}/>
  <canvas ref={canvasRef} className={`sandy-puppet sandy-stable-canvas${ready?' is-ready':''}`} aria-hidden="true"/>
- </div>}
+ </div></div>}
  </div>
 }
