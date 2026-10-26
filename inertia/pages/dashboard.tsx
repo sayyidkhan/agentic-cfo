@@ -49,22 +49,22 @@ export function viewFromUrl(url: string): View {
 const pageText: Record<View, { eyebrow: string; title: string; detail: string }> = {
   overview: {
     eyebrow: 'YOUR FINANCIAL HOME',
-    title: 'Your money, in focus.',
+    title: 'Overview',
     detail: 'See what you have, what is coming up, and which decisions deserve attention.',
   },
   transactions: {
     eyebrow: 'MONEY IN & OUT',
-    title: 'Every dollar accounted for.',
+    title: 'Transactions',
     detail: 'Record your income, spending and transfers without losing track of where the money went.',
   },
   budget: {
     eyebrow: 'MAKE A PLAN',
-    title: 'Spend with intention.',
+    title: 'Budgets & goals',
     detail: 'Set limits, track goals, and prepare for bills before they become surprises.',
   },
   wealth: {
     eyebrow: 'THE BIG PICTURE',
-    title: 'Know what you own.',
+    title: 'Wealth',
     detail: 'Your recorded assets minus liabilities, with transparent valuation dates.',
   },
 }
@@ -222,6 +222,7 @@ function ValuationForm({ currentDate }: Pick<DashboardProps, 'currentDate'>) {
 export default function Dashboard(props: DashboardProps) {
   const { url } = usePage()
   const view = viewFromUrl(url)
+  const [planTab,setPlanTab] = useState<'spending'|'goals'|'bills'>('spending')
   const {
     accounts, categories, currentDate, month, incomeCents, expenseCents,
     financialPosition, budgetStatus, valuations, recentTransactions, availableCashCents,
@@ -240,9 +241,8 @@ export default function Dashboard(props: DashboardProps) {
       <header className="cfo-page-intro">
         <div><div className="cfo-eyebrow">{descriptor.eyebrow} · {month}</div><h1>{descriptor.title}</h1><p>{descriptor.detail}</p></div>
         <div className="cfo-action-row">
-          {view === 'overview' && <Link className="cfo-action" href="/dashboard?view=transactions"><Plus size={16}/> Record spending</Link>}
-          {view !== 'overview' && <Link className="cfo-action cfo-action--quiet" href="/dashboard"><ArrowRight size={15}/> Overview</Link>}
-          <Link className="cfo-action cfo-action--quiet" href="/cfo"><SandyAvatar size="sm" /> Chat with Sandy</Link>
+          {view === 'overview' && <Link className="cfo-action" href="/dashboard?view=transactions&add=1"><Plus size={16}/> Record spending</Link>}
+
         </div>
       </header>
 
@@ -252,58 +252,22 @@ export default function Dashboard(props: DashboardProps) {
           <div><strong>Welcome to Acorra</strong><p>Start by adding a bank account or a valuation. The dashboard will use your real entries—never sample figures presented as your finances.</p>
             <Link className="cfo-action" href="/dashboard?view=wealth">Get started <ArrowRight size={14}/></Link></div>
         </div>}
-        <div className="cfo-grid">
-          <section className="cfo-card cfo-hero cfo-span-8">
-            <div className="cfo-hero-inner">
-              <span className="cfo-eyebrow">ESTIMATED NET WORTH · SGD</span>
-              <div className="cfo-hero-number">{recorded ? money(financialPosition.netWorthCents) : 'Not set up yet'}</div>
-              <p className="cfo-hero-text">Assets minus liabilities based on recorded balances and manually entered valuations. This is not a real-time bank or market valuation.</p>
-              <Link className="cfo-hero-link" href="/dashboard?view=wealth">Explore your wealth <ArrowUpRight size={13} style={{display:'inline'}}/></Link>
-            </div>
-          </section>
-          <section className="cfo-card cfo-span-4">
-            <div className="cfo-card-header"><div><h2>Financial pulse</h2><p className="cfo-card-note">Early signals from your records</p></div><Activity size={20} color="var(--cfo-brand)"/></div>
-            {planning.insights.length ? <>
-              <span className="cfo-pill">{planning.insights.length} item{planning.insights.length > 1 ? 's' : ''} to review</span>
-              <div style={{height:12}}/>
-              <Insights insights={planning.insights} limited/>
-            </> : <div className="cfo-empty"><strong>No current warning</strong>Known bills, goals and budgets have no flagged issue. Check for missing records.</div>}
-          </section>
-          <StatCard name="Recorded cash" cents={availableCashCents} icon={WalletCards} foot="Across cash and bank accounts"/>
-          <StatCard name="Monthly income" cents={incomeCents} icon={TrendingUp} foot="Recorded income this month"/>
-          <StatCard name="Monthly expenses" cents={expenseCents} icon={TrendingDown} foot="Recorded expenses this month"/>
-          <section className="cfo-card cfo-span-7">
-            <div className="cfo-card-header"><div><h2>Budget health</h2><p className="cfo-card-note">Your category spending this month</p></div>
-              <Link href="/dashboard?view=budget">Manage budget <ChevronRight size={13} style={{display:'inline'}}/></Link></div>
-            <BudgetBars budgets={budgetStatus} categories={categories} count={4} budgetStatus={budgetStatus}/>
-          </section>
-          <section className="cfo-card cfo-span-5">
-            <div className="cfo-card-header"><div><h2>Before payday</h2><p className="cfo-card-note">Recorded commitments still unpaid this month</p></div><CalendarClock size={20} color="var(--cfo-brand)"/></div>
-            <div className="cfo-inline-metric"><div className="cfo-inline-metric-label">Unpaid bills <small>Including earlier due dates</small></div><strong>{money(planning.upcomingTotalCents)}</strong></div>
-            <div className="cfo-inline-metric"><div className="cfo-inline-metric-label">Cash after those bills <small>Static estimate, not a forecast</small></div><strong>{money(planning.cashAfterUpcomingCents)}</strong></div>
-            <Link href="/dashboard?view=budget" className="cfo-action cfo-action--quiet" style={{marginTop:18}}>View your plan <ArrowRight size={14}/></Link>
-          </section>
-          <section className="cfo-card cfo-span-8">
-            <div className="cfo-card-header"><div><h2>Recent activity</h2><p className="cfo-card-note">Latest recorded transactions</p></div><Link href="/dashboard?view=transactions">All transactions <ChevronRight size={13} style={{display:'inline'}}/></Link></div>
-            {!recentTransactions.length ? <div className="cfo-empty"><strong>No transactions yet</strong>Record income or spending to see activity here.
-              <Link href="/dashboard?view=transactions">Add a transaction <ArrowRight size={13}/></Link></div> :
-            <table className="cfo-list-table"><thead><tr><th>Activity</th><th>Type</th><th>Amount</th></tr></thead><tbody>
-              {recentTransactions.slice(0,5).map(t => <tr key={t.id}>
-                <td><strong>{t.note || categoryName(t.categoryId)}</strong><div className="cfo-subtle">{t.bookedOn}</div></td>
-                <td>{t.kind === 'transfer' ? 'Transfer' : t.kind === 'income' ? 'Income' : 'Expense'}</td>
-                <td className="cfo-amount">{t.kind === 'expense' ? '−' : t.kind === 'income' ? '+' : ''}{money(t.amountCents)}</td>
-              </tr>)}
-            </tbody></table>}
-          </section>
-          <section className="cfo-card cfo-span-4">
-            <div className="cfo-card-header"><h2>Your financial workspace</h2></div>
-            <div style={{display:'grid',gap:10}}>
-              <Link href="/dashboard?view=transactions" className="cfo-shortcut"><ReceiptText size={20}/><span><strong>Transactions</strong><small>Record and update spending</small></span><ChevronRight size={16}/></Link>
-              <Link href="/dashboard?view=budget" className="cfo-shortcut"><CircleDollarSign size={20}/><span><strong>Budgets & goals</strong><small>Plan what happens next</small></span><ChevronRight size={16}/></Link>
-              <Link href="/dashboard?view=wealth" className="cfo-shortcut"><Landmark size={20}/><span><strong>Wealth</strong><small>Accounts, assets and debts</small></span><ChevronRight size={16}/></Link>
-            </div>
-          </section>
+        <div className="acorra-snapshot" aria-label="Money snapshot">
+          <div><span>Recorded cash</span><strong>{money(availableCashCents)}</strong><small>Cash and bank accounts</small></div>
+          <div><span>Spent this month</span><strong>{money(expenseCents)}</strong><small>Income {money(incomeCents)}</small></div>
+          <div><span>Estimated net worth</span><strong>{recorded?money(financialPosition.netWorthCents):'Not set up'}</strong><Link href="/dashboard?view=wealth">View assets & debts →</Link></div>
         </div>
+        <section className="cfo-card acorra-next">
+          <div className="cfo-brand-row"><SandyAvatar size="md"/><div><h2>{planning.insights.length?'Worth a look':'A little breathing room'}</h2><p className="cfo-card-note">{planning.insights.length?planning.insights[0].title:'No immediate risks flagged in these records.'}</p></div></div>
+          {planning.insights.length>0&&<details className="acorra-details"><summary>Review {planning.insights.length} signal{planning.insights.length===1?'':'s'}</summary><Insights insights={planning.insights}/></details>}
+          <div className="acorra-bill-line"><span>Unpaid bills this month <strong>{money(planning.upcomingTotalCents)}</strong></span><Link href="/dashboard?view=budget">Review plan →</Link></div>
+          <p className="cfo-card-note">Cash after those bills: {money(planning.cashAfterUpcomingCents)}. Estimate from recorded bills only.</p>
+        </section>
+        <section className="cfo-card">
+          <div className="cfo-card-header"><h2>Recent activity</h2><Link href="/dashboard?view=transactions">View all →</Link></div>
+          {!recentTransactions.length?<div className="cfo-empty">No transactions yet. Record your first income or expense.</div>:<div className="acorra-activity">{recentTransactions.slice(0,3).map(t=><div key={t.id}><span><strong>{t.note||categoryName(t.categoryId)}</strong><small>{t.bookedOn} · {t.kind}</small></span><strong>{t.kind==='expense'?'−':t.kind==='income'?'+':''}{money(t.amountCents)}</strong></div>)}</div>}
+        </section>
+        <details className="cfo-card acorra-details"><summary>Budget health <span>{budgetStatus.length} categories</span></summary><BudgetBars budgets={budgetStatus} categories={categories} budgetStatus={budgetStatus}/></details>
       </>}
 
       {view === 'transactions' && <div className="cfo-grid">
@@ -315,20 +279,15 @@ export default function Dashboard(props: DashboardProps) {
             <div className="cfo-span-4"><span className="cfo-subtle">Net cash flow</span><div className="cfo-stat-value">{money(incomeCents-expenseCents)}</div></div>
           </div>
         </section>
-        <div className="cfo-span-5"><TransactionForm accounts={accounts} categories={categories} currentDate={currentDate}/></div>
-        <div className="cfo-span-7"><TransactionManager transactions={recentTransactions} accounts={accounts} categories={categories}/></div>
+        <div className="cfo-span-12"><details className="acorra-details cfo-card" open={recentTransactions.length===0||new URLSearchParams(url.split('?')[1]).has('add')}><summary>Add a transaction <Plus size={16}/></summary><TransactionForm accounts={accounts} categories={categories} currentDate={currentDate}/></details></div>
+        <div className="cfo-span-12"><TransactionManager transactions={recentTransactions} accounts={accounts} categories={categories}/></div>
       </div>}
 
       {view === 'budget' && <>
-        <div className="cfo-grid">
-          <section className="cfo-card cfo-span-7">
-            <div className="cfo-card-header"><div><h2>Monthly spending limits</h2><p className="cfo-card-note">Make every category intentional</p></div><span className="cfo-pill">{month}</span></div>
-            <BudgetBars budgets={budgetStatus} categories={categories} budgetStatus={budgetStatus}/>
-          </section>
-          <div className="cfo-span-5"><BudgetForms categories={categories} month={month}/></div>
-        </div>
-        <section className="cfo-card"><div className="cfo-card-header"><div><h2>Review what's ahead</h2><p className="cfo-card-note">Financial insights based on recorded bills, category budgets and savings goals</p></div><ShieldCheck color="var(--cfo-brand)" size={20}/></div><Insights insights={planning.insights}/></section>
-        <FinancialPlanning commitments={commitments} goals={goals} planning={planning} month={month} currentDate={currentDate} availableCashCents={availableCashCents}/>
+        <div className="acorra-tabs" role="group" aria-label="Plan sections">{(['spending','goals','bills'] as const).map(tab=><button key={tab} aria-pressed={planTab===tab} onClick={()=>setPlanTab(tab)}>{tab==='spending'?'Spending':tab==='goals'?'Goals':'Bills'}</button>)}</div>
+        {planTab==='spending'&&<><section className="cfo-card"><div className="cfo-card-header"><h2>Monthly spending limits</h2><span className="cfo-subtle">{month}</span></div><BudgetBars budgets={budgetStatus} categories={categories} budgetStatus={budgetStatus}/></section><details className="acorra-details cfo-card"><summary>Manage budgets & categories <Plus size={16}/></summary><BudgetForms categories={categories} month={month}/></details></>}
+        {planTab!=='spending'&&<FinancialPlanning panel={planTab} commitments={commitments} goals={goals} planning={planning} month={month} currentDate={currentDate} availableCashCents={availableCashCents}/>}
+        <details className="acorra-details cfo-card"><summary>Financial health <span>{planning.insights.length} signals</span></summary><Insights insights={planning.insights}/></details>
       </>}
 
       {view === 'wealth' && <>
@@ -358,9 +317,9 @@ export default function Dashboard(props: DashboardProps) {
               <div>{accounts.map(a => <div className="cfo-inline-metric" key={a.id}><div className="cfo-inline-metric-label">{a.name}<small>{a.kind === 'asset' ? 'Cash / bank' : 'Loan / debt'}</small></div><strong>{money(a.balanceCents)}</strong></div>)}</div>}
             <p className="cfo-field-note">Compare these calculated balances with statements to identify differences. Automatic bank reconciliation is not enabled.</p>
           </section>
-          <div className="cfo-span-5"><AccountForm/></div>
+          <div className="cfo-span-5"><details className="acorra-details cfo-card" open={!accounts.length}><summary>Add an account <Plus size={16}/></summary><AccountForm/></details></div>
           <div className="cfo-span-7"><ValuationManager valuations={valuations}/></div>
-          <div className="cfo-span-5"><ValuationForm currentDate={currentDate}/></div>
+          <div className="cfo-span-5"><details className="acorra-details cfo-card"><summary>Add an asset or debt <Plus size={16}/></summary><ValuationForm currentDate={currentDate}/></details></div>
         </div>
       </>}
       <p className="cfo-subtle" style={{paddingBottom:12}}>All figures are in SGD. Financial insights depend on the records you supply and are not professional financial or investment advice. No payments are initiated.</p>

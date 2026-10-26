@@ -28,7 +28,8 @@ const dollars = formatSgd
 const inputStyle = { display: 'block', width: '100%', padding: 9, borderRadius: 6, border: '1px solid #aeb8c0' }
 const box = { padding: 20, border: '1px solid #d4d9dd', borderRadius: 12, marginBottom: 18 }
 
-export default function FinancialPlanning({ commitments, goals, planning, month, currentDate, availableCashCents }: {
+export default function FinancialPlanning({ commitments, goals, planning, month, currentDate, availableCashCents, panel = 'all' }: {
+  panel?: 'all' | 'goals' | 'bills'
   commitments: Commitment[]
   goals: Goal[]
   planning: Planning
@@ -39,7 +40,7 @@ export default function FinancialPlanning({ commitments, goals, planning, month,
   const [editingGoal, setEditingGoal] = useState<number | null>(null)
   return (
     <>
-      <section style={box}>
+      {(panel==='all'||panel==='bills')&&<section style={box}>
         <h2>Upcoming commitments</h2>
         <p>Monthly bills are reminders and projections only. They are <strong>not</strong> posted as expenses automatically.</p>
         <p><strong>Recorded bank/cash balances:</strong> {dollars(availableCashCents)} · <strong>Unpaid bills this month (including overdue):</strong> {dollars(planning.upcomingTotalCents)}</p>
@@ -59,7 +60,7 @@ export default function FinancialPlanning({ commitments, goals, planning, month,
             ))}
           </ul>
         )}
-        <Form route="finance.commitments.store">
+        <details className="acorra-details"><summary>Add a monthly bill</summary><Form route="finance.commitments.store">
           {({ errors, processing }) => <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 10, alignItems: 'end' }}>
             <label>Bill name<input name="name" required placeholder="Rent, insurance" style={inputStyle}/></label>
             <label>Amount (S$)<input name="amount" required inputMode="decimal" placeholder="180.00" style={inputStyle}/></label>
@@ -67,11 +68,11 @@ export default function FinancialPlanning({ commitments, goals, planning, month,
             <button className="btn btn--primary" type="submit" disabled={processing}>Add monthly bill</button>
             {Object.values(errors).map((e, i) => <small key={i} role="alert">{e}</small>)}
           </div>}
-        </Form>
+        </Form></details>
         <small>Marking paid only updates this reminder. Record the actual expense separately so your balances stay accurate.</small>
-      </section>
+      </section>}
 
-      <section style={box}>
+      {(panel==='all'||panel==='goals')&&<section style={box}>
         <h2>Savings goals</h2>
         <p>Track your intentions alongside your budget. Goal progress is a planning figure, <strong>not</strong> an additional asset in net worth.</p>
         {goals.map(g => (
@@ -96,7 +97,7 @@ export default function FinancialPlanning({ commitments, goals, planning, month,
             </Form>}
           </div>
         ))}
-        <h3 style={{ marginTop: 16 }}>Create a goal</h3>
+        <details className="acorra-details"><summary>Create a goal</summary>
         <Form route="finance.goals.store">
           {({ errors, processing }) => <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(160px, 1fr))',gap:10,alignItems:'end'}}>
             <label>Goal name<input name="name" placeholder="Emergency fund" required style={inputStyle}/></label>
@@ -106,10 +107,10 @@ export default function FinancialPlanning({ commitments, goals, planning, month,
             <button className="btn btn--primary" type="submit" disabled={processing}>Add goal</button>
             {Object.values(errors).map((e, i) => <small key={i} role="alert">{e}</small>)}
           </div>}
-        </Form>
-      </section>
+        </Form></details>
+      </section>}
 
-      <section style={box}>
+      {panel==='all'&&<section style={box}>
         <h2>Financial health review</h2>
         <p>Early warnings calculated from your own recorded budgets, upcoming unpaid commitments, and goals. This is a rules-based preview, not AI advice yet.</p>
         {planning.insights.length === 0 ? <p>No early warnings detected from the records supplied. This doesn't guarantee all expenses are covered.</p> : (
@@ -123,7 +124,7 @@ export default function FinancialPlanning({ commitments, goals, planning, month,
           </div>
         )}
         <small>Assumptions: monthly bills remain outstanding until marked paid. Bills due earlier this month remain included and are flagged as potentially overdue; recording the actual expense remains a separate step.</small>
-      </section>
+      </section>}
     </>
   )
 }

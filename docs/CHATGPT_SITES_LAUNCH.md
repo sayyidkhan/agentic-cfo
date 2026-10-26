@@ -54,3 +54,15 @@ Pure domain files to consider porting:
 ## Status
 
 This brief originally described preparation. The additive Sites runtime and labelled synthetic-data demo have now been implemented in `sites/`. See `docs/SITES_VERIFICATION.md` for the tested scope and remaining real-data release gate. Source files alone do not establish deployment; the native Sites saved-version and deployment records are authoritative.
+
+
+### Minimal workspace refinement — 26 October 2026
+Overview now prioritises cash, monthly spending (with income), estimated net worth,
+one Sandy attention summary and three recent transactions. All risk signals and
+budget health remain accessible in expandable sections. Repeated navigation cards
+and competing overview actions are removed. Planning is split into Spending,
+Goals and Bills; creation forms are disclosed on demand. Wealth account/valuation
+forms and transaction entry are similarly expandable; Record spending opens the
+transaction form directly. Settings is available through the header gear. Demo
+privacy labelling and the real-data lock remain in force. Shared finance components
+retain their original default behaviour outside the focused planning view.
