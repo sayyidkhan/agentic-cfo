@@ -261,3 +261,16 @@ test('Automatic blinking always presents a closed-eye frame even with dropped fr
  for(let t=0;t<14000;t+=33.33)if(normal.sample(t)>.99)closed++
  assert.ok(normal.count>=2);assert.ok(closed>=normal.count)
 })
+
+test('Refined lids close from above and tail/paw movement stays continuous',async()=>{
+ const {createPaintedBlink}=await import('./dist/sandy-blink.mjs')
+ const {createMotionRig}=await import('./dist/sandy-motion.mjs')
+ const make=value=>({width:400,height:400,data:new Uint8ClampedArray(400*400*4).fill(value)})
+ const original=make(40),closed=make(180),frame=createPaintedBlink(original,closed,'curious').frame(.5)
+ function pixel(v){const x=.57-v*Math.sin(.28),y=.255+v*Math.cos(.28);return frame.data[(Math.floor(y*400)*400+Math.floor(x*400))*4]}
+ assert.ok(pixel(-.025)>pixel(.025)+50,'upper lid must lead instead of both lids squeezing symmetrically')
+ for(const mood of ['curious','calm','watchful','concerned','screaming','celebrating','relieved']){
+  const rig=createMotionRig(mood,40);let last=Float32Array.from(rig.frame(0))
+  for(let t=1/60;t<12;t+=1/60){const frame=rig.frame(t);for(let i=0;i<frame.length;i++)assert.ok(Math.abs(frame[i]-last[i])<.012,'no abrupt deformation steps at display cadence');last.set(frame)}
+ }
+})

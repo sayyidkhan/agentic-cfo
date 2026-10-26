@@ -27,22 +27,25 @@ const landmarks:Record<SandyStateId,{paws:Point[],neck:Point}>={
 }
 /** Float offsets remove quantisation jitter; exact head rotation preserves eye shape. */
 export function createMotionRig(mood:SandyStateId,size=160){
- const config=landmarks[mood],weights=new Float32Array(size*size*4),field=new Float32Array(size*size*2),duration=sequences[mood].duration
+ const config=landmarks[mood],weights=new Float32Array(size*size*5),field=new Float32Array(size*size*2),duration=sequences[mood].duration
  for(let py=0;py<size;py++)for(let px=0;px<size;px++){
-  const x=(px+.5)/size,y=(py+.5)/size,i=(py*size+px)*4
+  const x=(px+.5)/size,y=(py+.5)/size,i=(py*size+px)*5
   weights[i]=(1-smooth(.38,.5,x))*(1-smooth(.72,.88,y))*smooth(.02,.12,y)
+  weights[i+4]=(1-smooth(.25,.73,y))*weights[i]
   weights[i+1]=smooth(.39,.49,x)*(1-smooth(.4,.51,y))
   weights[i+2]=Math.exp(-(((x-.64)/.2)**2+((y-.62)/.21)**2)*2)*(1-smooth(.81,.89,y))
   weights[i+3]=Math.max(...config.paws.map(([cx,cy])=>1-smooth(.35,1,Math.hypot((x-cx)/.13,(y-cy)/.15))))
  }
  return {size,frame(seconds:number){
-  const pose=sampleSandyPose(mood,seconds),follow=sampleSandyPose(mood,seconds-.32),cycle=seconds/duration*Math.PI*2
+  const pose=sampleSandyPose(mood,seconds),follow=sampleSandyPose(mood,seconds-.22),tipFollow=sampleSandyPose(mood,seconds-.5),cycle=seconds/duration*Math.PI*2
   const head=pose.head+Math.sin(cycle)*.003,rawTail=follow.tail+follow.head*.3+Math.sin(cycle*2)*.012,tail=rawTail<0?-.024*Math.tanh(-rawTail/.024):rawTail,breath=Math.sin(cycle*3)*.003+pose.breath
+  const tip=(tipFollow.tail-follow.tail)*.55+(tipFollow.head-follow.head)*.12
+  const pawArc=Math.sin(Math.min(1,Math.abs(pose.paw)/.04)*Math.PI/2)*.008*Math.sign(pose.paw)
   const ch=Math.cos(head)-1,sh=Math.sin(head),ct=Math.cos(tail)-1,st=Math.sin(tail)
   for(let py=0;py<size;py++)for(let px=0;px<size;px++){
-   const x=(px+.5)/size,y=(py+.5)/size,i=(py*size+px)*4,k=(py*size+px)*2
-   field[k]=((x-.4)*ct+(y-.82)*st)*weights[i]+((x-config.neck[0])*ch+(y-config.neck[1])*sh-pose.x)*weights[i+1]
-   field[k+1]=(-(x-.4)*st+(y-.82)*ct)*weights[i]+(-(x-config.neck[0])*sh+(y-config.neck[1])*ch-pose.y)*weights[i+1]+breath*weights[i+2]-pose.paw*weights[i+3]
+   const x=(px+.5)/size,y=(py+.5)/size,i=(py*size+px)*5,k=(py*size+px)*2
+   field[k]=((x-.4)*ct+(y-.82)*st)*weights[i]+((x-config.neck[0])*ch+(y-config.neck[1])*sh-pose.x)*weights[i+1]+(y-.6)*tip*weights[i+4]+pawArc*weights[i+3]
+   field[k+1]=(-(x-.4)*st+(y-.82)*ct)*weights[i]+(-(x-config.neck[0])*sh+(y-config.neck[1])*ch-pose.y)*weights[i+1]+breath*weights[i+2]-pose.paw*weights[i+3]-(x-.35)*tip*weights[i+4]
   }
   return field
  }}

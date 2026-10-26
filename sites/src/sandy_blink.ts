@@ -26,24 +26,25 @@ export function createPaintedBlink(original:SandyPixels,closed:SandyPixels|undef
    const a=u/rx*.054,b=v/ry*.061,sx=(reference[n][0]+a*rc-b*rs)*closed.width-.5,sy=(reference[n][1]+a*rs+b*rc)*closed.height-.5
    const x0=Math.max(0,Math.min(closed.width-2,Math.floor(sx))),y0=Math.max(0,Math.min(closed.height-2,Math.floor(sy))),tx=sx-x0,ty=sy-y0,p=(y0*closed.width+x0)*4
    const sample=(channel:number)=>closed.data[p+channel]*(1-tx)*(1-ty)+closed.data[p+4+channel]*tx*(1-ty)+closed.data[p+closed.width*4+channel]*(1-tx)*ty+closed.data[p+closed.width*4+4+channel]*tx*ty
-   patches.push({index,edge,vertical:Math.abs(v)/ry,r:sample(0),g:sample(1),b:sample(2)})
+   patches.push({index,edge,vertical:v/ry,r:sample(0),g:sample(1),b:sample(2)})
   }
  }
- return {frame(amount:number){if(amount<=.001)return original;output.data.set(original.data);const opening=(1-amount)**2*1.15-.12
-  for(const patch of patches){const alpha=patch.edge*smooth(opening-.08,opening+.08,patch.vertical),i=patch.index;output.data[i]=original.data[i]*(1-alpha)+patch.r*alpha;output.data[i+1]=original.data[i+1]*(1-alpha)+patch.g*alpha;output.data[i+2]=original.data[i+2]*(1-alpha)+patch.b*alpha}
+ return {frame(amount:number){if(amount<=.001)return original;output.data.set(original.data);const closure=smooth(0,1,Math.max(0,Math.min(1,amount))),upper=-1.1+1.65*closure,lower=1.1-.75*closure
+  for(const patch of patches){const alpha=patch.edge*Math.max(1-smooth(upper-.08,upper+.08,patch.vertical),smooth(lower-.08,lower+.08,patch.vertical)),i=patch.index;output.data[i]=original.data[i]*(1-alpha)+patch.r*alpha;output.data[i+1]=original.data[i+1]*(1-alpha)+patch.g*alpha;output.data[i+2]=original.data[i+2]*(1-alpha)+patch.b*alpha}
   return output
  }}
 }
 
 /** Never skip the closed pose when a slow/background webview misses a blink interval. */
 export function createBlinkClock(){
+ const intervals=[4900,6200,5400,7100]
  let next=1200,start:number|undefined,closedShown=false,count=0
  return {get count(){return count},sample(milliseconds:number){
   if(start===undefined){if(milliseconds<next)return 0;start=milliseconds;closedShown=false}
   const age=milliseconds-start
   if(age<=0)return 0
   if(age>=100&&!closedShown){closedShown=true;count++;return 1}
-  if(age>=300){start=undefined;next=milliseconds+6100;return 0}
+  if(age>=300){start=undefined;next=milliseconds+intervals[(count-1)%intervals.length];return 0}
   return blinkAmount(1.2+age/1000)
  }}
 }
