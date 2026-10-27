@@ -225,7 +225,7 @@ export default function Dashboard(props: DashboardProps) {
   const categoryName = (id: number | null) => categories.find(c => c.id === id)?.name ?? 'Uncategorised'
 
   return <Page title={view === 'overview' ? 'Acorra · Overview' : descriptor.title} hideTitle>
-    <div className="cfo-workspace">
+    <div className={'cfo-workspace workspace-'+view}>
       <header className="cfo-page-intro">
         <div><div className="cfo-eyebrow">{descriptor.eyebrow} · {month}</div><h1>{descriptor.title}</h1><p>{descriptor.detail}</p></div>
         <div className="cfo-action-row">

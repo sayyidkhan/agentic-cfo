@@ -115,3 +115,19 @@ body{margin:0;background:#f8f6ef}button,a,input,select,textarea{-webkit-tap-high
 @media(max-width:767px){.cfo-app .cfo-navigation a.sandy-nav{background:#f2e7c9;color:#674d20;margin:0 3px;border-radius:16px}.cfo-app .cfo-navigation a.sandy-nav svg{width:24px;height:24px}.cfo-app .cfo-navigation a.sandy-nav[aria-current=page]{background:#d8bb76;color:#244a3b;box-shadow:inset 0 0 0 1px #b7964d}.cfo-app .cfo-navigation a.sandy-nav:hover{background:#e8d5a6}}
 
 .acorra-mark{display:block;flex-shrink:0;object-fit:contain}.cfo-brand-mark:has(.acorra-mark){background:transparent;border-radius:12px}.cfo-brand-mark .acorra-mark{width:100%;height:100%}.landing-brand>.acorra-mark{width:40px;height:40px}.acorra-wordmark__icon:has(.acorra-mark){background:transparent;padding:0;overflow:visible}.acorra-wordmark__icon>.acorra-mark{width:100%;height:100%}
+
+/* One fluid desktop frame prevents nested, shrink-to-content page gutters. */
+@media(min-width:768px){
+ .cfo-app{--desktop-frame:1600px;--desktop-gutter:clamp(24px,3vw,56px)}
+ .cfo-app .header__inner,.cfo-app .cfo-navigation-inner,.cfo-app .app-main{width:100%;max-width:var(--desktop-frame);margin-inline:auto;padding-inline:var(--desktop-gutter);box-sizing:border-box}
+ .cfo-app .app-main{display:block}
+ .cfo-app .app-main>.page,.cfo-app .cfo-workspace{width:100%;max-width:none;min-width:0;margin-inline:0;box-sizing:border-box}
+ .cfo-app .workspace-status{max-width:760px;margin-inline:auto}
+ .landing .landing-nav,.landing .hero,.landing .feature-strip{max-width:1600px;width:100%;box-sizing:border-box;padding-inline:clamp(24px,3vw,56px)}
+ .landing .feature-strip{margin-inline:auto}.landing .hero{gap:clamp(40px,5vw,100px)}
+}
+@media(min-width:1100px){
+ .cfo-app .workspace-overview{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+ .workspace-overview>.cfo-page-intro,.workspace-overview>.acorra-snapshot,.workspace-overview>details,.workspace-overview>p,.workspace-overview>.cfo-alert{grid-column:1/-1}
+ .workspace-overview>.cfo-card{height:100%}
+}
