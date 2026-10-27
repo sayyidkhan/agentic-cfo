@@ -301,7 +301,7 @@ test('Acorn-holding arms retain their shape instead of stretching with isolated 
 
 
 test('seasonal artwork is complete, versioned and read-only',async()=>{
- for(const name of ['spring','summer','autumn','winter','sandy-carry','sandy-stash']){
+ for(const name of ['spring','summer','autumn','winter','sandy-carry','sandy-stash','sandy-winter-rest']){
   const url='https://acorra.test/assets/seasons/v1/'+name+'.webp',response=await worker.fetch(new Request(url),{})
   assert.equal(response.status,200);assert.equal(response.headers.get('content-type'),'image/webp');assert.match(response.headers.get('cache-control'),/immutable/)
   assert.deepEqual(Buffer.from(await response.arrayBuffer()),readFileSync('assets/seasons/'+name+'.webp'))

@@ -43,3 +43,11 @@ Existing financial checks remain in place. Additional tests verify that all six 
 ## Mobile viewport follow-up
 
 The woodland hero now sizes against the small viewport height (`svh`) instead of a fixed 650px stage. Its four season controls sit within the first mobile screen with space above browser chrome; the caption and character remain part of the same continuous forest scene. The header entry is labelled “Open app” on mobile and desktop and uses a native dashboard link so navigation also works without client-side interception.
+
+## Winter payoff — Sandy’s earned rest
+
+In winter Sandy reclines on a rustic wooden lounger, feet up, holding an acorn, beside the full six-acorn store. The dedicated transparent asset is `sites/assets/seasons/sandy-winter-rest.webp`. It crossfades into the snowy woodland, replacing the standing pose only in winter, and respects reduced-motion preferences. The wooden lounger stays still; snowfall provides ambient movement. Winter copy: “A little saved. A little well-earned rest.”
+
+Generated with the built-in image-generation tool using the existing curious Sandy as the character reference. Prompt: “Create a new full-body pose of this same cinnamon-furred squirrel Sandy, preserving her cream belly, fluffy curled tail, round expressive face, dark green neck scarf and gold acorn pin. Reclining on a small rustic wooden chaise longue, back supported, feet stretched out, peaceful half-closed eyes, holding an acorn near her chest. Backrest left, feet right, three-quarter front view. Complete squirrel and bench in frame, transparent background, no scenery, premium detailed 3D storybook render, warm fur lighting and cool soft fill.”
+
+Choosing a season keeps that season selected while its local scene animation continues; the default untouched hero still cycles through the year. This lets visitors linger on winter’s resting scene.

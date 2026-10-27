@@ -3,7 +3,7 @@ export const seasons=[
  {id:'spring',label:'Spring',line:'Start with one small habit.'},
  {id:'summer',label:'Summer',line:'Keep a little for tomorrow.'},
  {id:'autumn',label:'Autumn',line:'Small steps build a buffer.'},
- {id:'winter',label:'Winter',line:'A little prepared. A little more at ease.'},
+ {id:'winter',label:'Winter',line:'A little saved. A little well-earned rest.'},
 ] as const
 const clamp=(n:number)=>Math.max(0,Math.min(1,n))
 const ease=(n:number)=>{n=clamp(n);return n*n*(3-2*n)}
