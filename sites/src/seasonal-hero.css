@@ -25,3 +25,17 @@
 @media(prefers-reduced-motion:reduce){.al-season-world,.al-hero,.al-seasonal-atmosphere{transition:none!important}.al-season-selector button[aria-pressed=true] b{transform:scaleX(1)}.al-stash-spark{display:none}}
 
 .al-motion .al-foraging-sandy>.al-sandy-rest{animation:al-sandy-winter-breathe 4s ease-in-out infinite;transform-origin:50% 95%}@keyframes al-sandy-winter-breathe{50%{scale:1.015 1.025;translate:0 -1px}}
+
+/* The story has a crisp woodland window; copy gets a deliberate, uncluttered surface. */
+.al-seasonal-atmosphere{background:radial-gradient(ellipse at 88% 18%,color-mix(in srgb,var(--season-light) 13%,transparent),transparent 52%),linear-gradient(120deg,#082d26,#103a2d 65%,#0a3028)}
+.al-season-veil{background:radial-gradient(ellipse at 8% 42%,#234d361c,transparent 52%),linear-gradient(0deg,#0a3028,transparent 30%)}
+.al-season-beams{right:-35%;width:75%;opacity:.25}.al-season-wind{left:45%;mask-image:linear-gradient(90deg,transparent,#000 25%)}
+.al-woodland-lines{position:absolute;top:0;left:0;width:100%;height:760px;fill:none;stroke:#c5b36d29;stroke-width:1.2;pointer-events:none}.al-woodland-stem{stroke:#cfb97740;stroke-dasharray:1100;stroke-dashoffset:0}
+.al-motion .al-woodland-stem{animation:al-woodland-trace 12s ease-in-out infinite}@keyframes al-woodland-trace{0%,100%{stroke-dashoffset:0;opacity:.5}50%{stroke-dashoffset:120;opacity:1}}
+.al-season-scene{inset:22px 0 140px 20px;mask-image:none;mask-composite:add;border-radius:45% 45% 23px 23px / 34% 34% 23px 23px;border:1px solid #cab97652;box-shadow:0 22px 55px #001e1938;transform:translateZ(0)}
+.al-season-scene:after{box-shadow:inset 0 -10px 25px #082d2650;background:linear-gradient(0deg,#0c302b20,transparent 20%)}
+.al-scene-ground-mist{height:6%;background:linear-gradient(transparent,#0b332b40)}
+.al-season-story-caption{left:30px;right:15px;bottom:65px}.al-season-selector{left:30px;right:15px;bottom:16px}.al-season-story-caption>p{font-size:22px}
+.al-hero-stage{gap:30px;grid-template-columns:1fr 1.05fr}.al-hero-art{margin-right:0}.al-hero-copy{max-width:590px}.al-hero-copy>p{max-width:410px;line-height:1.75}.al-hero-copy .al-hero-actions{gap:24px}.al-hero-copy .al-button{padding-inline:24px;min-width:179px}.al-hero-copy .al-demo-caption{margin-top:20px}
+@media(max-width:1050px){.al-hero-stage{gap:20px}.al-season-scene{inset:26px 0 140px 0}.al-season-story-caption,.al-season-selector{left:8px;right:6px}.al-season-story-caption>p{font-size:20px}.al-hero .al-hero-copy h1{font-size:62px}.al-hero-copy .al-hero-actions{gap:20px}.al-hero-copy .al-button{min-width:0;padding-inline:18px}}
+@media(max-width:650px){.al-hero-stage{gap:0}.al-hero .al-hero-copy h1{font-size:clamp(48px,13vw,74px)}.al-hero-copy>p{max-width:310px}.al-hero-copy .al-hero-actions{gap:18px}.al-hero-copy .al-demo-caption{margin-top:17px}.al-hero-art{width:100%;height:421px;margin:27px 0 0}.al-season-scene{inset:0 0 132px;border-radius:45% 45% 16px 16px / 30% 30% 16px 16px}.al-season-story-caption{left:4px;right:4px;bottom:63px}.al-season-story-caption>p{font-size:19px}.al-season-selector{left:4px;right:4px;bottom:12px}.al-season-wind{left:15%}.al-woodland-lines{height:600px;opacity:.45}.al-season-beams{right:-55%;width:110%;top:-100px}.al-season-veil{background:linear-gradient(180deg,#082d2600,#0a3028 95%)}}

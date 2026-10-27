@@ -6,7 +6,7 @@ Updated 27 October 2026.
 
 Sandy gathers an acorn, approaches her oak-tree hiding place, crouches to store it, and settles beside her growing stash. The woodland progresses through spring, summer, autumn and winter. This gives the savings-habit metaphor a visible story rather than an isolated floating acorn.
 
-The hero background changes with the scene. Moving sunbeams, airborne particles, autumn leaves and winter snow provide environmental motion. The foreground uses layered artwork and a shared 32-second timeline: eight seconds per season. Visitors can jump to a season using the four labelled buttons. No play/pause button is shown.
+The woodland illustration sits in a crisp, softly arched window. The left copy area uses a clean forest-green surface with fine botanical linework; the duplicated, blurred forest layer has been removed. Seasonal ambient colour, moving sunbeams and particles connect the two areas without obscuring the text. Moving sunbeams, airborne particles, autumn leaves and winter snow provide environmental motion. The foreground uses layered artwork and a shared 32-second timeline: eight seconds per season. Visitors can jump to a season using the four labelled buttons. No play/pause button is shown.
 
 The clock suspends when the scene is offscreen or the document is hidden. OS reduced-motion preferences produce a complete still scene; season selection remains available. The animation is decorative and has no connection to financial mutations, account data or simulated investment returns. The actual finance preview and complete footer remain below it.
 
