@@ -85,3 +85,10 @@ The footer has no demo or app call-to-action links and no internal navigation.
 Brand and tagline sit on the left; copyright and the back-to-top link are grouped
 on the right in the same compact row. On mobile the right-aligned metadata sits
 below the brand. The large decorative wordmark and extra divider row are removed.
+
+
+### Single closing action
+
+The closing section keeps only Explore Acorra. The Start a blank demo action,
+its now-unused landing callback, and its explanatory demo paragraph were removed.
+Reset controls remain in app settings.
