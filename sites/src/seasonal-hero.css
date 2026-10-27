@@ -39,11 +39,25 @@
 .al-season-plane{position:absolute;inset:0;isolation:isolate}
 @media(max-width:650px){
  .acorra-landing{position:relative}.acorra-landing>.al-nav{position:absolute;inset:0 0 auto;z-index:10;background:linear-gradient(180deg,#072c25ed,#072c2580);border-bottom:0;height:70px}
- .al-hero{padding-top:70px}.al-hero-stage{display:block;height:650px;min-height:0}.al-hero-copy{position:relative;z-index:3;padding-top:25px;pointer-events:none}.al-hero-copy a{pointer-events:auto}.al-hero-copy>p{color:#e0e7d2;text-shadow:0 2px 15px #001e19}.al-hero-copy .al-text-link{color:#f6efd8;text-shadow:0 2px 10px #001e19}.al-hero-copy .al-demo-caption{color:#c1d0b1;text-shadow:0 2px 10px #001e19}
+ .al-hero{padding-top:70px}.al-hero-stage{display:block;height:clamp(490px,calc(100svh - 100px),600px);min-height:0}.al-hero-copy{position:relative;z-index:3;padding-top:25px;pointer-events:none}.al-hero-copy a{pointer-events:auto}.al-hero-copy>p{color:#e0e7d2;text-shadow:0 2px 15px #001e19}.al-hero-copy .al-text-link{color:#f6efd8;text-shadow:0 2px 10px #001e19}.al-hero-copy .al-demo-caption{color:#c1d0b1;text-shadow:0 2px 10px #001e19}
  .al-hero-art{position:absolute;inset:-70px -20px 0;width:auto;height:auto;margin:0;z-index:1}.al-season-scene{inset:0 0 89px;mask-image:linear-gradient(0deg,transparent,#000 13%,#000);border:0;border-radius:0}
  .al-season-plane{inset:0 0 0 auto;width:auto;height:100%;aspect-ratio:1}.al-season-plane>.al-season-world{object-position:center}
  .al-season-scene:after{background:linear-gradient(180deg,#062b2499 0%,#062b24bf 33%,#062b2466 48%,transparent 64%,#0a30284d 82%,#0a3028d9 100%);z-index:5}
  .al-foraging-sandy{left:var(--sandy-mobile-x,44.4%);width:31%;bottom:26%}.al-acorn-stash{top:57%}.al-scene-ground-mist{height:9%}
  .al-season-story-caption{left:22px;right:22px;bottom:62px}.al-season-story-caption>p{color:#f8e6b4;text-shadow:0 2px 12px #072b24}.al-season-selector{left:22px;right:22px;bottom:12px}.al-season-selector>button{color:#d8e0c4}
  .al-season-beams{top:-100px;opacity:.3}.al-season-wind{top:-70px}
+}
+
+/* Keep the app entry explicit and tappable, including compact mobile headers. */
+.al-nav-cta{position:relative;touch-action:manipulation;white-space:nowrap}
+@media(max-width:650px){
+ .acorra-landing>.al-nav{gap:12px}
+ .al-nav nav{gap:12px}
+ .al-nav-cta{font-size:10px;min-width:85px;min-height:44px;height:44px;padding:10px 12px;gap:7px}
+ .al-nav-cta svg{width:14px;height:14px;flex-shrink:0}
+ .al-season-selector>button{min-height:44px;font-size:10px}
+}
+@media(max-width:360px){
+ .al-nav{padding-inline:16px}.al-brand{font-size:24px;gap:7px}.al-nav nav{gap:10px;font-size:9px}
+ .al-nav-cta{min-width:78px;padding-inline:10px;font-size:9px}
 }

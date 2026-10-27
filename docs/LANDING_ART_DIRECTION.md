@@ -39,3 +39,7 @@ Reference: existing `sites/assets/sandy/curious.webp`.
 ## Validation
 
 Existing financial checks remain in place. Additional tests verify that all six seasonal assets are served intact using read-only methods, that an acorn enters the stash only after release, that the winter stash stays intact, and that pose opacity remains continuous through the complete loop. Desktop and 390px browser checks cover scene rendering, season selection, image loading and horizontal overflow.
+
+## Mobile viewport follow-up
+
+The woodland hero now sizes against the small viewport height (`svh`) instead of a fixed 650px stage. Its four season controls sit within the first mobile screen with space above browser chrome; the caption and character remain part of the same continuous forest scene. The header entry is labelled “Open app” on mobile and desktop and uses a native dashboard link so navigation also works without client-side interception.
