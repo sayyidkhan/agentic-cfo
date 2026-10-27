@@ -125,3 +125,50 @@
 .al-benefit-copy{min-width:0}
 .al-hero-copy .al-benefit-icon{width:40px;height:40px;padding:9px;border:1px solid #e6cd8b55;border-radius:12px;background:#e6cd8b12;color:#f0d58e;box-sizing:border-box;flex-shrink:0;overflow:visible}
 @media(max-width:650px){.al-hero-copy>.al-eyebrow{font-size:clamp(12px,3.3vw,14px);gap:10px;letter-spacing:0;line-height:1.45}.al-hero-copy .al-benefit-icon{width:34px;height:34px;padding:7px;border-radius:10px}}
+
+/* Desktop hero fits the visible window, including the complete seasonal timeline.
+   Earlier fixed 650/680px stages pushed the controls below short laptop screens. */
+@media(min-width:651px){
+ .al-hero-stage{height:clamp(300px,calc(100svh - 108px),790px);min-height:0}
+}
+@media(min-width:651px) and (max-height:780px){
+ .al-hero-copy{padding:12px 0 32px;max-width:49%}
+ .al-hero-copy>.al-eyebrow{font-size:clamp(12px,1.25vw,15px);gap:10px}
+ .al-hero-copy .al-benefit-icon{width:34px;height:34px;padding:7px}
+ .al-hero .al-hero-copy h1{font-size:clamp(40px,min(6.3vw,9svh),70px);margin:20px 0 0}
+ .al-hero-copy>p{font-size:13px;line-height:1.65;margin-top:20px;max-width:340px}
+ .al-hero-copy .al-hero-actions{margin-top:22px;gap:18px}
+ .al-hero-copy .al-button{min-height:46px;padding:12px 18px;font-size:11px}
+ .al-hero-copy .al-text-link{font-size:10px}
+ .al-season-controls{bottom:20px;padding:13px 17px 7px}
+ .al-season-controls .al-season-story-caption>p{font-size:clamp(17px,1.7vw,22px)}
+ .al-season-controls .al-season-selector{margin-top:7px;gap:12px}
+}
+/* Narrow landscape windows need two clear rows, rather than overlapping the copy. */
+@media(min-width:651px) and (max-width:900px) and (max-height:780px){
+ .al-hero-copy{max-width:58%;justify-content:flex-start;padding-top:18px}
+ .al-hero .al-hero-copy h1{font-size:clamp(38px,5.8vw,52px)}
+ .al-hero-copy>p{max-width:310px;margin-top:14px;font-size:12px}
+ .al-hero-copy .al-hero-actions{margin-top:16px;gap:13px}
+ .al-hero-copy .al-button{padding-inline:14px}
+ .al-season-controls{left:12%;right:6%;bottom:16px}
+ .al-season-controls .al-season-story-caption>p{font-size:18px}
+}
+
+@media(min-width:651px) and (max-height:560px){
+ .al-hero-copy{justify-content:flex-start;padding-top:12px}
+ .al-hero .al-hero-copy h1{font-size:clamp(30px,4.5vw,48px);line-height:1.15;margin-top:14px}
+ .al-hero .al-hero-copy h1 .al-title-line{display:inline}
+ .al-hero .al-hero-copy h1 em{display:inline;font-size:1.2em;margin-left:.12em;line-height:inherit}
+ .al-hero-copy>p{font-size:12px;margin-top:14px}
+ .al-hero-copy .al-hero-actions{margin-top:16px}
+}
+
+@media(min-width:651px) and (max-height:460px){
+ .al-hero-copy{padding-top:4px}
+ .al-hero-copy .al-benefit-icon{width:28px;height:28px;padding:5px}
+ .al-hero .al-hero-copy h1{font-size:30px;margin-top:10px}
+ .al-hero-copy>p{margin-top:8px;line-height:1.4}
+ .al-hero-copy .al-hero-actions{margin-top:10px}
+ .al-hero-copy .al-button{min-height:40px;padding-block:9px}
+}

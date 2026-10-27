@@ -65,3 +65,15 @@ The landing header now contains only the Acorra brand and Open app. Its opaque g
 ## Interactive preview response and count-ups
 
 Sandy’s check-in now reveals characters at a readable streaming pace with a temporary caret. Bills and Wealth totals and row amounts count up over 1.25 seconds, ending at the original exact SGD cents. These are presentation-only animations over deterministic synthetic records; no generative-AI claim or record mutation is introduced. Final content reserves the layout space and is exposed once to assistive technology; changing intermediate text is hidden from screen readers. Animation starts when the preview is visible, pauses offscreen and in hidden tabs, and shows completed content immediately for reduced-motion preferences. Switching tabs restarts the relevant preview; completed scenes do not endlessly replay. Tests cover monotonic bounded amounts, exact endpoints and complete text reveal.
+
+
+### Responsive seasonal timeline
+
+The desktop stage now follows the available viewport height instead of forcing a
+650/680px minimum. Short windows use tighter headline, paragraph and action
+spacing; narrow landscape windows give the timeline its own bottom row. The
+four season buttons retain 44px tap targets and the mobile hero remains unchanged.
+Browser checked 1100×670, 1440×720, 1024×768, 820×620, 1366×600,
+1920×1080, 1100×500, 700×400, 390×650 and 320×568. All four season
+controls fit, with no horizontal overflow or action/timeline overlap; winter's
+longer caption was also checked. No financial data or calculations changed.
