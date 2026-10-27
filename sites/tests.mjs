@@ -338,3 +338,16 @@ test('winter acting moves the head and tail while preserving the bench and acorn
  assert.ok(movement>.01,'the acting must visibly change the character, not just the background');
  const loop=rig.frame(8);for(let i=0;i<first.length;i++)assert.ok(Math.abs(loop[i]-first[i])<1e-7,'loop must join without a jump');
 })
+
+
+test('preview amounts accumulate without overshoot and finish at exact integer cents',async()=>{
+ const {countedCents,COUNT_DURATION,typedCount,typingDuration}=await import('./dist/preview-motion.mjs');
+ for(const target of [0,1,9500,18000,27500,4141000,4541000,12345678912,-400000]){
+  assert.equal(countedCents(target,0),0);let last=0;
+  for(let t=0;t<=COUNT_DURATION;t+=17){const value=countedCents(target,t);assert.ok(Number.isSafeInteger(value));assert.ok(Math.abs(value)>=Math.abs(last));assert.ok(Math.abs(value)<=Math.abs(target));last=value}
+  assert.equal(countedCents(target,COUNT_DURATION),target);assert.equal(countedCents(target,COUNT_DURATION+500),target);
+ }
+ const length=Array.from('Sandy: S$275.00, ready for bills.').length;let last=0;
+ for(let t=0;t<typingDuration(length);t+=16){const n=typedCount(length,t);assert.ok(n>=last&&n<=length);last=n}
+ assert.equal(typedCount(length,0),0);assert.equal(typedCount(length,typingDuration(length)),length);
+})

@@ -127,3 +127,14 @@
 .acorra-landing.al-motion .al-hero-copy :is(.al-eyebrow,h1,h1 span,h1 em,p,.al-hero-actions,.al-demo-caption){animation:none!important;opacity:1!important;translate:none!important;transform:none!important}
 @media(max-width:650px){.al-sculpture-art>img{width:96%;height:96%;left:2%;top:2%}.al-sculpture-spark{width:2px;height:2px}}
 @media(prefers-reduced-motion:reduce){.al-sculpture-art{transform:none!important;transition:none!important}}
+
+/* Display-only count-ups and a streamed check-in; final content reserves its full space. */
+.al-motion-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important}
+.al-count-number{display:inline-grid;position:relative;white-space:nowrap;font:inherit;letter-spacing:inherit;font-variant-numeric:tabular-nums}
+.al-count-width,.al-count-live{grid-area:1/1;font:inherit;letter-spacing:inherit;white-space:nowrap}
+.al-count-width{visibility:hidden}.al-count-live{justify-self:start}
+.al-typed-response{position:relative}.al-typed-layout{display:block;visibility:hidden}.al-typed-live{position:absolute;inset:0;display:block}
+.al-typing-caret{display:inline-block;width:2px;height:.85em;margin-left:2px;vertical-align:-.03em;background:#9d7d3b;animation:al-caret-pulse .8s steps(1,end) infinite}
+.al-typed-response[data-complete=true] .al-typing-caret{display:none}
+@keyframes al-caret-pulse{50%{opacity:0}}
+@media(prefers-reduced-motion:reduce){.al-typing-caret{display:none;animation:none}}

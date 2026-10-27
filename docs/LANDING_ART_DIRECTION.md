@@ -61,3 +61,7 @@ Winter now uses `sites/assets/seasons/sandy-winter-gold.webp`, derived with the 
 ## Woodland framing and simplified navigation
 
 The landing header now contains only the Acorra brand and Open app. Its opaque green strip and divider are removed; the forest extends behind it on mobile and desktop. Seasonal shading uses a cooler woodland tone in winter, retaining green for the brand. The story image fills the stage behind a single translucent season panel, combining the caption and all four controls in one readable surface. The scene no longer fades into an empty green band above the controls. Winter Sandy’s position is adjusted to clear the mobile panel.
+
+## Interactive preview response and count-ups
+
+Sandy’s check-in now reveals characters at a readable streaming pace with a temporary caret. Bills and Wealth totals and row amounts count up over 1.25 seconds, ending at the original exact SGD cents. These are presentation-only animations over deterministic synthetic records; no generative-AI claim or record mutation is introduced. Final content reserves the layout space and is exposed once to assistive technology; changing intermediate text is hidden from screen readers. Animation starts when the preview is visible, pauses offscreen and in hidden tabs, and shows completed content immediately for reduced-motion preferences. Switching tabs restarts the relevant preview; completed scenes do not endlessly replay. Tests cover monotonic bounded amounts, exact endpoints and complete text reveal.

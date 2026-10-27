@@ -38,3 +38,5 @@ await build({...common,entryPoints:['src/sandy_gpu.ts'],outfile:'dist/sandy-gpu.
 await build({...common,entryPoints:['src/season_story.ts'],outfile:'dist/season-story.mjs',platform:'node',format:'esm'})
 
 await build({...common,entryPoints:['src/winter_motion.ts'],outfile:'dist/winter-motion.mjs',platform:'node',format:'esm'})
+
+await build({...common,entryPoints:['src/preview_motion.ts'],outfile:'dist/preview-motion.mjs',platform:'node',format:'esm'})
