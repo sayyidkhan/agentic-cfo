@@ -322,5 +322,5 @@ test('season story deposits one acorn after release and preserves the winter sta
  for(let t=24;t<32;t+=.125){const s=sampleSeasonStory(t);assert.equal(s.index,3);assert.equal(s.stash,6);assert.equal(s.rest,1);assert.equal(s.nut,0)}
  assert.equal(sampleSeasonStory(32.7).index,sampleSeasonStory(.7).index)
  assert.ok(Math.abs(sampleSeasonStory(32.7).x-sampleSeasonStory(.7).x)<1e-9)
- for(let t=0;t<32;t+=.05){const s=sampleSeasonStory(t);assert.ok(Object.values(s).every(v=>typeof v!=='number'||Number.isFinite(v)));assert.ok(s.opacity>=0&&s.opacity<=1);assert.ok(Math.abs(s.carry+s.crouch+s.rest-1)<1e-9)}
+ for(let t=0;t<32;t+=.05){const s=sampleSeasonStory(t);assert.ok(Object.values(s).every(v=>typeof v!=='number'||Number.isFinite(v)));assert.ok(s.opacity>=.45&&s.opacity<=1);assert.ok(Math.abs(s.carry+s.crouch+s.rest-1)<1e-9)}
 })
