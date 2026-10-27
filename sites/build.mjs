@@ -9,7 +9,7 @@ const demoCopy={name:'demo-copy',setup(build){build.onLoad({filter:/sandy_avatar
 const common={absWorkingDir:base,tsconfigRaw:{compilerOptions:{jsx:'react-jsx'}},plugins:[demoCopy],bundle:true,minify:true,jsx:'automatic',alias,nodePaths:[path.join(base,'node_modules')],logLevel:'info'}
 const result=await build({...common,entryPoints:['src/client.tsx'],write:false,platform:'browser',target:'es2022',define:{'process.env.NODE_ENV':'"production"'}})
 await writeFile('src/generated-client.js.txt',result.outputFiles[0].text)
-const styles=await Promise.all(['../inertia/css/app.css','../inertia/css/cfo.css','src/style.css','src/landing.css','src/landing-motion.css','src/seasonal-hero.css'].map(f=>readFile(f,'utf8')))
+const styles=await Promise.all(['../inertia/css/app.css','../inertia/css/cfo.css','src/style.css','src/landing.css','src/landing-motion.css','src/seasonal-hero.css','src/workspace.css'].map(f=>readFile(f,'utf8')))
 await writeFile('src/generated-style.css.txt',styles.join('\n'))
 const sandyArt=Object.fromEntries(await Promise.all(['curious','calm','watchful','concerned','screaming','celebrating','relieved','greeting'].map(async mood=>[mood,(await readFile('assets/sandy/'+mood+'.webp')).toString('base64')])));
 await writeFile('src/generated-sandy-assets.txt',JSON.stringify(sandyArt))

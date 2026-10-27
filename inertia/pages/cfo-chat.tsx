@@ -1,7 +1,7 @@
 import { Form } from '@adonisjs/inertia/react'
-import { Link, router } from '@inertiajs/react'
+import { router } from '@inertiajs/react'
 import { useRef } from 'react'
-import { AlertCircle, ArrowLeft, BookOpen, LockKeyhole, Send, ShieldCheck, Sparkles, Trash2 } from 'lucide-react'
+import { BookOpen, LockKeyhole, Send, ShieldCheck, Sparkles, Trash2 } from 'lucide-react'
 import AppLayout from '~/layouts/app'
 import SandyAvatar from '~/components/sandy_avatar'
 import Page from '~/components/page'
@@ -29,11 +29,11 @@ export default function CfoChat({ configured, messages, dailyMessageLimit }: Cfo
     <div className="cfo-workspace cfo-chat-page">
       <header className="cfo-page-intro">
         <div>
-          <div className="cfo-eyebrow">PERSONAL FINANCIAL GUIDANCE</div>
-          <h1>Meet Sandy.</h1>
+          <div className="cfo-eyebrow">Your money companion</div>
+          <h1>Sandy</h1>
           <p>Your friendly money companion is here to help you make sense of spending, savings and wealth. Sandy uses read-only financial facts and cannot move money.</p>
         </div>
-        <Link href="/dashboard" className="cfo-action cfo-action--quiet"><ArrowLeft size={15}/> Financial overview</Link>
+        
       </header>
       <div className="cfo-grid">
         <div className="cfo-span-8">
@@ -52,7 +52,7 @@ export default function CfoChat({ configured, messages, dailyMessageLimit }: Cfo
               {messages.length === 0 ? <div className="cfo-chat-welcome">
                 <SandyAvatar size="lg" />
                 <h2>Hi, I’m Sandy. 🐿️</h2>
-                <p>Let’s grow your money habits, one small win at a time. Ask me about your monthly budget, upcoming bills or savings goals.</p>
+                <p>Budgets, bills or a goal—what’s on your mind?</p>
                 <span className="cfo-pill cfo-pill--good"><ShieldCheck size={13}/> No account changes or payments</span>
               </div> :
                 messages.map(message => <div className={'cfo-chat-message ' + (message.role === 'user' ? 'cfo-chat-message--user' : 'cfo-chat-message--agent')} key={message.id}>
@@ -62,15 +62,12 @@ export default function CfoChat({ configured, messages, dailyMessageLimit }: Cfo
               }
             </div>
             <div className="cfo-chat-compose">
-              {!configured && <div className="cfo-chat-notice" role="status">
-                <AlertCircle size={17}/>
-                <div><strong>Guided mode — works without an AI key</strong><p>Your recorded finances are reviewed locally using deterministic rules. No external model or additional subscription setup is required for guided mode.</p></div>
-              </div>}
+              {!configured && <details className="cfo-chat-mode"><summary>Guided mode <span>About Sandy</span></summary><p>Uses rules and your recorded financial calculations, not a generative AI model. Sandy can explain the numbers but cannot change your records.</p></details>}
               <Form route="cfo.message.store" resetOnSuccess>
                 {({errors, processing}) => <div className="cfo-chat-form">
                   <label htmlFor="cfo-question" className="cfo-eyebrow">YOUR QUESTION</label>
-                  <textarea ref={composerRef} id="cfo-question" name="message" rows={3} required minLength={2} maxLength={1500}
-                    placeholder="Could I spend S$300 this month and still cover my upcoming bills?"
+                  <textarea ref={composerRef} id="cfo-question" name="message" rows={2} required minLength={2} maxLength={1500}
+                    placeholder="Ask Sandy about your money…"
                     disabled={processing}/>
                   {errors.message && <p className="cfo-field-error" role="alert">{errors.message}</p>}
                   <div className="cfo-between" style={{alignItems:'center',flexWrap:'wrap',gap:10}}>
@@ -96,11 +93,11 @@ export default function CfoChat({ configured, messages, dailyMessageLimit }: Cfo
               </button>)}
             </div>
           </section>
-          <section className="cfo-card" style={{marginTop:16}}>
-            <div className="cfo-card-header"><h2>Your data stays under your control</h2><LockKeyhole size={19} color="var(--cfo-brand)"/></div>
+          <details className="cfo-card acorra-chat-privacy" style={{marginTop:16}}>
+            <summary>Your data &amp; privacy <LockKeyhole size={16}/></summary>
             <p className="cfo-subtle">Conversation history is stored in this app's SQLite database. When an AI provider is configured, your question and relevant financial figures are transmitted to that provider.</p>
             <p className="cfo-subtle" style={{marginTop:12}}>Sandy cannot change budgets or send payments. Valuations may be outdated, and suggestions depend on the records you provide.</p>
-          </section>
+          </details>
         </aside>
       </div>
     </div>

@@ -1,9 +1,10 @@
 import { formatSgd } from '../../app/services/finance/money.js'
 import { Form } from '@adonisjs/inertia/react'
 import { Link, usePage } from '@inertiajs/react'
-import { AlertCircle, ArrowRight, Plus, ShieldCheck } from 'lucide-react'
+import { AlertCircle, ArrowRight, Plus, ShieldCheck, CalendarDays, MessageCircle, ArrowDownLeft, ArrowUpRight, ArrowLeftRight } from 'lucide-react'
 import { useState } from 'react'
 import Page from '~/components/page'
+import FitMoney from '~/components/fit_money'
 import SandyAvatar from '~/components/sandy_avatar'
 import AppLayout from '~/layouts/app'
 import FinancialPlanning from '~/components/financial_planning'
@@ -227,11 +228,7 @@ export default function Dashboard(props: DashboardProps) {
   return <Page title={view === 'overview' ? 'Acorra · Overview' : descriptor.title} hideTitle>
     <div className={'cfo-workspace workspace-'+view}>
       <header className="cfo-page-intro">
-        <div><div className="cfo-eyebrow">{descriptor.eyebrow} · {month}</div><h1>{descriptor.title}</h1><p>{descriptor.detail}</p></div>
-        <div className="cfo-action-row">
-          {view === 'overview' && <Link className="cfo-action" href="/dashboard?view=transactions&add=1"><Plus size={16}/> Record spending</Link>}
-
-        </div>
+        <div><div className="cfo-eyebrow">{new Intl.DateTimeFormat('en-SG',{month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(month+'-01T00:00:00Z'))}</div><h1>{descriptor.title}</h1><p>{descriptor.detail}</p></div>
       </header>
 
       {view === 'overview' && <>
@@ -241,19 +238,24 @@ export default function Dashboard(props: DashboardProps) {
             <Link className="cfo-action" href="/dashboard?view=wealth">Get started <ArrowRight size={14}/></Link></div>
         </div>}
         <div className="acorra-snapshot" aria-label="Money snapshot">
-          <div><span>Recorded cash</span><strong>{money(availableCashCents)}</strong><small>Cash and bank accounts</small></div>
-          <div><span>Spent this month</span><strong>{money(expenseCents)}</strong><small>Income {money(incomeCents)}</small></div>
-          <div><span>Estimated net worth</span><strong>{recorded?money(financialPosition.netWorthCents):'Not set up'}</strong><Link href="/dashboard?view=wealth">View assets & debts →</Link></div>
+          <div><span>Recorded cash</span><FitMoney>{money(availableCashCents)}</FitMoney><small>Cash &amp; accounts</small></div>
+          <div><span>Spent this month</span><FitMoney>{money(expenseCents)}</FitMoney><small>Income {money(incomeCents)}</small></div>
+          <div><span>Est. net worth</span><FitMoney>{recorded?money(financialPosition.netWorthCents):'Not set up'}</FitMoney><Link href="/dashboard?view=wealth">Assets & debts →</Link></div>
         </div>
+        <nav className="acorra-quick-actions" aria-label="Quick actions">
+          <Link href="/dashboard?view=transactions&add=1"><span><Plus size={21}/></span>Add entry</Link>
+          <Link href="/dashboard?view=budget"><span><CalendarDays size={20}/></span>Plan ahead</Link>
+          <Link href="/cfo"><span><MessageCircle size={21}/></span>Ask Sandy</Link>
+        </nav>
         <section className="cfo-card acorra-next">
-          <div className="cfo-brand-row"><SandyAvatar size="md"/><div><h2>{planning.insights.length?'Worth a look':'A little breathing room'}</h2><p className="cfo-card-note">{planning.insights.length?planning.insights[0].title:'No immediate risks flagged in these records.'}</p></div></div>
+          <div className="cfo-brand-row"><SandyAvatar size="md"/><div><h2>Sandy’s check-in</h2><p className="cfo-card-note">{planning.insights.length?planning.insights[0].title:'No immediate risks flagged in these records.'}</p></div></div>
           {planning.insights.length>0&&<details className="acorra-details"><summary>Review {planning.insights.length} signal{planning.insights.length===1?'':'s'}</summary><Insights insights={planning.insights}/></details>}
           <div className="acorra-bill-line"><span>Unpaid bills this month <strong>{money(planning.upcomingTotalCents)}</strong></span><Link href="/dashboard?view=budget">Review plan →</Link></div>
           <p className="cfo-card-note">Cash after those bills: {money(planning.cashAfterUpcomingCents)}. Estimate from recorded bills only.</p>
         </section>
-        <section className="cfo-card">
+        <section className="cfo-card acorra-recent">
           <div className="cfo-card-header"><h2>Recent activity</h2><Link href="/dashboard?view=transactions">View all →</Link></div>
-          {!recentTransactions.length?<div className="cfo-empty">No transactions yet. Record your first income or expense.</div>:<div className="acorra-activity">{recentTransactions.slice(0,3).map(t=><div key={t.id}><span><strong>{t.note||categoryName(t.categoryId)}</strong><small>{t.bookedOn} · {t.kind}</small></span><strong>{t.kind==='expense'?'−':t.kind==='income'?'+':''}{money(t.amountCents)}</strong></div>)}</div>}
+          {!recentTransactions.length?<div className="cfo-empty">No transactions yet. Record your first income or expense.</div>:<div className="acorra-activity">{recentTransactions.slice(0,3).map(t=><div key={t.id}><span className="acorra-activity-label"><i className={'activity-icon kind-'+t.kind} aria-hidden="true">{t.kind==='income'?<ArrowDownLeft size={17}/>:t.kind==='transfer'?<ArrowLeftRight size={17}/>:<ArrowUpRight size={17}/>}</i><span><strong>{t.note||categoryName(t.categoryId)}</strong><small>{t.bookedOn} · {t.kind}</small></span></span><strong>{t.kind==='expense'?'−':t.kind==='income'?'+':''}{money(t.amountCents)}</strong></div>)}</div>}
         </section>
         <details className="cfo-card acorra-details"><summary>Budget health <span>{budgetStatus.length} categories</span></summary><BudgetBars budgets={budgetStatus} categories={categories} budgetStatus={budgetStatus}/></details>
       </>}
@@ -262,9 +264,9 @@ export default function Dashboard(props: DashboardProps) {
         <section className="cfo-card cfo-span-12 transaction-summary">
           <div className="cfo-card-header"><div><h2>Monthly cash flow</h2><p className="cfo-card-note">Recorded income less expenses, excluding transfers</p></div><span className="cfo-pill">{month}</span></div>
           <div className="cfo-grid">
-            <div className="cfo-span-4"><span className="cfo-subtle">Income</span><div className="cfo-stat-value">{money(incomeCents)}</div></div>
-            <div className="cfo-span-4"><span className="cfo-subtle">Expenses</span><div className="cfo-stat-value">{money(expenseCents)}</div></div>
-            <div className="cfo-span-4"><span className="cfo-subtle">Net cash flow</span><div className="cfo-stat-value">{money(incomeCents-expenseCents)}</div></div>
+            <div className="cfo-span-4"><span className="cfo-subtle">Income</span><div className="cfo-stat-value"><FitMoney>{money(incomeCents)}</FitMoney></div></div>
+            <div className="cfo-span-4"><span className="cfo-subtle">Expenses</span><div className="cfo-stat-value"><FitMoney>{money(expenseCents)}</FitMoney></div></div>
+            <div className="cfo-span-4"><span className="cfo-subtle">Net cash flow</span><div className="cfo-stat-value"><FitMoney>{money(incomeCents-expenseCents)}</FitMoney></div></div>
           </div>
         </section>
         <div className="cfo-span-12 transaction-entry"><details className="acorra-details cfo-card" open={recentTransactions.length===0||new URLSearchParams(url.split('?')[1]).has('add')}><summary>Add a transaction <Plus size={16}/></summary><TransactionForm accounts={accounts} categories={categories} currentDate={currentDate}/></details></div>

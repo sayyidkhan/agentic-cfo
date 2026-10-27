@@ -1,0 +1,122 @@
+/* Acorra workspace: balance first, quiet cards, direct everyday actions. */
+.cfo-app{--cfo-bg:#f4f5f6;--cfo-surface:#fff;--cfo-ink:#172b24;--cfo-muted:#6b7772;--cfo-stroke:#e9ecea;--cfo-brand:#174c3c;--cfo-brand-2:#174c3c;--cfo-tint:#edf3ef;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.cfo-app .header--bar{background:var(--cfo-bg);border:0}
+.cfo-app .header__inner{min-height:62px;padding-block:8px}
+.cfo-app .cfo-brand-mark{width:34px;height:34px}
+.cfo-app .cfo-brand-type strong{font-size:24px}
+.cfo-app .profile-menu>summary{width:38px;height:38px;background:var(--cfo-surface);border:0}
+.cfo-app .demo-banner{background:#e9eee8;color:#526153;border:0;font-size:9px;padding:6px 16px;line-height:1.5;letter-spacing:0}
+.cfo-app .demo-banner strong{font-size:9px;letter-spacing:.06em}
+.cfo-app .app-main{padding-top:16px}
+.cfo-app .cfo-workspace{gap:16px}
+.cfo-app .cfo-page-intro{margin:0;gap:0}
+.cfo-app .cfo-page-intro h1,.cfo-app .sandy-settings .cfo-page-intro h1{font-family:inherit;font-size:30px;font-weight:730;letter-spacing:-1px;margin:5px 0 3px;line-height:1.2}
+.cfo-app .cfo-page-intro .cfo-eyebrow{font-size:11px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--cfo-muted)}
+.cfo-app .cfo-page-intro p{display:none}
+.cfo-app .cfo-action-row:empty{display:none}
+.cfo-app .cfo-card{border:0;border-radius:22px;padding:22px;box-shadow:none}
+.cfo-app .cfo-card h2{font-family:inherit;font-size:17px;font-weight:700;letter-spacing:-.4px}
+.cfo-app .cfo-card h3{font-family:inherit}
+.cfo-app .cfo-card-note{font-size:12px;line-height:1.6}
+.cfo-app .acorra-snapshot{grid-template-columns:repeat(3,minmax(0,1fr));gap:0;background:var(--cfo-surface);border:0;border-radius:22px;padding:24px 20px;margin:0}
+.cfo-app .acorra-snapshot>div{min-width:0;gap:8px;padding:0 18px}
+.cfo-app .acorra-snapshot>div:first-child{padding-left:0}
+.cfo-app .acorra-snapshot>div+div,.cfo-app .acorra-snapshot>div:last-child{grid-column:auto;border-top:0;border-left:1px solid var(--cfo-stroke);padding:0 0 0 18px;margin:0}
+.cfo-app .acorra-snapshot>div:nth-child(2){padding-right:18px}
+.cfo-app .acorra-snapshot>div>span{font-size:12px;line-height:1.4}
+.cfo-app .acorra-money{display:block;min-width:0;width:100%;white-space:nowrap;font-variant-numeric:tabular-nums;letter-spacing:-.04em;font-weight:700;line-height:1.25}
+.cfo-app .acorra-money>span{display:inline-block;font-size:inherit;color:inherit;white-space:nowrap}
+.cfo-app .acorra-snapshot .acorra-money{font-size:clamp(20px,2.6vw,34px)}
+.cfo-app .acorra-snapshot small,.cfo-app .acorra-snapshot a{font-size:10px;line-height:1.5}
+.cfo-app .acorra-quick-actions{display:flex;justify-content:center;gap:36px;padding:2px 0 6px;grid-column:1/-1}
+.cfo-app .acorra-quick-actions>a{display:flex;flex-direction:column;align-items:center;gap:8px;min-width:65px;font-size:11px;font-weight:600;color:var(--cfo-ink)}
+.cfo-app .acorra-quick-actions>a>span{display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:var(--cfo-surface);color:var(--cfo-brand);transition:background .15s,transform .15s}
+.cfo-app .acorra-quick-actions>a:first-child>span{background:var(--cfo-brand);color:white}
+.cfo-app .acorra-quick-actions>a:last-child>span{background:#eee2bd;color:#684e20}
+.cfo-app .acorra-quick-actions>a:hover>span{transform:translateY(-2px)}
+.cfo-app .acorra-next .sandy-avatar{width:42px;height:42px;min-width:42px;border-radius:14px}
+.cfo-app .acorra-next .cfo-brand-row{gap:12px;align-items:center}
+.cfo-app .acorra-next .cfo-card-note{margin-bottom:0}
+.cfo-app .acorra-next .acorra-details{margin:12px 0 0}
+.cfo-app .acorra-next .acorra-details>summary{font-size:12px;color:var(--cfo-brand);font-weight:600;min-height:34px}
+.cfo-app .acorra-bill-line{margin-top:12px;padding-top:12px;font-size:12px}
+.cfo-app .acorra-bill-line strong{font-size:14px}
+.cfo-app .acorra-bill-line a{font-size:11px}
+.cfo-app .acorra-activity>div{padding:14px 0;font-size:12px;gap:12px}
+.cfo-app .acorra-activity>div:first-child{border-top:0;padding-top:4px}
+.cfo-app .acorra-activity>div:last-child{padding-bottom:0}
+.cfo-app .acorra-activity-label{display:flex;align-items:center;gap:10px;min-width:0}
+.cfo-app .acorra-activity-label>span{min-width:0}
+.cfo-app .activity-icon{display:grid;place-items:center;flex-shrink:0;width:35px;height:35px;border-radius:50%;background:var(--cfo-bg);color:var(--cfo-ink);font-style:normal}
+.cfo-app .activity-icon.kind-income{background:var(--cfo-tint);color:var(--cfo-brand)}
+.cfo-app .acorra-activity strong{font-weight:600}
+.cfo-app .acorra-activity small{font-size:10px}
+.cfo-app .acorra-tabs{border:0;padding:4px;background:#e6e9e8;border-radius:100px;gap:2px;margin:0}
+.cfo-app .acorra-tabs button{border:0;border-radius:100px;padding:11px 22px;font-size:12px;min-height:42px;flex:1}
+.cfo-app .acorra-tabs button[aria-pressed=true]{background:var(--cfo-surface);color:var(--cfo-ink);box-shadow:0 1px 4px #172b2410}
+.cfo-app .cfo-action,.cfo-app .btn{border-radius:100px;font-size:12px}
+.cfo-app .cfo-form-grid :is(input,select,textarea){border-radius:13px;background:var(--cfo-bg);border-color:transparent}
+.cfo-app .cfo-empty{border:0;border-radius:15px;font-size:12px}
+.cfo-app .cfo-hero{background:#174c3c;color:white}
+.cfo-app .cfo-hero:after{display:none}
+.cfo-app .cfo-chat-thread{border:0;border-radius:22px;background:var(--cfo-surface)}
+.cfo-app .cfo-chat-compose{border:0;border-radius:22px}
+.cfo-app .cfo-chat-message{border-radius:18px;box-shadow:none}
+.cfo-app .cfo-budget-track{height:6px;border:0}
+.cfo-app .site-footer{font-size:10px;color:var(--cfo-muted);border:0}
+@media(max-width:767px){
+ .cfo-app .header__inner{min-height:56px}
+ .cfo-app .app-main{padding:14px 16px 20px}
+ .cfo-app .cfo-workspace{gap:14px}
+ .cfo-app .cfo-card{padding:18px;border-radius:20px}
+ .cfo-app .cfo-page-intro h1{font-size:28px;margin:4px 0 2px}
+ .cfo-app .acorra-snapshot{padding:18px 12px;border-radius:20px}
+ .cfo-app .acorra-snapshot>div{gap:6px;padding:0 8px}
+ .cfo-app .acorra-snapshot>div+div,.cfo-app .acorra-snapshot>div:last-child{padding:0 0 0 8px}
+ .cfo-app .acorra-snapshot>div:nth-child(2){padding-right:8px}
+ .cfo-app .acorra-snapshot>div>span{font-size:9px;white-space:nowrap}
+ .cfo-app .acorra-snapshot .acorra-money{font-size:clamp(14px,4.1vw,25px);letter-spacing:-.055em}
+ .cfo-app .acorra-snapshot small,.cfo-app .acorra-snapshot a{font-size:8px;line-height:1.5}
+ .cfo-app .acorra-quick-actions{gap:30px}
+ .cfo-app .cfo-navigation{background:#ffffffed;border-color:#eceeed;box-shadow:none;backdrop-filter:blur(18px)}
+ .cfo-app .cfo-navigation-inner{padding:4px 10px}
+ .cfo-app .cfo-navigation a{font-size:9px;font-weight:550;min-height:54px;border-radius:0;color:#829087;gap:4px}
+ .cfo-app .cfo-navigation a[aria-current=page]{background:transparent;color:var(--cfo-brand);font-weight:750}
+ .cfo-app .cfo-navigation a svg{width:20px;height:20px}
+ .cfo-app .cfo-navigation a.sandy-nav{background:transparent;color:#8a692b;border-radius:0;margin:0}
+ .cfo-app .cfo-navigation a.sandy-nav svg{width:23px;height:23px;background:#f2e7c9;box-sizing:content-box;padding:5px;border-radius:50%;margin-top:-5px;margin-bottom:-5px}
+ .cfo-app .cfo-navigation a.sandy-nav[aria-current=page]{background:transparent;box-shadow:none;color:#684d20}
+ .cfo-app .cfo-navigation a.sandy-nav[aria-current=page] svg{background:#ddc58a}
+ .cfo-app .transaction-summary .cfo-stat-value{font-size:clamp(14px,4vw,21px)}
+ .cfo-app .acorra-activity>div>strong{font-size:12px}
+}
+@media(min-width:768px){
+ .cfo-app .cfo-navigation{background:var(--cfo-bg);border:0}
+ .cfo-app .cfo-navigation a{padding:11px 18px;min-height:44px;border:0;border-radius:100px;font-size:12px}
+ .cfo-app .cfo-navigation a[aria-current=page]{background:var(--cfo-brand);color:white;border:0}
+ .cfo-app .cfo-navigation-inner{gap:8px;padding-block:7px}
+ .cfo-app .acorra-quick-actions{justify-content:flex-start;padding-left:8px}
+}
+.cfo-app{--paper:var(--cfo-bg);--card:var(--cfo-surface);--ink:var(--cfo-ink);--muted:var(--cfo-muted);--line:var(--cfo-stroke)}
+.cfo-app .app-main,.cfo-app .page{background:transparent}
+.cfo-app .acorra-next,.cfo-app .cfo-workspace>.acorra-details{margin-bottom:0}
+
+.cfo-app .transaction-entry .cfo-card h2{display:none}
+.cfo-app .cfo-chat-header{padding:14px 18px;background:var(--cfo-surface)}
+.cfo-app .cfo-chat-header .cfo-brand-type strong{font-family:inherit;font-size:15px;font-weight:650;letter-spacing:-.3px}
+.cfo-app .cfo-chat-welcome{gap:10px;padding:12px 0}
+.cfo-app .cfo-chat-welcome p{font-size:12px;max-width:270px}
+.cfo-app .cfo-chat-welcome h2{font-size:20px}
+.cfo-app .cfo-chat-mode{font-size:11px;margin-bottom:14px;color:var(--cfo-muted)}
+.cfo-app .cfo-chat-mode summary{cursor:pointer;min-height:32px;align-content:center}
+.cfo-app .cfo-chat-mode summary span{float:right;color:var(--cfo-brand)}
+.cfo-app .cfo-chat-mode p{line-height:1.7;margin-top:8px}
+.cfo-app .cfo-chat-form textarea{border:0;background:var(--cfo-bg);border-radius:16px}
+.cfo-app .cfo-chat-form>.cfo-between>.cfo-subtle{font-size:9px}
+.cfo-app .cfo-suggested-question{border:0;background:var(--cfo-bg);border-radius:14px;padding:14px}
+.cfo-app .cfo-suggested-question small{display:none}
+.cfo-app .acorra-chat-privacy>summary{display:flex;justify-content:space-between;align-items:center;cursor:pointer;min-height:28px;font-size:12px;font-weight:600}
+.cfo-app .acorra-chat-privacy p{margin-top:12px}
+@media(max-width:767px){.cfo-app .cfo-hero{min-height:175px}.cfo-app .cfo-chat-thread{min-height:200px}.cfo-app .cfo-chat-compose{padding:16px}}
+
+.cfo-app .cfo-workspace>section.cfo-card{margin-bottom:0}
