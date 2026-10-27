@@ -34,3 +34,22 @@
 .al-motion .al-console.is-visible{animation:al-console-enter .9s cubic-bezier(.16,1,.3,1) both}
 @keyframes al-console-enter{from{opacity:.3;transform:translateY(25px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
 @media(prefers-reduced-motion:reduce){.acorra-landing .al-console{animation:none!important}}
+
+/* Visible, repeating motion keeps the page alive after the entrance has finished. */
+.al-hero h1 em{position:relative;display:inline-block;padding-bottom:11px}.al-headline-swoosh{position:absolute;left:0;bottom:-1px;width:100%;height:18px;overflow:visible;fill:none;stroke:#bd974e;stroke-width:3;stroke-linecap:round;pointer-events:none}.al-headline-swoosh path{stroke-dasharray:100;stroke-dashoffset:0}.al-motion .al-headline-swoosh path{animation:al-swoosh-draw 5s ease-in-out infinite}
+@keyframes al-swoosh-draw{0%{stroke-dashoffset:100;opacity:0}10%{opacity:1}38%,82%{stroke-dashoffset:0;opacity:1}98%,100%{stroke-dashoffset:0;opacity:0}}
+.al-console-top .al-console-tools{display:flex;gap:13px;align-items:center}.al-motion-toggle{width:29px;height:29px;border:1px solid #72977566;border-radius:7px;background:#153c30;color:#e4d4a5;display:grid;place-items:center;cursor:pointer}.al-motion-toggle:hover{background:#315c42}.al-motion-toggle:focus-visible{outline:2px solid #e7ce8f;outline-offset:3px}
+.al-landing-greeting{position:absolute;top:-31px;left:50%;width:315px;height:315px;transform:translateX(-50%)}.al-landing-greeting>.sandy-greeting{width:100%;height:100%;max-width:none}.al-landing-greeting .sandy-greeting-scene{width:100%;height:100%}
+.al-landing-greeting .sandy-greeting *{animation-play-state:paused!important}.al-motion.al-page-active .al-sandy-portrait.is-in-view .sandy-greeting.is-playing *{animation-play-state:running!important}
+.al-motion .al-sample i{animation:al-beacon 2.6s ease-in-out infinite}
+@keyframes al-beacon{0%,100%{box-shadow:0 0 0 2px #d2bb7330}50%{box-shadow:0 0 0 7px #d2bb7308}}
+.al-motion .al-console.is-in-view .al-budget-list progress::-webkit-progress-value{background-image:linear-gradient(90deg,#c8ad64 0%,#e8cf89 36%,#fff4bf 50%,#e8cf89 64%,#c8ad64 100%);background-size:250% 100%;animation:al-bar-flow 3.6s linear infinite;transform:none}
+.al-motion .al-console.is-in-view .al-budget-list progress::-moz-progress-bar{background-image:linear-gradient(90deg,#c8ad64,#fff4bf,#c8ad64);background-size:250% 100%;animation:al-bar-flow 3.6s linear infinite;transform:none}
+@keyframes al-bar-flow{from{background-position:200% 50%}to{background-position:-100% 50%}}
+.al-motion .al-console.is-in-view .al-budget-list>div:nth-child(2) progress::-webkit-progress-value{animation-delay:-1.2s}.al-motion .al-console.is-in-view .al-budget-list>div:nth-child(3) progress::-webkit-progress-value{animation-delay:-2.4s}
+.acorra-landing[data-motion-paused=true] *{animation-play-state:paused!important}
+.al-motion.al-page-active[data-motion-paused=true] .al-sandy-portrait.is-in-view .sandy-greeting.is-playing *,.al-motion.al-page-active[data-motion-paused=true] .al-mini-ledger.is-in-view{animation-play-state:paused!important}
+.acorra-landing[data-motion-paused=true] progress::-webkit-progress-value,.acorra-landing[data-motion-paused=true] progress::-moz-progress-bar{animation-play-state:paused!important}
+@media(max-width:650px){.al-landing-greeting{width:112px;height:112px;top:-19px;left:auto;right:-3px;transform:none}.al-console-top .al-console-tools{gap:7px}.al-motion-toggle{width:25px;height:25px}.al-headline-swoosh{height:12px;bottom:1px}.al-hero h1 em{padding-bottom:9px}}
+@media(prefers-reduced-motion:reduce){.acorra-landing .al-headline-swoosh path,.acorra-landing .al-sample i{animation:none!important}.acorra-landing .al-headline-swoosh path{stroke-dashoffset:0;opacity:1}.acorra-landing .al-motion-toggle{display:none}.acorra-landing .al-landing-greeting .sandy-greeting *{animation:none!important}}
+.al-motion.al-page-active[data-motion-paused=true] .al-console.is-in-view .al-budget-list progress::-webkit-progress-value,.al-motion.al-page-active[data-motion-paused=true] .al-console.is-in-view .al-budget-list progress::-moz-progress-bar{animation-play-state:paused!important}
