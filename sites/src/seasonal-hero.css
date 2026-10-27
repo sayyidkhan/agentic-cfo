@@ -72,8 +72,8 @@
 
 /* A quieter promise and a crisp, connected intelligence mark above the headline. */
 .al-hero-copy>.al-eyebrow{gap:12px;font-size:10px;letter-spacing:.16em;color:#e2d3a4}
-.al-hero-copy .al-intelligence-mark{width:32px;height:32px;flex-shrink:0;color:#e9ce8a;overflow:visible}
-@media(max-width:650px){.al-hero-copy>.al-eyebrow{gap:9px;font-size:7px;letter-spacing:.13em}.al-hero-copy .al-intelligence-mark{width:24px;height:24px}}
+
+@media(max-width:650px){.al-hero-copy>.al-eyebrow{gap:9px;font-size:7px;letter-spacing:.13em}}
 
 /* Regional winter acting: the chair stays planted and complete frames replace atomically. */
 .al-winter-retreat>canvas{position:absolute;inset:0;width:100%;height:100%;opacity:0;pointer-events:none}
@@ -119,3 +119,9 @@
 }
 @media(prefers-reduced-motion:reduce){.al-season-controls{transition:none}}
 @media(max-width:360px){.al-winter-retreat{width:32%;bottom:20%}.al-season-controls .al-season-story-caption>p{font-size:16px}}
+
+/* Readable benefits with a familiar finance symbol, rather than an abstract AI badge. */
+.al-hero-copy>.al-eyebrow{font-size:15px;font-weight:650;letter-spacing:.015em;line-height:1.45;gap:12px;color:#f2e5bf;max-width:100%;text-transform:none}
+.al-benefit-copy{min-width:0}
+.al-hero-copy .al-benefit-icon{width:40px;height:40px;padding:9px;border:1px solid #e6cd8b55;border-radius:12px;background:#e6cd8b12;color:#f0d58e;box-sizing:border-box;flex-shrink:0;overflow:visible}
+@media(max-width:650px){.al-hero-copy>.al-eyebrow{font-size:clamp(12px,3.3vw,14px);gap:10px;letter-spacing:0;line-height:1.45}.al-hero-copy .al-benefit-icon{width:34px;height:34px;padding:7px;border-radius:10px}}
