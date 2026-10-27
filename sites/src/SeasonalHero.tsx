@@ -32,7 +32,7 @@ export default function SeasonalHero(){
    <Acorn className="al-released-acorn"/><span className="al-stash-spark">✦</span>
    <div className="al-scene-ground-mist"/>
   </div></div>
-  <div className="al-season-story-caption"><p>{seasons[season].line}</p></div>
-  <div className="al-season-selector" role="group" aria-label="Explore Sandy’s seasons">{seasons.map((s,i)=><button key={s.id} type="button" aria-pressed={season===i} onClick={()=>choose(i)}><span>{s.label}</span><i aria-hidden="true"><b/></i></button>)}</div>
+  <div className="al-season-controls"><div className="al-season-story-caption"><p>{seasons[season].line}</p></div>
+  <div className="al-season-selector" role="group" aria-label="Explore Sandy’s seasons">{seasons.map((s,i)=><button key={s.id} type="button" aria-pressed={season===i} onClick={()=>choose(i)}><span>{s.label}</span><i aria-hidden="true"><b/></i></button>)}</div></div>
  </div>
 }

@@ -82,3 +82,40 @@
 .al-winter-retreat[data-motion=running] .al-gold-glint{animation:al-acorn-glint 6s ease-in-out infinite}
 @keyframes al-acorn-glint{0%,32%,52%,100%{opacity:0;scale:.5;rotate:0deg}40%{opacity:.9;scale:1;rotate:25deg}46%{opacity:.3;scale:.8;rotate:40deg}}
 @media(prefers-reduced-motion:reduce){.al-winter-retreat>canvas{display:none!important}.al-winter-retreat.winter-ready>img{visibility:visible}.al-gold-glint{animation:none!important;opacity:0}}
+
+/* The woodland reaches the edges; navigation and seasons float within the scene. */
+.acorra-landing{position:relative;--scene-ink:#092d25}
+.acorra-landing[data-season=winter]{--scene-ink:#102c3a}
+.acorra-landing[data-season=autumn]{--scene-ink:#282d22}
+.acorra-landing>.al-nav{position:absolute;inset:0 0 auto;z-index:10;background:transparent;border:0;height:84px}
+.acorra-landing>.al-nav .al-brand{text-shadow:0 2px 20px #001b1880}
+.acorra-landing>.al-nav .al-nav-cta{display:inline-flex;border-radius:100px;box-shadow:0 5px 24px #031b1920}
+.al-hero{padding-top:84px;background:var(--scene-ink)}
+.al-hero-art{top:-84px}
+.al-seasonal-atmosphere{background:radial-gradient(ellipse at 75% 25%,color-mix(in srgb,var(--season-light) 12%,transparent),transparent 65%),var(--scene-ink)}
+.al-season-veil{background:linear-gradient(0deg,var(--scene-ink),transparent 30%)}
+.al-season-scene:after{background:linear-gradient(0deg,var(--scene-ink),color-mix(in srgb,var(--scene-ink) 35%,transparent) 18%,transparent 38%)}
+.al-scene-ground-mist{background:linear-gradient(transparent,color-mix(in srgb,var(--scene-ink) 45%,transparent))}
+.al-season-controls{position:absolute;left:35%;right:7%;bottom:25px;z-index:8;padding:17px 20px 9px;border:1px solid #edf0da30;border-radius:22px;background:linear-gradient(130deg,#ffffff13,#0b242a66);backdrop-filter:blur(16px) saturate(1.15);-webkit-backdrop-filter:blur(16px) saturate(1.15);box-shadow:0 12px 34px #00151b20}
+.al-season-controls .al-season-story-caption{position:static;margin:0}
+.al-season-controls .al-season-story-caption>p{font-size:22px;max-width:none;margin:0;color:#f8e8bc;line-height:1.3}
+.al-season-controls .al-season-selector{position:static;margin-top:11px;gap:16px}
+.al-season-controls .al-season-selector>button{padding:7px 0;min-height:44px;color:#e4e9dc}
+.al-season-controls .al-season-selector>button[aria-pressed=true]{color:#ffe9ad}
+.al-season-controls .al-season-selector i{background:#eef1df2e}
+@media(min-width:651px) and (max-width:1050px){.al-season-controls{left:43%;right:6%}.al-season-controls .al-season-story-caption>p{font-size:19px}}
+@media(max-width:650px){
+ .acorra-landing>.al-nav{height:70px;background:transparent;padding-inline:20px}
+ .al-hero{padding-top:70px}
+ .al-hero-art{top:-70px}
+ .al-season-scene{inset:0;mask-image:linear-gradient(0deg,transparent,#000 5%,#000);border:0}
+ .al-season-scene:after{background:linear-gradient(180deg,color-mix(in srgb,var(--scene-ink) 55%,transparent) 0%,color-mix(in srgb,var(--scene-ink) 64%,transparent) 29%,color-mix(in srgb,var(--scene-ink) 25%,transparent) 47%,transparent 64%,color-mix(in srgb,var(--scene-ink) 20%,transparent) 80%,color-mix(in srgb,var(--scene-ink) 60%,transparent) 100%)}
+ .al-scene-ground-mist{height:6%}
+ .al-winter-retreat{width:34%;bottom:22%}
+ .al-season-controls{left:16px;right:16px;bottom:12px;padding:14px 15px 7px;border-radius:19px;background:linear-gradient(125deg,#ffffff14,#091e2b8f)}
+ .al-season-controls .al-season-story-caption>p{font-size:18px;line-height:1.25;text-shadow:0 2px 12px #041d25}
+ .al-season-controls .al-season-selector{margin-top:8px;gap:12px}
+ .al-season-controls .al-season-selector>button{font-size:10px;min-height:44px}
+}
+@media(prefers-reduced-motion:reduce){.al-season-controls{transition:none}}
+@media(max-width:360px){.al-winter-retreat{width:32%;bottom:20%}.al-season-controls .al-season-story-caption>p{font-size:16px}}
