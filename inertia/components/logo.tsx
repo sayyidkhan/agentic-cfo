@@ -8,7 +8,7 @@ export default function Logo({ size = 28 }: { size?: number }) {
       <span className="acorra-wordmark__icon" style={{width:size+10,height:size+10}}>
         <AcorraMark size={size+10}/>
       </span>
-      <span>Acorra<span className="acorra-wordmark__dot">.</span></span>
+      <span className="acorra-brand-name">Acorra<span className="acorra-wordmark__dot">.</span></span>
     </Link>
   )
 }
