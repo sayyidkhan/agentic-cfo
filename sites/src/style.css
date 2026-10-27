@@ -131,3 +131,5 @@ body{margin:0;background:#f8f6ef}button,a,input,select,textarea{-webkit-tap-high
  .workspace-overview>.cfo-page-intro,.workspace-overview>.acorra-snapshot,.workspace-overview>details,.workspace-overview>p,.workspace-overview>.cfo-alert{grid-column:1/-1}
  .workspace-overview>.cfo-card{height:100%}
 }
+
+.settings-reset{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px}.settings-reset>div{max-width:620px}.settings-reset>p[role=status]{flex-basis:100%;font-size:13px;color:var(--cfo-brand)}
