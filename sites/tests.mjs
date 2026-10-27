@@ -167,6 +167,12 @@ test('Sandy artwork is served intact with safe methods and immutable versioned U
   const head=await worker.fetch(new Request(url,{method:'HEAD'}),{});assert.equal(head.status,200);assert.equal((await head.arrayBuffer()).byteLength,0)
   assert.equal((await worker.fetch(new Request(url,{method:'POST'}),{})).status,405)
  }
+ const brandUrl='https://acorra.test/assets/brand/acorra-sculpture-v1.webp'
+ const brand=await worker.fetch(new Request(brandUrl),{})
+ assert.equal(brand.headers.get('content-type'),'image/webp');assert.match(brand.headers.get('cache-control'),/immutable/)
+ assert.deepEqual(Buffer.from(await brand.arrayBuffer()),readFileSync('assets/brand/acorra-sculpture-v1.webp'))
+ assert.equal((await (await worker.fetch(new Request(brandUrl,{method:'HEAD'}),{})).arrayBuffer()).byteLength,0)
+ assert.equal((await worker.fetch(new Request(brandUrl,{method:'POST'}),{})).status,405)
  assert.equal((await worker.fetch(new Request('https://acorra.test/assets/sandy/v2/missing.webp'),{})).status,404)
 })
 
