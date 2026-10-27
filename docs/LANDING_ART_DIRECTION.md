@@ -79,10 +79,9 @@ controls fit, with no horizontal overflow or action/timeline overlap; winter's
 longer caption was also checked. No financial data or calculations changed.
 
 
-### Compact public footer
+### Minimal public footer
 
-Replaced the oversized navigation grid and decorative wordmark with a small
-brand/tagline row, public demo anchor, explicit app entry, copyright and back-to-top.
-Internal account, transactions, budgets, wealth, Sandy chat and settings links
-are no longer exposed as landing-page footer navigation. App navigation remains
-inside the app. Mobile stacks the brand above the two public actions.
+The footer has no demo or app call-to-action links and no internal navigation.
+Brand and tagline sit on the left; copyright and the back-to-top link are grouped
+on the right in the same compact row. On mobile the right-aligned metadata sits
+below the brand. The large decorative wordmark and extra divider row are removed.

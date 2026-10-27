@@ -66,26 +66,21 @@
 @media(max-width:1000px){.al-closing{padding-right:40%}.al-closing-celebration{width:330px;height:370px;right:-1%;bottom:-25px}}
 @media(max-width:650px){.al-atmosphere{inset:-30px -25vw 0}.al-atmosphere>i{max-width:none;width:420px;height:550px;filter:blur(16px)}.al-atmosphere>span{font-size:17px}.al-atmosphere>span:nth-of-type(2){font-size:23px}.al-atmosphere>span:nth-of-type(3){left:22%}.al-closing{padding:34px 23px 225px;min-height:560px}.al-closing-celebration{width:265px;height:285px;right:-3%;bottom:-45px}.al-closing h2{font-size:38px}}
 .al-insight-copy{position:relative}
-/* A compact public footer: product entry and public-page navigation only. */
+/* Minimal footer: brand on the left, copyright and return link together on the right. */
 .al-footer{display:block;max-width:none;margin:0;padding:0 4vw;background:#0c3027;color:#f6f2df;border-top:1px solid #c9d6ad26;border-radius:0}
-.al-footer-content,.al-footer-meta{max-width:1400px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:24px}
-.al-footer-content{padding:26px 0 20px}
+.al-footer-content{max-width:1400px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:24px 0}
 .al-footer .al-brand{font-size:28px;gap:9px;color:#fff7df}
 .al-footer-identity>p{font-size:12px;line-height:1.5;color:#b5c6b5;margin:9px 0 0}
-.al-footer-content>nav{display:flex;align-items:center;gap:26px;font-size:12px;font-weight:600}
-.al-footer-content nav>a{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;color:#d9e4cf}
-.al-footer-content nav>a:hover,.al-footer-meta>a:hover{color:#f3d48e}
-.al-footer-content .al-footer-open{color:#edcf8a}
-.al-footer-meta{padding:12px 0;border-top:1px solid #c9d6ad20;color:#a2b7a2;font-size:10px}
-.al-footer-meta>a{display:inline-flex;align-items:center;gap:7px;min-height:32px;color:#c9d3bd}
+.al-footer-meta{display:flex;align-items:center;justify-content:flex-end;gap:24px;color:#a2b7a2;font-size:11px;white-space:nowrap}
+.al-footer-meta>a{display:inline-flex;align-items:center;gap:7px;min-height:44px;color:#c9d3bd}
+.al-footer-meta>a:hover{color:#f3d48e}
 .al-footer a:focus-visible{outline:2px solid #edcf8a;outline-offset:4px;border-radius:4px}
 @media(max-width:650px){
  .al-footer{padding-inline:20px}
- .al-footer-content{align-items:flex-start;flex-direction:column;gap:12px;padding:23px 0 15px}
+ .al-footer-content{align-items:stretch;flex-direction:column;gap:12px;padding:22px 0 14px}
  .al-footer .al-brand{font-size:26px}
  .al-footer-identity>p{font-size:11px;margin-top:8px}
- .al-footer-content>nav{gap:24px;font-size:12px}
- .al-footer-meta{padding:9px 0;font-size:10px;gap:12px}
+ .al-footer-meta{font-size:10px;gap:20px}
 }
 
 /* A forest-and-gold stage for the CFO introduction. Artwork is decorative, never financial data. */
