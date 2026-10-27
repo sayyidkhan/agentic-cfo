@@ -77,3 +77,12 @@ Browser checked 1100×670, 1440×720, 1024×768, 820×620, 1366×600,
 1920×1080, 1100×500, 700×400, 390×650 and 320×568. All four season
 controls fit, with no horizontal overflow or action/timeline overlap; winter's
 longer caption was also checked. No financial data or calculations changed.
+
+
+### Compact public footer
+
+Replaced the oversized navigation grid and decorative wordmark with a small
+brand/tagline row, public demo anchor, explicit app entry, copyright and back-to-top.
+Internal account, transactions, budgets, wealth, Sandy chat and settings links
+are no longer exposed as landing-page footer navigation. App navigation remains
+inside the app. Mobile stacks the brand above the two public actions.
