@@ -9,7 +9,7 @@ export default function SeasonalHero(){
   let frame=0,last=0,visible=true,disposed=false,current=-1
   const preference=matchMedia('(prefers-reduced-motion: reduce)')
   const paint=(time:number)=>{
-   const s=sampleSeasonStory(time);el.style.setProperty('--sandy-x',s.x+'%');el.style.setProperty('--sandy-y',s.y+'%');el.style.setProperty('--sandy-angle',s.angle+'deg')
+   const s=sampleSeasonStory(time);el.style.setProperty('--sandy-x',s.x+'%');el.style.setProperty('--sandy-y',s.y+'%');el.style.setProperty('--sandy-angle',s.angle+'deg');el.style.setProperty('--sandy-mobile-x',(36+s.x*.35)+'%')
    for(const [key,value] of Object.entries({carry:s.carry,crouch:s.crouch,rest:s.rest,visibility:s.opacity,nut:s.nut,'nut-x':s.nutX+'%','nut-y':s.nutY+'%','season-progress':s.progress}))el.style.setProperty('--'+key,String(value))
    el.dataset.stash=String(s.stash);el.dataset.deposit=String(s.deposit);el.dataset.action=s.index===3?'resting':s.t<2.8?'gathering':s.t<4.65?'stashing':'settling'
    if(current!==s.index){current=s.index;setSeason(current);el.dataset.season=seasons[current].id;el.closest<HTMLElement>('.acorra-landing')!.dataset.season=seasons[current].id}
@@ -22,14 +22,14 @@ export default function SeasonalHero(){
  },[])
  const choose=(index:number)=>{elapsed.current=index*8+(matchMedia('(prefers-reduced-motion: reduce)').matches?6:.4);paintRef.current(elapsed.current)}
  return <div className="al-season-story" ref={root} data-season="spring" data-stash="3" role="group" aria-label="Sandy gathers and stores acorns through the seasons">
-  <div className="al-season-scene" aria-hidden="true">
+  <div className="al-season-scene" aria-hidden="true"><div className="al-season-plane">
    {seasons.map(s=><img className={'al-season-world season-'+s.id} key={s.id} src={'/assets/seasons/v1/'+s.id+'.webp'} alt="" fetchPriority={s.id==='spring'?'high':undefined} width="1024" height="1024"/>)}
    <div className="al-scene-weather">{Array.from({length:20},(_,i)=><i key={i} style={{'--i':i} as React.CSSProperties}/>)}</div>
    <div className="al-stash-glow"/><div className="al-acorn-stash">{Array.from({length:6},(_,i)=><Acorn key={i} className={'al-stashed-acorn stash-'+i}/>)}</div>
    <div className="al-foraging-sandy"><img className="al-sandy-carry" src="/assets/seasons/v1/sandy-carry.webp" alt="" width="1024" height="1024"/><img className="al-sandy-stash" src="/assets/seasons/v1/sandy-stash.webp" alt="" width="1024" height="1024"/><img className="al-sandy-rest" src="/assets/sandy/v2/relieved.webp" alt="" width="800" height="800"/></div>
    <Acorn className="al-released-acorn"/><span className="al-stash-spark">✦</span>
    <div className="al-scene-ground-mist"/>
-  </div>
+  </div></div>
   <div className="al-season-story-caption"><p>{seasons[season].line}</p></div>
   <div className="al-season-selector" role="group" aria-label="Explore Sandy’s seasons">{seasons.map((s,i)=><button key={s.id} type="button" aria-pressed={season===i} onClick={()=>choose(i)}><span>{s.label}</span><i aria-hidden="true"><b/></i></button>)}</div>
  </div>
