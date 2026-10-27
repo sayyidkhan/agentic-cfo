@@ -74,3 +74,11 @@
 .al-hero-copy>.al-eyebrow{gap:12px;font-size:10px;letter-spacing:.16em;color:#e2d3a4}
 .al-hero-copy .al-intelligence-mark{width:32px;height:32px;flex-shrink:0;color:#e9ce8a;overflow:visible}
 @media(max-width:650px){.al-hero-copy>.al-eyebrow{gap:9px;font-size:7px;letter-spacing:.13em}.al-hero-copy .al-intelligence-mark{width:24px;height:24px}}
+
+/* Regional winter acting: the chair stays planted and complete frames replace atomically. */
+.al-winter-retreat>canvas{position:absolute;inset:0;width:100%;height:100%;opacity:0;pointer-events:none}
+.al-winter-retreat.winter-ready>img{visibility:hidden}.al-winter-retreat.winter-ready>canvas{opacity:1}
+.al-gold-glint{position:absolute;left:59%;top:44%;width:5%;height:5%;opacity:0;pointer-events:none;filter:drop-shadow(0 0 3px #f8d476)}
+.al-winter-retreat[data-motion=running] .al-gold-glint{animation:al-acorn-glint 6s ease-in-out infinite}
+@keyframes al-acorn-glint{0%,32%,52%,100%{opacity:0;scale:.5;rotate:0deg}40%{opacity:.9;scale:1;rotate:25deg}46%{opacity:.3;scale:.8;rotate:40deg}}
+@media(prefers-reduced-motion:reduce){.al-winter-retreat>canvas{display:none!important}.al-winter-retreat.winter-ready>img{visibility:visible}.al-gold-glint{animation:none!important;opacity:0}}

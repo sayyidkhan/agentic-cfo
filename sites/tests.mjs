@@ -301,7 +301,7 @@ test('Acorn-holding arms retain their shape instead of stretching with isolated 
 
 
 test('seasonal artwork is complete, versioned and read-only',async()=>{
- for(const name of ['spring','summer','autumn','winter','sandy-carry','sandy-stash','sandy-winter-rest']){
+ for(const name of ['spring','summer','autumn','winter','sandy-carry','sandy-stash','sandy-winter-rest','sandy-winter-gold']){
   const url='https://acorra.test/assets/seasons/v1/'+name+'.webp',response=await worker.fetch(new Request(url),{})
   assert.equal(response.status,200);assert.equal(response.headers.get('content-type'),'image/webp');assert.match(response.headers.get('cache-control'),/immutable/)
   assert.deepEqual(Buffer.from(await response.arrayBuffer()),readFileSync('assets/seasons/'+name+'.webp'))
@@ -323,4 +323,18 @@ test('season story deposits one acorn after release and preserves the winter sta
  assert.equal(sampleSeasonStory(32.7).index,sampleSeasonStory(.7).index)
  assert.ok(Math.abs(sampleSeasonStory(32.7).x-sampleSeasonStory(.7).x)<1e-9)
  for(let t=0;t<32;t+=.05){const s=sampleSeasonStory(t);assert.ok(Object.values(s).every(v=>typeof v!=='number'||Number.isFinite(v)));assert.ok(s.opacity>=.45&&s.opacity<=1);assert.ok(Math.abs(s.carry+s.crouch+s.rest-1)<1e-9)}
+})
+
+
+test('winter acting moves the head and tail while preserving the bench and acorn grip',async()=>{
+ const {createWinterRig}=await import('./dist/winter-motion.mjs'),rig=createWinterRig(),first=Float32Array.from(rig.frame(0));
+ const anchors=[[.24,.29],[.30,.4],[.37,.6],[.45,.77],[.76,.75],[.9,.85],[.535,.46],[.595,.45],[.65,.47]];
+ const at=(x,y)=>((Math.round(y*rig.size-.5)*rig.size+Math.round(x*rig.size-.5))*2);
+ let movement=0;
+ for(let t=0;t<8;t+=.125){const f=rig.frame(t);for(const value of f){assert.ok(Number.isFinite(value));assert.ok(Math.abs(value)<.05)}
+  for(const [x,y] of anchors){const k=at(x,y);assert.ok(Math.abs(f[k])<1e-9,'chair and grip anchors must stay still');assert.ok(Math.abs(f[k+1])<1e-9)}
+  for(const [x,y] of [[.55,.20],[.12,.30]]){const k=at(x,y);movement=Math.max(movement,Math.hypot(f[k]-first[k],f[k+1]-first[k+1]))}
+ }
+ assert.ok(movement>.01,'the acting must visibly change the character, not just the background');
+ const loop=rig.frame(8);for(let i=0;i<first.length;i++)assert.ok(Math.abs(loop[i]-first[i])<1e-7,'loop must join without a jump');
 })

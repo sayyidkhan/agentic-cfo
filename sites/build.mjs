@@ -13,7 +13,7 @@ const styles=await Promise.all(['../inertia/css/app.css','../inertia/css/cfo.css
 await writeFile('src/generated-style.css.txt',styles.join('\n'))
 const sandyArt=Object.fromEntries(await Promise.all(['curious','calm','watchful','concerned','screaming','celebrating','relieved','greeting'].map(async mood=>[mood,(await readFile('assets/sandy/'+mood+'.webp')).toString('base64')])));
 await writeFile('src/generated-sandy-assets.txt',JSON.stringify(sandyArt))
-await writeFile('src/generated-season-assets.txt',JSON.stringify(Object.fromEntries(await Promise.all(['spring','summer','autumn','winter','sandy-carry','sandy-stash','sandy-winter-rest'].map(async name=>[name,(await readFile('assets/seasons/'+name+'.webp')).toString('base64')])))))
+await writeFile('src/generated-season-assets.txt',JSON.stringify(Object.fromEntries(await Promise.all(['spring','summer','autumn','winter','sandy-carry','sandy-stash','sandy-winter-rest','sandy-winter-gold'].map(async name=>[name,(await readFile('assets/seasons/'+name+'.webp')).toString('base64')])))))
 await mkdir('dist/server',{recursive:true});await mkdir('dist/.openai',{recursive:true})
 await build({...common,entryPoints:['src/server.ts'],outfile:'dist/server/index.js',platform:'browser',format:'esm',target:'es2022',loader:{'.txt':'text','.svg':'text'}})
 await copyFile('../.openai/hosting.json','.openai/hosting.json')
@@ -36,3 +36,5 @@ await writeFile('dist/preview-migrations.json',JSON.stringify(migrations))
 await build({...common,entryPoints:['src/sandy_gpu.ts'],outfile:'dist/sandy-gpu.mjs',platform:'node',format:'esm'})
 
 await build({...common,entryPoints:['src/season_story.ts'],outfile:'dist/season-story.mjs',platform:'node',format:'esm'})
+
+await build({...common,entryPoints:['src/winter_motion.ts'],outfile:'dist/winter-motion.mjs',platform:'node',format:'esm'})
