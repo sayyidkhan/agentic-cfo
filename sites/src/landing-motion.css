@@ -71,3 +71,5 @@
 .acorra-landing .al-footer>.al-footer-signature{font:400 var(--al-signature-size,clamp(130px,23vw,370px))/.7 Georgia,serif;color:#bdd8a310;letter-spacing:-.085em}
 @media(max-width:650px){.al-footer{--al-signature-size:27vw}}
 @media(max-width:650px){.al-footer-main nav>a{font-size:13px;min-height:34px;display:flex;align-items:center}.al-footer-main>nav{gap:7px}}
+/* Footer navigation is always fully rendered; the atmosphere carries its motion. */
+.acorra-landing.al-motion .al-footer :is(.al-footer-main,.al-footer-main>*,.al-footer-bottom,.al-footer-signature){animation:none!important;opacity:1!important;translate:none!important;transform:none!important}
