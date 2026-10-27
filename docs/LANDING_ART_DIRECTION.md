@@ -1,27 +1,39 @@
-# Acorra landing direction — 27 October 2026
+# Acorra — Sandy through the seasons
 
-The hero uses a sculptural brand object as its focal point, oversized editorial typography, and an asymmetric desktop composition. The mobile layout puts the message and call to action first, then the sculpture, then the working finance preview. The existing application, calculations and synthetic-data release lock are preserved.
+Updated 27 October 2026.
 
-## References reviewed
+## Current direction
 
-- https://stripe.com/ — a clear product proposition against large, dimensional visual work; hierarchy and restrained navigation.
-- https://activetheory.net/ — a sculptural focal point, spatial layers and environmental motion.
-- https://lusion.co/ — researched its approach to 3D visual storytelling. Its live WebGL hero did not render in the QA browser; no claim of visual inspection of that hero.
+Sandy gathers an acorn, approaches her oak-tree hiding place, crouches to store it, and settles beside her growing stash. The woodland progresses through spring, summer, autumn and winter. This gives the savings-habit metaphor a visible story rather than an isolated floating acorn.
 
-These informed the direction; no assets or source were copied from them.
+The hero background changes with the scene. Moving sunbeams, airborne particles, autumn leaves and winter snow provide environmental motion. The foreground uses layered artwork and a shared 32-second timeline: eight seconds per season. Visitors can jump to a season using the four labelled buttons. No play/pause button is shown.
 
-## Brand artwork
+The clock suspends when the scene is offscreen or the document is hidden. OS reduced-motion preferences produce a complete still scene; season selection remains available. The animation is decorative and has no connection to financial mutations, account data or simulated investment returns. The actual finance preview and complete footer remain below it.
 
-Asset: `sites/assets/brand/acorra-sculpture-v1.webp`.
+## Implementation and assets
 
-Created with built-in image generation, then encoded as WebP while preserving transparency. It is an original decorative brand illustration, not a financial chart. No paid AI service or runtime AI dependency was added.
+- `sites/src/SeasonalHero.tsx`: character, scene, stash, season controls and visibility handling.
+- `sites/src/season_story.ts`: deterministic timing for character poses, the released acorn and stash growth.
+- `sites/src/seasonal-hero.css`: responsive composition, weather, atmosphere and transitions.
+- `sites/assets/seasons/{spring,summer,autumn,winter}.webp`: four woodland environments.
+- `sites/assets/seasons/sandy-carry.webp`: reused approved Sandy artwork.
+- `sites/assets/seasons/sandy-stash.webp`: new crouching pose matched to the approved character.
+- The relieved Sandy pose is reused for settling and winter.
 
-Generation prompt:
+The four environments and crouching pose were made with built-in image generation, not a paid runtime API. Environment sheet extraction and WebP encoding preserve the supplied panels and character transparency. All assets are served from same-origin versioned URLs with immutable caching. No new external service or WebGL dependency is needed. The previous sculptural acorn remains archived in the repository but is no longer shipped in the landing page.
 
-> Use case: stylized-concept. Asset type: premium personal finance website hero cutout for Acorra. Create an extraordinarily polished photorealistic 3D product sculpture, a large golden acorn with a subtly textured champagne-gold cap and a smooth warm brushed gold seed tapering to a point, sprouting two rich emerald-green leaves with fine gold veins. Acorn floats upright, slightly tilted 10 degrees, within TWO thin elliptical champagne gold metal orbit rings, one diagonally in front and one behind. A tiny emerald sphere sits on one orbit. Below is a low elegant dark forest green circular plinth with a thin gold edge. Studio luxury product photography, exquisite metallic reflections, soft ivory highlights, emerald reflected light, physically credible surfaces, not flat vector, high-fidelity octane/cinema4d rendering. Front three-quarter camera, entire object and all orbit rings fully inside frame with comfortable margin. Strong memorable sculptural silhouette. Transparent background with real alpha, no environment, no floor plane outside plinth, no lettering, no words, no watermark, no dollar signs or coins. Acorn occupies center 55% of frame, surrounding rings within 90%, square composition. Not a logo tile or app icon. Standalone sculpture.
+## Generation prompts
 
-## Motion and delivery
+### Woodland environment sheet
 
-The sculpture is pre-rendered so its finish is consistent on mobile and browsers without WebGL. CSS supplies gentle rigid-object motion; mouse movement supplies restrained perspective. No real-time 3D engine is shipped for this hero. The play/pause button has been removed as requested. OS reduced-motion preferences disable motion, and offscreen/background animation suspension is preserved.
+> Use case: stylized-concept. Asset: a FOUR SEASON environment sprite sheet for Acorra's animated woodland hero. Create a perfectly aligned 2 by 2 grid of FOUR equally sized square illustrations, edge to edge, no gutters, no borders, no text. Top-left SPRING, top-right SUMMER, bottom-left AUTUMN, bottom-right WINTER. SAME forest clearing, identical camera, exact same central objects and perspective in all four panels. Feature a huge old oak trunk on the RIGHT side (center x=76% of each panel), broad gnarled roots, and an inviting dark hollow at its base (center x=72%, y=73%), large enough for a squirrel's acorn store. Woodland floor at y=80%, clearing on LEFT two-thirds for a squirrel to approach the hollow. Far forest with atmospheric depth, sunrays, layered trees, storybook cinematic high fidelity 3D animation film environment, believable mossy bark texture, soft lush foliage. Spring: fresh green leaves, tiny flowers, morning light. Summer: rich forest greens, golden sunbeams, lush canopy. Autumn: amber and copper leaves, warm afternoon golden light, fallen leaves. Winter: same tree with sparse bare boughs, soft snow on ground and roots, cool blue-green twilight, welcoming warm light in hollow. Scene has room for overlaid character in clearing and stash inside hollow; DO NOT draw any animals, characters, nuts, acorns, people, furniture or text. Not flat clipart. Rich sophisticated forest green, ivory and gold palette, warm premium Pixar-quality environment, no logos. Each panel must be the exact same dimensions and all 4 panels fill the entire image. 2048 by 2048 overall preferred.
 
-The image is served from a versioned same-origin URL with immutable caching. No third-party image hosts, tracking scripts or fonts are needed. All preview figures still come from the existing deterministic synthetic-data calculations.
+### Crouching pose
+
+Reference: existing `sites/assets/sandy/curious.webp`.
+
+> Create one new animation pose for this friendly squirrel mascot, matching the reference character's cinnamon fur, cream belly, fluffy tail, green neck scarf and gold pin. The squirrel is crouching beside her imaginary woodland hiding spot, facing right in a three-quarter side view, gently placing an acorn down with her front paws. Show the entire squirrel including tail and feet, centered with comfortable clear margin. Keep the same polished 3D storybook illustration style and friendly expression. Transparent background. Only the squirrel character and the acorn in her paws, no scenery and no text.
+
+## Validation
+
+Existing financial checks remain in place. Additional tests verify that all six seasonal assets are served intact using read-only methods, that an acorn enters the stash only after release, that the winter stash stays intact, and that pose opacity remains continuous through the complete loop. Desktop and 390px browser checks cover scene rendering, season selection, image loading and horizontal overflow.

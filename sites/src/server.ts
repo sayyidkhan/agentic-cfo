@@ -2,7 +2,8 @@ import script from './generated-client.js.txt'
 import css from './generated-style.css.txt'
 import acorraMark from '../../public/acorra-mark.svg'
 import sandyArtSource from './generated-sandy-assets.txt'
-import brandArt from './generated-brand-art.txt'
+import seasonalArtSource from './generated-season-assets.txt'
+const seasonalArt:Record<string,string>=JSON.parse(seasonalArtSource)
 const sandyArt:Record<string,string>=JSON.parse(sandyArtSource)
 import {applyAction,emptyState} from './domain'
 // Fail closed. Turn on only in a reviewed source revision after live two-visitor QA.
@@ -70,7 +71,8 @@ export function createHandler(realDataEnabled=false){return async function(reque
   }catch(e:any){return json({error:e instanceof SyntaxError?'Invalid request data':e.message||'Unable to process request'},400)}
  }
  if(!['GET','HEAD'].includes(request.method))return json({error:'Method not allowed'},405)
- if(path==='/assets/brand/acorra-sculpture-v1.webp')return new Response(request.method==='HEAD'?null:Uint8Array.from(atob(brandArt),c=>c.charCodeAt(0)),{headers:{...security,'Content-Type':'image/webp','Cache-Control':'public, max-age=31536000, immutable'}})
+ const seasonMatch=path.match(/^\/assets\/seasons\/v1\/([a-z-]+)\.webp$/)
+ if(seasonMatch&&Object.hasOwn(seasonalArt,seasonMatch[1]))return new Response(request.method==='HEAD'?null:Uint8Array.from(atob(seasonalArt[seasonMatch[1]]),c=>c.charCodeAt(0)),{headers:{...security,'Content-Type':'image/webp','Cache-Control':'public, max-age=31536000, immutable'}})
  const artworkMatch=path.match(/^\/assets\/sandy\/v2\/([a-z]+)\.webp$/)
  if(artworkMatch&&Object.hasOwn(sandyArt,artworkMatch[1]))return new Response(request.method==='HEAD'?null:Uint8Array.from(atob(sandyArt[artworkMatch[1]]),c=>c.charCodeAt(0)),{headers:{...security,'Content-Type':'image/webp','Cache-Control':'public, max-age=31536000, immutable'}})
  const assets:any={'/app.js':[script,'text/javascript; charset=utf-8'],'/style.css':[css,'text/css; charset=utf-8'],'/favicon.svg':[acorraMark,'image/svg+xml'],'/acorra-mark.svg':[acorraMark,'image/svg+xml']}

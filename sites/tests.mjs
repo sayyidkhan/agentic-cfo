@@ -167,12 +167,6 @@ test('Sandy artwork is served intact with safe methods and immutable versioned U
   const head=await worker.fetch(new Request(url,{method:'HEAD'}),{});assert.equal(head.status,200);assert.equal((await head.arrayBuffer()).byteLength,0)
   assert.equal((await worker.fetch(new Request(url,{method:'POST'}),{})).status,405)
  }
- const brandUrl='https://acorra.test/assets/brand/acorra-sculpture-v1.webp'
- const brand=await worker.fetch(new Request(brandUrl),{})
- assert.equal(brand.headers.get('content-type'),'image/webp');assert.match(brand.headers.get('cache-control'),/immutable/)
- assert.deepEqual(Buffer.from(await brand.arrayBuffer()),readFileSync('assets/brand/acorra-sculpture-v1.webp'))
- assert.equal((await (await worker.fetch(new Request(brandUrl,{method:'HEAD'}),{})).arrayBuffer()).byteLength,0)
- assert.equal((await worker.fetch(new Request(brandUrl,{method:'POST'}),{})).status,405)
  assert.equal((await worker.fetch(new Request('https://acorra.test/assets/sandy/v2/missing.webp'),{})).status,404)
 })
 
@@ -303,4 +297,30 @@ test('Acorn-holding arms retain their shape instead of stretching with isolated 
   assert.ok(Math.abs(Math.hypot(wrist[0]-elbow[0],wrist[1]-elbow[1])-Math.hypot(.1,.01)*800)<.5,'held-acorn forearm length stays stable')
  }
  const {createPaintedBlink,hasPaintedBlink}=await import('./dist/sandy-blink.mjs');assert.equal(hasPaintedBlink('greeting'),true)
+})
+
+
+test('seasonal artwork is complete, versioned and read-only',async()=>{
+ for(const name of ['spring','summer','autumn','winter','sandy-carry','sandy-stash']){
+  const url='https://acorra.test/assets/seasons/v1/'+name+'.webp',response=await worker.fetch(new Request(url),{})
+  assert.equal(response.status,200);assert.equal(response.headers.get('content-type'),'image/webp');assert.match(response.headers.get('cache-control'),/immutable/)
+  assert.deepEqual(Buffer.from(await response.arrayBuffer()),readFileSync('assets/seasons/'+name+'.webp'))
+  assert.equal((await (await worker.fetch(new Request(url,{method:'HEAD'}),{})).arrayBuffer()).byteLength,0)
+  assert.equal((await worker.fetch(new Request(url,{method:'POST'}),{})).status,405)
+ }
+ assert.equal((await worker.fetch(new Request('https://acorra.test/assets/seasons/v1/missing.webp'),{})).status,404)
+})
+
+test('season story deposits one acorn after release and preserves the winter stash',async()=>{
+ const {sampleSeasonStory}=await import('./dist/season-story.mjs')
+ for(let season=0;season<3;season++){
+  const before=sampleSeasonStory(season*8+3.3),release=sampleSeasonStory(season*8+4.15),after=sampleSeasonStory(season*8+4.8)
+  assert.equal(before.stash,3+season);assert.equal(before.nut,0);assert.ok(before.crouch>.99)
+  assert.ok(release.nut>0);assert.equal(release.stash,before.stash,'stash must not grow while the released acorn is still in flight')
+  assert.equal(after.stash,before.stash+1);assert.equal(after.nut,0);assert.ok(after.rest>.99)
+ }
+ for(let t=24;t<32;t+=.125){const s=sampleSeasonStory(t);assert.equal(s.index,3);assert.equal(s.stash,6);assert.equal(s.rest,1);assert.equal(s.nut,0)}
+ assert.equal(sampleSeasonStory(32.7).index,sampleSeasonStory(.7).index)
+ assert.ok(Math.abs(sampleSeasonStory(32.7).x-sampleSeasonStory(.7).x)<1e-9)
+ for(let t=0;t<32;t+=.05){const s=sampleSeasonStory(t);assert.ok(Object.values(s).every(v=>typeof v!=='number'||Number.isFinite(v)));assert.ok(s.opacity>=0&&s.opacity<=1);assert.ok(Math.abs(s.carry+s.crouch+s.rest-1)<1e-9)}
 })

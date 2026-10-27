@@ -9,11 +9,11 @@ const demoCopy={name:'demo-copy',setup(build){build.onLoad({filter:/sandy_avatar
 const common={absWorkingDir:base,tsconfigRaw:{compilerOptions:{jsx:'react-jsx'}},plugins:[demoCopy],bundle:true,minify:true,jsx:'automatic',alias,nodePaths:[path.join(base,'node_modules')],logLevel:'info'}
 const result=await build({...common,entryPoints:['src/client.tsx'],write:false,platform:'browser',target:'es2022',define:{'process.env.NODE_ENV':'"production"'}})
 await writeFile('src/generated-client.js.txt',result.outputFiles[0].text)
-const styles=await Promise.all(['../inertia/css/app.css','../inertia/css/cfo.css','src/style.css','src/landing.css','src/landing-motion.css'].map(f=>readFile(f,'utf8')))
+const styles=await Promise.all(['../inertia/css/app.css','../inertia/css/cfo.css','src/style.css','src/landing.css','src/landing-motion.css','src/seasonal-hero.css'].map(f=>readFile(f,'utf8')))
 await writeFile('src/generated-style.css.txt',styles.join('\n'))
 const sandyArt=Object.fromEntries(await Promise.all(['curious','calm','watchful','concerned','screaming','celebrating','relieved','greeting'].map(async mood=>[mood,(await readFile('assets/sandy/'+mood+'.webp')).toString('base64')])));
 await writeFile('src/generated-sandy-assets.txt',JSON.stringify(sandyArt))
-await writeFile('src/generated-brand-art.txt',(await readFile('assets/brand/acorra-sculpture-v1.webp')).toString('base64'))
+await writeFile('src/generated-season-assets.txt',JSON.stringify(Object.fromEntries(await Promise.all(['spring','summer','autumn','winter','sandy-carry','sandy-stash'].map(async name=>[name,(await readFile('assets/seasons/'+name+'.webp')).toString('base64')])))))
 await mkdir('dist/server',{recursive:true});await mkdir('dist/.openai',{recursive:true})
 await build({...common,entryPoints:['src/server.ts'],outfile:'dist/server/index.js',platform:'browser',format:'esm',target:'es2022',loader:{'.txt':'text','.svg':'text'}})
 await copyFile('../.openai/hosting.json','.openai/hosting.json')
@@ -34,3 +34,5 @@ const migrations=await Promise.all(['0000_financial_workspaces.sql','0001_storag
 await writeFile('dist/preview-migrations.json',JSON.stringify(migrations))
 
 await build({...common,entryPoints:['src/sandy_gpu.ts'],outfile:'dist/sandy-gpu.mjs',platform:'node',format:'esm'})
+
+await build({...common,entryPoints:['src/season_story.ts'],outfile:'dist/season-story.mjs',platform:'node',format:'esm'})
