@@ -69,3 +69,8 @@
 .al-season-story[data-season=winter] .al-foraging-sandy{opacity:0}
 @media(max-width:650px){.al-winter-retreat{left:43%;bottom:16%;width:36%}}
 @media(prefers-reduced-motion:reduce){.al-winter-retreat{transition:none;translate:0 0}}
+
+/* A quieter promise and a crisp, connected intelligence mark above the headline. */
+.al-hero-copy>.al-eyebrow{gap:12px;font-size:10px;letter-spacing:.16em;color:#e2d3a4}
+.al-hero-copy .al-intelligence-mark{width:32px;height:32px;flex-shrink:0;color:#e9ce8a;overflow:visible}
+@media(max-width:650px){.al-hero-copy>.al-eyebrow{gap:9px;font-size:7px;letter-spacing:.13em}.al-hero-copy .al-intelligence-mark{width:24px;height:24px}}
