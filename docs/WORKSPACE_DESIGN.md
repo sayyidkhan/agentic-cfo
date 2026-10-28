@@ -4,7 +4,7 @@ The internal app uses a balance-first hierarchy and direct everyday actions insp
 
 ## Presentation
 
-- Desktop uses a fixed 208px navigation rail, a compact profile header and a fluid content frame. Tablet and mobile retain bottom navigation with Sandy in the centre.
+- Desktop uses a fixed 208px navigation rail with the workspace/demo notice at the top and the Profile menu anchored at the bottom. The account menu opens upward and groups Profile, Settings and sign-in/logout. The content header contains the breadcrumb. Tablet and mobile retain the notice and profile in the header, and bottom navigation with Sandy in the centre. Short desktop windows scroll the navigation links while keeping the profile accessible.
 - Home groups recorded cash, monthly spending and net worth in one emerald balance surface with Add entry, Plan ahead and Ask Sandy shortcuts. The three values stay on one row on mobile. `FitMoney` scales exact SGD amounts to fit without rounding, truncation or wrapping.
 - Recent activity and Sandy’s next-step card form an asymmetric desktop layout and stack on mobile.
 - Activity shows readable transaction descriptions, account/date metadata, signed amounts and compact action menus. Menus dismiss on outside click, action selection or Escape, with focus returned on keyboard dismissal.
