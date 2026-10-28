@@ -111,3 +111,17 @@ forward/back journey, 44px section links and no overflow at 390px and 320px.
 Removed obsolete hover/focus pauses from the console container: they were meant
 for its former floating loop and could freeze the current entrance at 35px when
 an anchor focuses the demo. Its entrance now completes while focused or hovered.
+
+
+### Synchronized Spending count-up
+
+The Spending demo now shares one visible-time animation clock between its monthly
+total, category spending amounts and budget bars. Each bar width is derived from
+the displayed integer cents divided by the fixed budget limit, so amount and bar
+cannot use different easing, delays or durations. Income and budget limits remain
+fixed reference values. The former independent CSS bar-fill animation is removed;
+the quiet color shimmer stays. Reduced motion shows exact final values directly.
+
+Browser QA verified replay on tab selection, matching intermediate cents/widths,
+exact final totals, and the mobile layout at 390px and 320px without overflow.
+The deterministic animation tests also cover zero limits and overspent budgets.

@@ -351,3 +351,21 @@ test('preview amounts accumulate without overshoot and finish at exact integer c
  for(let t=0;t<typingDuration(length);t+=16){const n=typedCount(length,t);assert.ok(n>=last&&n<=length);last=n}
  assert.equal(typedCount(length,0),0);assert.equal(typedCount(length,typingDuration(length)),length);
 })
+
+
+test('spending bar percentage stays tied to its accumulating cents',async()=>{
+ const {countedBudget,COUNT_DURATION}=await import('./dist/preview-motion.mjs');
+ for(const [spent,limit] of [[42000,50000],[12000,20000],[165000,200000],[0,50000],[90000,50000],[1,3],[9500,0]]){
+  let previous=0;
+  for(let t=0;t<=COUNT_DURATION;t+=13){
+   const {cents,percent}=countedBudget(spent,limit,t);
+   assert.ok(Number.isSafeInteger(cents)&&cents>=previous&&cents<=spent);
+   assert.ok(percent>=0&&percent<=100);
+   if(limit>0)assert.ok(Math.abs(percent-Math.min(100,cents/limit*100))<1e-9,'bar must match visible amount on every frame');
+   else assert.equal(percent,cents>0?100:0);
+   previous=cents;
+  }
+  assert.deepEqual(countedBudget(spent,limit,0),{cents:0,percent:0});
+  assert.deepEqual(countedBudget(spent,limit,COUNT_DURATION),{cents:spent,percent:limit?Math.min(100,spent*100/limit):(spent?100:0)});
+ }
+})
