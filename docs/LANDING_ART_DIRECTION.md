@@ -92,3 +92,18 @@ below the brand. The large decorative wordmark and extra divider row are removed
 The closing section keeps only Explore Acorra. The Start a blank demo action,
 its now-unused landing callback, and its explanatory demo paragraph were removed.
 Reset controls remain in app settings.
+
+
+### Guided section scrolling
+
+Take a closer look and the footer Back to top link now use browser-native smooth
+scrolling. The demo ends with See how Acorra helps, leading to the feature heading;
+the features end with Get started with Acorra, leading to the final panel. No
+onward-section link is added to the final panel or footer. Links retain real hash
+URLs, preserve modified clicks, and focus the destination for keyboard users.
+Layout offsets keep reveal animations from changing the scroll landing position.
+Reduced-motion visitors get instant scrolling; other app navigation is unaffected.
+
+Browser QA confirmed intermediate scroll positions followed by the intended
+landing positions, focused targets, keyboard Enter activation, the complete
+forward/back journey, 44px section links and no overflow at 390px and 320px.

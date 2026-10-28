@@ -147,3 +147,20 @@
 .al-typed-response[data-complete=true] .al-typing-caret{display:none}
 @keyframes al-caret-pulse{50%{opacity:0}}
 @media(prefers-reduced-motion:reduce){.al-typing-caret{display:none;animation:none}}
+
+/* Quiet section-to-section navigation; the last product panel has no onward link. */
+.acorra-landing :is(#experience,#why-acorra,#get-started){scroll-margin-top:24px}
+.acorra-landing[tabindex="-1"]:focus,.acorra-landing [tabindex="-1"]:focus{outline:none}
+.al-section-next{max-width:1230px;margin:30px auto 0;display:flex;justify-content:flex-end;color:#244e3c}
+.al-section-next>a{display:inline-flex;align-items:center;gap:14px;min-height:44px;font-size:12px;font-weight:650}
+.al-section-next a>span{display:grid;place-items:center;width:34px;height:34px;border:1px solid #54755755;border-radius:50%;transition:background .2s,transform .2s}
+.al-section-next a:hover>span{background:#54755712;transform:translateY(3px)}
+.al-section-next a:focus-visible{outline:2px solid currentColor;outline-offset:5px;border-radius:4px}
+.al-section-next--dark{color:#e5d3a0;margin-top:22px}
+.al-section-next--dark a>span{border-color:#d7c68d66}
+.al-section-next--dark a:hover>span{background:#d7c68d14}
+@media(max-width:650px){
+ .al-section-next{justify-content:center;margin-top:24px}
+ .al-section-next>a{font-size:12px}
+ .al-section-next--dark{margin-top:20px}
+}
