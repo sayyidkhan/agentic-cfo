@@ -1,7 +1,8 @@
 import { formatSgd } from '../../app/services/finance/money.js'
 import { Form } from '@adonisjs/inertia/react'
 import { router } from '@inertiajs/react'
-import { useState } from 'react'
+import { useState, useEffect, useRef, type ReactNode } from 'react'
+import {ArrowDownLeft,ArrowUpRight,ArrowLeftRight,Landmark,MoreHorizontal} from 'lucide-react'
 
 export interface FinanceAccount { id: number; name: string; kind: 'asset' | 'liability' }
 export interface FinanceCategory { id: number; name: string }
@@ -24,7 +25,17 @@ export interface ManualValuation {
 }
 const price = formatSgd
 const inputStyle = { padding: '8px', border: '1px solid #aeb8c0', borderRadius: 6, width: '100%' }
-const section = { border: '1px solid #d4d9dd', padding: 20, borderRadius: 12, marginBottom: 18 }
+
+function RecordActions({label,children}:{label:string;children:ReactNode}){
+  const ref=useRef<HTMLDetailsElement>(null)
+  useEffect(()=>{
+    const outside=(event:PointerEvent)=>{if(event.target instanceof Node&&!ref.current?.contains(event.target))ref.current?.removeAttribute('open')}
+    const escape=(event:KeyboardEvent)=>{if(event.key==='Escape'&&ref.current?.open){ref.current.removeAttribute('open');ref.current.querySelector('summary')?.focus()}}
+    document.addEventListener('pointerdown',outside);document.addEventListener('keydown',escape)
+    return()=>{document.removeEventListener('pointerdown',outside);document.removeEventListener('keydown',escape)}
+  },[])
+  return <details className="record-actions" ref={ref}><summary aria-label={label}><MoreHorizontal size={19}/></summary><div onClick={event=>{if((event.target as Element).closest('button')){ref.current?.removeAttribute('open');ref.current?.querySelector('summary')?.focus()}}}>{children}</div></details>
+}
 
 export function TransactionManager({ transactions, accounts, categories }: {
   transactions: FinanceTransaction[]
@@ -38,20 +49,19 @@ export function TransactionManager({ transactions, accounts, categories }: {
     setEditing(transaction.id === editing ? null : transaction.id)
     setKind(transaction.kind)
   }
-  return <section style={section}>
-    <h2>Recent transactions</h2>
-    <p>Changes are validated against your full account ledger to protect net-worth accuracy.</p>
+  return <section className="cfo-card record-card">
+    <div className="cfo-card-header"><h2>Transactions</h2><span className="cfo-pill">{transactions.length} entries</span></div>
     {transactions.length === 0 && <p>No transactions recorded yet.</p>}
-    {transactions.map(t => <div key={t.id} style={{padding:'12px 0',borderBottom:'1px solid #d4d9dd'}}>
+    {transactions.map(t => <div key={t.id} className="record-item">
       <div className="finance-record-row" style={{display:'flex',gap:10,alignItems:'center',justifyContent:'space-between',flexWrap:'wrap'}}>
-        <span>{t.bookedOn} · {t.note || categories.find(c=>c.id === t.categoryId)?.name || t.kind} ({t.kind})</span>
-        <strong>{price(t.amountCents)}</strong>
-        <span style={{display:'flex',gap:6}}>
+        <span className="record-description"><i className={'activity-icon kind-'+t.kind} aria-hidden="true">{t.kind==='income'?<ArrowDownLeft size={19}/>:t.kind==='transfer'?<ArrowLeftRight size={19}/>:<ArrowUpRight size={19}/>}</i><span><strong>{t.note || categories.find(c=>c.id === t.categoryId)?.name || t.kind}</strong><small>{t.bookedOn} · {accounts.find(a=>a.id===t.accountId)?.name || t.kind}</small></span></span>
+        <strong className={'record-amount kind-'+t.kind}>{t.kind==='expense'?'−':t.kind==='income'?'+':''}{price(t.amountCents)}</strong>
+        <RecordActions label={'Actions for '+(t.note||t.kind)}>
           <button className="btn btn--secondary btn--sm" type="button" onClick={()=>beginEdit(t)}>{editing===t.id?'Close':'Edit'}</button>
           <button className="btn btn--secondary btn--sm" type="button" onClick={()=>{
             if(window.confirm('Permanently delete this transaction?')) router.delete(`/finance/transactions/${t.id}`)
           }}>Delete</button>
-        </span>
+        </RecordActions>
       </div>
       {editing===t.id && <Form action={`/finance/transactions/${t.id}`} method="patch">
         {({errors,processing}) => <div className="finance-edit-grid" style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:10,marginTop:12}}>
@@ -72,19 +82,19 @@ export function TransactionManager({ transactions, accounts, categories }: {
 
 export function ValuationManager({ valuations }: { valuations: ManualValuation[] }) {
   const [editing, setEditing] = useState<number|null>(null)
-  return <section style={section}>
-    <h2>Manual asset and debt valuations</h2>
+  return <section className="cfo-card record-card">
+    <h2>Other assets &amp; debts</h2>
     <p>These must not duplicate any bank/cash or debt accounts already recorded.</p>
     {valuations.length===0 ? <p>No additional valuations recorded.</p> :
-    valuations.map(v=><div key={v.id} style={{padding:'10px 0',borderBottom:'1px solid #d4d9dd'}}>
+    valuations.map(v=><div key={v.id} className="record-item">
       <div className="finance-record-row" style={{display:'flex',justifyContent:'space-between',gap:10,alignItems:'center',flexWrap:'wrap'}}>
-        <span>{v.name} · {v.kind} · as of {v.asOf}</span><strong>{price(v.valueCents)}</strong>
-        <span style={{display:'flex',gap:8}}>
+        <span className="record-description"><i className="activity-icon" aria-hidden="true"><Landmark size={18}/></i><span><strong>{v.name}</strong><small>{v.kind} · Valued {v.asOf}</small></span></span><strong className="record-amount">{price(v.valueCents)}</strong>
+        <RecordActions label={'Actions for '+v.name}>
           <button className="btn btn--secondary btn--sm" type="button" onClick={()=>setEditing(editing===v.id?null:v.id)}>{editing===v.id?'Close':'Update'}</button>
           <button className="btn btn--secondary btn--sm" type="button" onClick={()=>{
             if(window.confirm('Permanently delete this valuation?')) router.delete(`/finance/valuations/${v.id}`)
           }}>Delete</button>
-        </span>
+        </RecordActions>
       </div>
       {editing===v.id && <Form action={`/finance/valuations/${v.id}`} method="patch">
         {({errors,processing}) => <div className="finance-edit-grid" style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:10,marginTop:10}}>

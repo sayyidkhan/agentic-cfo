@@ -46,23 +46,23 @@ export function viewFromUrl(url: string): View {
 const pageText: Record<View, { eyebrow: string; title: string; detail: string }> = {
   overview: {
     eyebrow: 'YOUR FINANCIAL HOME',
-    title: 'Overview',
-    detail: 'See what you have, what is coming up, and which decisions deserve attention.',
+    title: 'Home',
+    detail: 'Your money, at a glance.',
   },
   transactions: {
     eyebrow: 'MONEY IN & OUT',
-    title: 'Transactions',
-    detail: 'Record your income, spending and transfers without losing track of where the money went.',
+    title: 'Activity',
+    detail: 'Every income, expense and transfer in one place.',
   },
   budget: {
     eyebrow: 'MAKE A PLAN',
-    title: 'Budgets & goals',
-    detail: 'Set limits, track goals, and prepare for bills before they become surprises.',
+    title: 'Plan',
+    detail: 'Make room for today. Put something aside for tomorrow.',
   },
   wealth: {
     eyebrow: 'THE BIG PICTURE',
     title: 'Wealth',
-    detail: 'Your recorded assets minus liabilities, with transparent valuation dates.',
+    detail: 'A complete picture of what you own and owe.',
   },
 }
 const money = formatSgd
@@ -225,7 +225,7 @@ export default function Dashboard(props: DashboardProps) {
   const share = wealthBase ? Math.min(100, Math.max(0, (Math.max(0, assetsTotal) / wealthBase) * 100)) : 0
   const categoryName = (id: number | null) => categories.find(c => c.id === id)?.name ?? 'Uncategorised'
 
-  return <Page title={view === 'overview' ? 'Acorra · Overview' : descriptor.title} hideTitle>
+  return <Page title={descriptor.title} hideTitle>
     <div className={'cfo-workspace workspace-'+view}>
       <header className="cfo-page-intro">
         <div><div className="cfo-eyebrow">{new Intl.DateTimeFormat('en-SG',{month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(month+'-01T00:00:00Z'))}</div><h1>{descriptor.title}</h1><p>{descriptor.detail}</p></div>
@@ -237,7 +237,7 @@ export default function Dashboard(props: DashboardProps) {
           <div><strong>Welcome to Acorra</strong><p>Start by adding a bank account or a valuation. The dashboard will use your real entries—never sample figures presented as your finances.</p>
             <Link className="cfo-action" href="/dashboard?view=wealth">Get started <ArrowRight size={14}/></Link></div>
         </div>}
-        <div className="acorra-snapshot" aria-label="Money snapshot">
+        <section className="cfo-card acorra-balance-panel" aria-label="Money snapshot"><div className="balance-panel-heading"><span>YOUR MONEY</span><span className="balance-currency">SGD</span></div><div className="acorra-snapshot">
           <div><span>Recorded cash</span><FitMoney>{money(availableCashCents)}</FitMoney><small>Cash &amp; accounts</small></div>
           <div><span>Spent this month</span><FitMoney>{money(expenseCents)}</FitMoney><small>Income {money(incomeCents)}</small></div>
           <div><span>Est. net worth</span><FitMoney>{recorded?money(financialPosition.netWorthCents):'Not set up'}</FitMoney><Link href="/dashboard?view=wealth">Assets & debts →</Link></div>
@@ -246,9 +246,9 @@ export default function Dashboard(props: DashboardProps) {
           <Link href="/dashboard?view=transactions&add=1"><span><Plus size={21}/></span>Add entry</Link>
           <Link href="/dashboard?view=budget"><span><CalendarDays size={20}/></span>Plan ahead</Link>
           <Link href="/cfo"><span><MessageCircle size={21}/></span>Ask Sandy</Link>
-        </nav>
+        </nav></section>
         <section className="cfo-card acorra-next">
-          <div className="cfo-brand-row"><SandyAvatar size="md"/><div><h2>Sandy’s check-in</h2><p className="cfo-card-note">{planning.insights.length?planning.insights[0].title:'No immediate risks flagged in these records.'}</p></div></div>
+          <div className="checkin-eyebrow">A MOMENT WITH SANDY</div><div className="cfo-brand-row"><SandyAvatar size="md"/><div><h2>Your next move</h2><p className="cfo-card-note">{planning.insights.length?planning.insights[0].title:'No immediate risks flagged in these records.'}</p></div></div>
           {planning.insights.length>0&&<details className="acorra-details"><summary>Review {planning.insights.length} signal{planning.insights.length===1?'':'s'}</summary><Insights insights={planning.insights}/></details>}
           <div className="acorra-bill-line"><span>Unpaid bills this month <strong>{money(planning.upcomingTotalCents)}</strong></span><Link href="/dashboard?view=budget">Review plan →</Link></div>
           <p className="cfo-card-note">Cash after those bills: {money(planning.cashAfterUpcomingCents)}. Estimate from recorded bills only.</p>
@@ -285,14 +285,14 @@ export default function Dashboard(props: DashboardProps) {
           <section className="cfo-card cfo-hero cfo-span-7">
             <div className="cfo-hero-inner">
               <span className="cfo-eyebrow">YOUR RECORDED NET WORTH</span>
-              <div className="cfo-hero-number">{recorded ? money(financialPosition.netWorthCents) : 'No records yet'}</div>
+              <div className="cfo-hero-number"><FitMoney>{recorded ? money(financialPosition.netWorthCents) : 'No records yet'}</FitMoney></div>
               <p className="cfo-hero-text">The sum of your recorded assets less debts. Update manual valuations periodically.</p>
             </div>
           </section>
           <section className="cfo-card cfo-span-5">
             <div className="cfo-card-header"><h2>Balance composition</h2></div>
             <div className="cfo-wealth-split">
-              <div className="cfo-donut" aria-label="Recorded assets compared with liabilities" style={{background: wealthBase ? 'conic-gradient(#268979 0% ' + share + '%, #c9a27f ' + share + '% 100%)' : 'var(--cfo-stroke)'}}>
+              <div className="cfo-donut" aria-label="Recorded assets compared with liabilities" style={{background: wealthBase ? 'conic-gradient(#497758 0% ' + share + '%, #c3ad78 ' + share + '% 100%)' : 'var(--cfo-stroke)'}}>
                 <div className="cfo-donut-hole">SGD</div>
               </div>
               <div>
@@ -306,10 +306,9 @@ export default function Dashboard(props: DashboardProps) {
             {!accounts.length ? <div className="cfo-empty"><strong>No accounts recorded</strong>Use the form to add a bank account or loan.</div> :
               <div>{accounts.map(a => <div className="cfo-inline-metric" key={a.id}><div className="cfo-inline-metric-label">{a.name}<small>{a.kind === 'asset' ? 'Cash / bank' : 'Loan / debt'}</small></div><strong>{money(a.balanceCents)}</strong></div>)}</div>}
             <p className="cfo-field-note">Compare these calculated balances with statements to identify differences. Automatic bank reconciliation is not enabled.</p>
+            <details className="acorra-details wealth-add" open={!accounts.length}><summary>Add an account <Plus size={16}/></summary><AccountForm/></details>
           </section>
-          <div className="cfo-span-5"><details className="acorra-details cfo-card" open={!accounts.length}><summary>Add an account <Plus size={16}/></summary><AccountForm/></details></div>
-          <div className="cfo-span-7"><ValuationManager valuations={valuations}/></div>
-          <div className="cfo-span-5"><details className="acorra-details cfo-card"><summary>Add an asset or debt <Plus size={16}/></summary><ValuationForm currentDate={currentDate}/></details></div>
+          <div className="cfo-span-5 wealth-other"><ValuationManager valuations={valuations}/><details className="acorra-details cfo-card"><summary>Add an asset or debt <Plus size={16}/></summary><ValuationForm currentDate={currentDate}/></details></div>
         </div>
       </>}
       <p className="cfo-subtle" style={{paddingBottom:12}}>All figures are in SGD. Financial insights depend on the records you supply and are not professional financial or investment advice. No payments are initiated.</p>

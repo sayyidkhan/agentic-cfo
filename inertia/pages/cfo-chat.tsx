@@ -31,7 +31,7 @@ export default function CfoChat({ configured, messages, dailyMessageLimit }: Cfo
         <div>
           <div className="cfo-eyebrow">Your money companion</div>
           <h1>Sandy</h1>
-          <p>Your friendly money companion is here to help you make sense of spending, savings and wealth. Sandy uses read-only financial facts and cannot move money.</p>
+          <p>A clearer next step, from your own records.</p>
         </div>
         
       </header>

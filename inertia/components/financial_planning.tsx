@@ -26,7 +26,6 @@ export interface Planning {
 
 const dollars = formatSgd
 const inputStyle = { display: 'block', width: '100%', padding: 9, borderRadius: 6, border: '1px solid #aeb8c0' }
-const box = { padding: 20, border: '1px solid #d4d9dd', borderRadius: 12, marginBottom: 18 }
 
 export default function FinancialPlanning({ commitments, goals, planning, month, currentDate, availableCashCents, panel = 'all' }: {
   panel?: 'all' | 'goals' | 'bills'
@@ -40,16 +39,15 @@ export default function FinancialPlanning({ commitments, goals, planning, month,
   const [editingGoal, setEditingGoal] = useState<number | null>(null)
   return (
     <>
-      {(panel==='all'||panel==='bills')&&<section style={box}>
+      {(panel==='all'||panel==='bills')&&<section className="cfo-card planning-card">
         <h2>Upcoming commitments</h2>
-        <p>Monthly bills are reminders and projections only. They are <strong>not</strong> posted as expenses automatically.</p>
-        <p><strong>Recorded bank/cash balances:</strong> {dollars(availableCashCents)} · <strong>Unpaid bills this month (including overdue):</strong> {dollars(planning.upcomingTotalCents)}</p>
-        <p><strong>Projected after those bills:</strong> {dollars(planning.cashAfterUpcomingCents)}</p>
+        <p className="cfo-card-note">Your monthly reminders. Record each expense separately when you pay.</p>
+        <div className="plan-totals"><div><span>Unpaid this month</span><strong>{dollars(planning.upcomingTotalCents)}</strong><small>Includes overdue bills</small></div><div><span>Cash after these bills</span><strong>{dollars(planning.cashAfterUpcomingCents)}</strong><small>Estimate from recorded bills</small></div></div>
         {commitments.length === 0 ? <p>No monthly commitments yet.</p> : (
           <ul style={{ display: 'grid', gap: 9, marginBottom: 18 }}>
             {commitments.map(c => (
               <li key={c.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap' }}>
-                <span>{c.name} · {dollars(c.amountCents)} · due day {c.dueDay} {c.lastPaidMonth === month ? '· paid this month' : ''}</span>
+                <span className="bill-description"><span className="bill-day">{c.dueDay}</span><span><strong>{c.name}</strong><small>{c.lastPaidMonth===month?'Paid this month':'Due day '+c.dueDay}</small></span><strong>{dollars(c.amountCents)}</strong></span>
                 <span style={{ display: 'flex', gap: 8 }}>
                   {c.lastPaidMonth !== month && <button className="btn btn--secondary btn--sm" type="button" onClick={() => router.post(`/finance/commitments/${c.id}/paid`)}>Mark paid</button>}
                   <button className="btn btn--secondary btn--sm" type="button" onClick={() => {
@@ -72,12 +70,12 @@ export default function FinancialPlanning({ commitments, goals, planning, month,
         <small>Marking paid only updates this reminder. Record the actual expense separately so your balances stay accurate.</small>
       </section>}
 
-      {(panel==='all'||panel==='goals')&&<section style={box}>
+      {(panel==='all'||panel==='goals')&&<section className="cfo-card planning-card">
         <h2>Savings goals</h2>
-        <p>Track your intentions alongside your budget. Goal progress is a planning figure, <strong>not</strong> an additional asset in net worth.</p>
+        <p className="cfo-card-note">Something to look forward to. Goal progress does not add to your net worth.</p>
         {goals.map(g => (
           <div key={g.id} style={{ padding: '12px 0', borderBottom: '1px solid #e1e5e8' }}>
-            <strong>{g.name}</strong> · {dollars(g.savedCents)} / {dollars(g.targetCents)} · target {g.targetDate}
+            <div className="goal-heading"><strong>{g.name}</strong><span>{dollars(g.savedCents)} <small>/ {dollars(g.targetCents)}</small></span></div><p className="cfo-card-note">Target {g.targetDate}</p>
             <progress max={100} value={Math.min(100, Math.round(100*g.savedCents/g.targetCents))} style={{display:'block',width:'100%'}}/>
             <div style={{ display: 'flex', gap: 8, marginTop: 6 }}>
               <button className="btn btn--secondary btn--sm" type="button" onClick={() => setEditingGoal(editingGoal === g.id ? null : g.id)}>Edit progress</button>
@@ -110,7 +108,7 @@ export default function FinancialPlanning({ commitments, goals, planning, month,
         </Form></details>
       </section>}
 
-      {panel==='all'&&<section style={box}>
+      {panel==='all'&&<section className="cfo-card planning-card">
         <h2>Financial health review</h2>
         <p>Early warnings calculated from your own recorded budgets, upcoming unpaid commitments, and goals. This is a rules-based preview, not AI advice yet.</p>
         {planning.insights.length === 0 ? <p>No early warnings detected from the records supplied. This doesn't guarantee all expenses are covered.</p> : (
