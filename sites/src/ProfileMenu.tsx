@@ -1,8 +1,8 @@
 import React,{useEffect,useRef} from 'react'
-import {UserRound,Settings,LogOut,LogIn,ChevronUp} from 'lucide-react'
+import {UserRound,Settings,LogOut,LogIn} from 'lucide-react'
 import {Link,usePage} from './bridge'
 
-export default function ProfileMenu({expanded=false}:{expanded?:boolean}){
+export default function ProfileMenu(){
  const page=usePage(),ref=useRef<HTMLDetailsElement>(null)
  useEffect(()=>{ref.current?.removeAttribute('open')},[page.url])
  useEffect(()=>{
@@ -12,7 +12,7 @@ export default function ProfileMenu({expanded=false}:{expanded?:boolean}){
   return()=>{document.removeEventListener('pointerdown',outside);document.removeEventListener('keydown',escape)}
  },[])
  return <details className="profile-menu" ref={ref}>
-  <summary aria-label="Profile menu" title="Profile menu"><UserRound size={21}/>{expanded&&<><span className="profile-menu-copy"><strong>Profile</strong><small>Account &amp; settings</small></span><ChevronUp className="profile-menu-chevron" size={15}/></>}</summary>
+  <summary aria-label="Profile menu" title="Profile menu"><UserRound size={21}/></summary>
   <nav className="profile-menu-panel" aria-label="Account options">
    <Link href="/account"><UserRound size={18}/>Profile</Link>
    <Link href="/settings"><Settings size={18}/>Settings</Link>

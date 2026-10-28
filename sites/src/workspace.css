@@ -351,26 +351,22 @@
 @media(max-width:360px){.cfo-app .record-description>.activity-icon{display:none}}
 .cfo-app .record-item:last-child .record-actions>div{top:auto;bottom:44px}
 
-/* Desktop context and account controls live together in the left rail. */
-.rail-demo-notice,.rail-account{display:none}
+/* A full-width workspace notice sits above the desktop shell. */
+.rail-account{display:none}
 @media(min-width:1024px){
- .workspace-mobile-notice,.workspace-mobile-profile{display:none}
- .cfo-app .rail-demo-notice{display:block;flex-shrink:0}
- .cfo-app .rail-demo-notice .demo-banner{display:flex;flex-direction:column;align-items:flex-start;gap:5px;padding:14px 20px;text-align:left;border-bottom:1px solid #dfe7d9;background:#eaf0e5;line-height:1.55}
- .cfo-app .rail-demo-notice .demo-banner strong{font-size:11px;color:#3a5332}
- .cfo-app .rail-demo-notice .demo-banner span{font-size:10px;color:#66735e}
+ .cfo-app.premium-workspace{padding-top:36px}
+ .cfo-app .workspace-notice{position:fixed;inset:0 0 auto;z-index:60;height:36px}
+ .cfo-app .workspace-notice .demo-banner{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:10px;height:36px;box-sizing:border-box;padding:7px 20px;border-bottom:1px solid #dfe7d9;background:#eaf0e5;line-height:1.5}
+ .workspace-mobile-profile{display:none}
+ .cfo-app .header--bar{top:36px}
+ .cfo-app .cfo-navigation{top:36px}
  .cfo-app .cfo-navigation .rail-brand{padding:25px 22px 28px;flex-shrink:0}
  .cfo-app .cfo-navigation-inner{overflow-y:auto;min-height:0;flex-shrink:1;padding-bottom:12px}
- .cfo-app .cfo-navigation-inner>a{flex-shrink:0}
- .cfo-app .rail-caption{flex-shrink:0}
- .cfo-app .rail-account{display:block;flex-shrink:0;margin-top:auto;padding:14px 12px 20px;border-top:1px solid #e6ebe0;background:#fdfefb}
- .cfo-app .rail-account .profile-menu>summary{display:flex;align-items:center;gap:11px;width:100%;min-height:60px;height:auto;border:0;border-radius:13px;padding:12px;background:#f0f3ea;box-shadow:none;color:#244932}
- .profile-menu-copy{display:grid;gap:4px;text-align:left;flex:1;min-width:0}
- .profile-menu-copy strong{font-size:13px;font-weight:600}.profile-menu-copy small{font-size:10px;font-weight:400;color:#78846f}
- .cfo-app .rail-account .profile-menu-chevron{width:15px;height:15px;color:#7b886e}
- .cfo-app .rail-account .profile-menu[open]>summary{background:#e5ecd9;color:#244932}
- .cfo-app .rail-account .profile-menu-panel{top:auto;bottom:calc(100% + 9px);left:0;right:auto;width:100%;max-width:none;padding:6px;border-radius:14px;box-shadow:0 -6px 28px #19382016}
- .cfo-app .cfo-navigation .rail-account .profile-menu-panel a{padding:11px 10px;min-height:44px;font-size:12px;gap:10px;border-radius:9px;color:#324b2b}
- .cfo-app .cfo-navigation .rail-account .profile-menu-panel a:hover{background:#edf2e5}
- .cfo-app .cfo-navigation .rail-account .profile-menu-panel a:last-child{border-top:1px solid #e5eadf;border-radius:0 0 9px 9px;margin-top:4px}
+ .cfo-app .cfo-navigation-inner>a,.cfo-app .rail-caption{flex-shrink:0}
+ .cfo-app .rail-account{display:block;flex-shrink:0;margin-top:auto;padding:0 12px 16px;background:#fdfefb}
+ .rail-brand-note{display:grid;gap:4px;margin:0 10px 10px;padding:15px 3px;border-top:1px solid #e6ebe0;border-bottom:1px solid #e6ebe0;font-size:10px;line-height:1.5;color:#8a9680}
+ .rail-brand-note strong{font-weight:500;color:#687960}
+ .rail-account-links{display:grid;gap:3px}
+ .cfo-app .cfo-navigation .rail-account-links a{min-height:42px;padding:10px 14px;gap:12px;font-size:12px;border-radius:11px}
+ .cfo-app .cfo-navigation .rail-account-links a:last-child{color:#7c785f}
 }
