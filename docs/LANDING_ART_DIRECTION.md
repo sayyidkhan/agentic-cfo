@@ -107,3 +107,7 @@ Reduced-motion visitors get instant scrolling; other app navigation is unaffecte
 Browser QA confirmed intermediate scroll positions followed by the intended
 landing positions, focused targets, keyboard Enter activation, the complete
 forward/back journey, 44px section links and no overflow at 390px and 320px.
+
+Removed obsolete hover/focus pauses from the console container: they were meant
+for its former floating loop and could freeze the current entrance at 35px when
+an anchor focuses the demo. Its entrance now completes while focused or hovered.

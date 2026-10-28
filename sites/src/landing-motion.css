@@ -46,8 +46,6 @@
 @media(prefers-reduced-motion:reduce){.acorra-landing *,.acorra-landing :before,.acorra-landing :after{animation:none!important;transition:none!important}.acorra-landing [data-reveal]{opacity:1!important;transform:none!important}.acorra-landing .al-motion-toggle{display:none}.acorra-landing .al-headline-swoosh path{stroke-dashoffset:0;opacity:1}.acorra-landing .al-preview-track{display:none}}
 /* Override animation shorthands so pause and offscreen states apply everywhere. */
 .acorra-landing.al-motion *,.acorra-landing.al-motion :before,.acorra-landing.al-motion :after{animation-play-state:var(--al-play,paused)!important}
-.al-motion .al-console:focus-within{animation-play-state:paused!important}
-@media(hover:hover) and (pointer:fine){.al-motion .al-console:hover{animation-play-state:paused!important}}
 /* Pausing settles to a complete, readable financial picture rather than partial fills. */
 .acorra-landing[data-motion-paused=true] [data-reveal],.acorra-landing[data-motion-paused=true] :is(.al-finance-panel,.al-number-heading>strong,.al-budget-list>div,.al-bill-list>div,.al-wealth-list>div,.al-title-line>span,.al-title-accent){opacity:1!important;transform:none!important;transition:none!important}
 .acorra-landing[data-motion-paused=true] .al-console{translate:0 0!important;rotate:0deg!important}
