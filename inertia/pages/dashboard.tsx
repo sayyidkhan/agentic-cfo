@@ -56,7 +56,7 @@ const pageText: Record<View, { eyebrow: string; title: string; detail: string }>
   },
   budget: {
     eyebrow: 'MAKE A PLAN',
-    title: 'Plan',
+    title: 'Budget',
     detail: 'Make room for today. Put something aside for tomorrow.',
   },
   wealth: {
@@ -234,7 +234,7 @@ export default function Dashboard(props: DashboardProps) {
       {view === 'overview' && <>
         {!recorded && <div className="cfo-card cfo-alert" role="status">
           <ShieldCheck size={21}/>
-          <div><strong>Welcome to Acorra</strong><p>Add your first account to establish a starting balance. Then record income and spending in Activity, and set a budget in Plan.</p>
+          <div><strong>Welcome to Acorra</strong><p>Add your first account to establish a starting balance. Then record income and spending in Activity, and set a budget in Budget.</p>
             <Link className="cfo-action" href="/dashboard?view=wealth">Add your first account <ArrowRight size={14}/></Link></div>
         </div>}
         <section className="cfo-card acorra-balance-panel" aria-label="Money snapshot"><div className="balance-panel-heading"><span>YOUR MONEY</span><span className="balance-currency">SGD</span></div><div className="acorra-snapshot">
@@ -244,7 +244,7 @@ export default function Dashboard(props: DashboardProps) {
         </div>
         <nav className="acorra-quick-actions" aria-label="Quick actions">
           <Link href="/dashboard?view=transactions&add=1"><span><Plus size={21}/></span>Add entry</Link>
-          <Link href="/dashboard?view=budget"><span><CalendarDays size={20}/></span>Plan ahead</Link>
+          <Link href="/dashboard?view=budget"><span><CalendarDays size={20}/></span>Budget</Link>
           <Link href="/cfo"><span><MessageCircle size={21}/></span>Ask Sandy</Link>
         </nav></section>
         <section className="cfo-card acorra-recent summary-budgets">
@@ -264,7 +264,7 @@ export default function Dashboard(props: DashboardProps) {
         </section>
         <section className="cfo-card summary-goals">
           <div className="cfo-card-header"><h2>Savings progress</h2><Link href="/dashboard?view=budget&section=goals">Manage goals →</Link></div>
-          {goals.length?<div className="summary-list">{goals.slice(0,3).map(g=><Link key={g.id} href="/dashboard?view=budget&section=goals"><span><strong>{g.name}</strong><small>{money(g.savedCents)} of {money(g.targetCents)} · Target {g.targetDate}</small><progress aria-label={g.name+' savings progress'} max={100} value={Math.min(100,Math.round(100*g.savedCents/g.targetCents))} aria-valuetext={money(g.savedCents)+' of '+money(g.targetCents)}/></span><ArrowRight size={15}/></Link>)}</div>:<div className="cfo-empty">Create a savings goal in Plan to track your progress.</div>}
+          {goals.length?<div className="summary-list">{goals.slice(0,3).map(g=><Link key={g.id} href="/dashboard?view=budget&section=goals"><span><strong>{g.name}</strong><small>{money(g.savedCents)} of {money(g.targetCents)} · Target {g.targetDate}</small><progress aria-label={g.name+' savings progress'} max={100} value={Math.min(100,Math.round(100*g.savedCents/g.targetCents))} aria-valuetext={money(g.savedCents)+' of '+money(g.targetCents)}/></span><ArrowRight size={15}/></Link>)}</div>:<div className="cfo-empty">Create a savings goal in Budget to track your progress.</div>}
         </section>
       </>}
 
@@ -274,7 +274,7 @@ export default function Dashboard(props: DashboardProps) {
       </div>}
 
       {view === 'budget' && <>
-        <div className="acorra-tabs" role="group" aria-label="Plan sections">{(['spending','goals','bills'] as const).map(tab=><button key={tab} aria-pressed={planTab===tab} onClick={()=>setPlanTab(tab)}>{tab==='spending'?'Spending':tab==='goals'?'Goals':'Bills'}</button>)}</div>
+        <div className="acorra-tabs" role="group" aria-label="Budget sections">{(['spending','goals','bills'] as const).map(tab=><button key={tab} aria-pressed={planTab===tab} onClick={()=>setPlanTab(tab)}>{tab==='spending'?'Spending':tab==='goals'?'Goals':'Bills'}</button>)}</div>
         {planTab==='spending'&&<><section className="cfo-card"><div className="cfo-card-header"><h2>Monthly spending limits</h2><span className="cfo-subtle">{month}</span></div><BudgetBars budgets={budgetStatus} categories={categories} budgetStatus={budgetStatus}/></section><details className="acorra-details cfo-card"><summary>Manage budgets & categories <Plus size={16}/></summary><BudgetForms categories={categories} month={month}/></details></>}
         {planTab!=='spending'&&<FinancialPlanning panel={planTab} commitments={commitments} goals={goals} planning={planning} month={month} currentDate={currentDate} availableCashCents={availableCashCents}/>}
         <details className="acorra-details cfo-card"><summary>Financial health <span>{planning.insights.length} signals</span></summary><Insights insights={planning.insights}/></details>

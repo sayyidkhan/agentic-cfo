@@ -9,7 +9,7 @@ import SandyAvatar from '~/components/sandy_avatar'
 const nav = [
   { label: 'Summary', url: '/dashboard', view: 'overview', icon: LayoutDashboard },
   { label: 'Activity', url: '/dashboard?view=transactions', view: 'transactions', icon: ReceiptText },
-  { label: 'Plan', url: '/dashboard?view=budget', view: 'budget', icon: Target },
+  { label: 'Budget', url: '/dashboard?view=budget', view: 'budget', icon: Target },
   { label: 'Sandy', url: '/cfo', view: 'chat', icon: MessageCircle },
 ] as const
 

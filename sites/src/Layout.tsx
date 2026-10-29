@@ -4,8 +4,8 @@ import ProfileMenu from './ProfileMenu'
 import AcorraMark from '../../inertia/components/acorra_mark'
 import {LayoutDashboard,ReceiptText,Target,MessageCircle,Cloud,ChevronRight,UserRound,Settings,LogOut,LogIn} from 'lucide-react'
 export default function Layout({children}:any){const page=usePage();const selected=page.url.startsWith('/settings')?'settings':page.url.startsWith('/account')?'account':page.url.startsWith('/cfo')?'chat':new URLSearchParams(page.url.split('?')[1]).get('view')||'overview'
- const shortLabels:Record<string,string>={overview:'Summary',transactions:'Activity',budget:'Plan',wealth:'Summary',chat:'Sandy'}
- const nav=[['Summary','/dashboard','overview',LayoutDashboard],['Activity','/dashboard?view=transactions','transactions',ReceiptText],['Sandy','/cfo','chat',MessageCircle],['Plan','/dashboard?view=budget','budget',Target]] as const
+ const shortLabels:Record<string,string>={overview:'Summary',transactions:'Activity',budget:'Budget',wealth:'Summary',chat:'Sandy'}
+ const nav=[['Summary','/dashboard','overview',LayoutDashboard],['Activity','/dashboard?view=transactions','transactions',ReceiptText],['Sandy','/cfo','chat',MessageCircle],['Budget','/dashboard?view=budget','budget',Target]] as const
  const navLinks=(items:readonly (typeof nav)[number][])=>items.map(([label,href,view,Icon])=><Link key={view} href={href} className={view==='chat'?'sandy-nav':undefined} aria-label={label} aria-current={view===(selected==='wealth'?'overview':selected)?'page':undefined}><Icon size={16}/><span className="nav-label-desktop">{shortLabels[view]}</span><span className="nav-label-mobile">{shortLabels[view]}</span></Link>)
  const notice = <div className="demo-banner" role="status"><strong>{page.personalMode&&page.session?.realDataEnabled?'PERSONAL WORKSPACE':'Public demo'}</strong><span>{page.personalMode&&page.session?.realDataEnabled?'Saved records belong to your signed-in account.':'Synthetic data · Resets on reload · No personal financial data.'}</span></div>
  return <div className="cfo-app premium-workspace"><div className="workspace-notice">{notice}</div>
