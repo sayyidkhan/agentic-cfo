@@ -15,6 +15,13 @@
       "when": 1792931000000,
       "tag": "0001_storage_checks",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1793265189077,
+      "tag": "0002_user_profiles",
+      "breakpoints": true
     }
   ]
 }

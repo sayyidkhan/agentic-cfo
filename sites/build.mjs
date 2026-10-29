@@ -30,7 +30,7 @@ await build({...common,entryPoints:['src/sandy_motion.ts'],outfile:'dist/sandy-m
 await build({...common,entryPoints:['src/api.ts'],outfile:'dist/api.mjs',platform:'node',format:'esm'})
 await build({...common,entryPoints:['src/routing.ts'],outfile:'dist/routing.mjs',platform:'node',format:'esm'})
 
-const migrations=await Promise.all(['0000_financial_workspaces.sql','0001_storage_checks.sql'].map(async name=>({name,sql:await readFile('../drizzle/'+name,'utf8')})))
+const migrations=await Promise.all(['0000_financial_workspaces.sql','0001_storage_checks.sql','0002_user_profiles.sql'].map(async name=>({name,sql:await readFile('../drizzle/'+name,'utf8')})))
 await writeFile('dist/preview-migrations.json',JSON.stringify(migrations))
 
 await build({...common,entryPoints:['src/sandy_gpu.ts'],outfile:'dist/sandy-gpu.mjs',platform:'node',format:'esm'})

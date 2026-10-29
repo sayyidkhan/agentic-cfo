@@ -66,7 +66,7 @@ test('public build rejects anonymous and authenticated real data, even spoofed I
  assert.equal((await worker.fetch(new Request('https://acorra.test/missing'),{})).status,404)
 })
 function dbAdapter(){
- const sqlite=new DatabaseSync(':memory:');for(const migration of ['0000_financial_workspaces.sql','0001_storage_checks.sql'])sqlite.exec(readFileSync('../drizzle/'+migration,'utf8'))
+ const sqlite=new DatabaseSync(':memory:');for(const migration of ['0000_financial_workspaces.sql','0001_storage_checks.sql','0002_user_profiles.sql'])sqlite.exec(readFileSync('../drizzle/'+migration,'utf8'))
  return {prepare(sql){return {bind(...args){return {async first(){return sqlite.prepare(sql).get(...args)},async run(){const result=sqlite.prepare(sql).run(...args);return {meta:{changes:Number(result.changes)}}}}}}}}
 }
 test('two identities isolate records; body/query IDs cannot select another workspace',async()=>{
@@ -369,3 +369,21 @@ test('spending bar percentage stays tied to its accumulating cents',async()=>{
   assert.deepEqual(countedBudget(spent,limit,COUNT_DURATION),{cents:spent,percent:limit?Math.min(100,spent*100/limit):(spent?100:0)});
  }
 })
+
+
+test('profiles persist per native identity and reject cross-account selectors, stale saves and cross-origin writes',async()=>{
+ const env={DB:dbAdapter()};const req=(id,method='GET',data=null,rev='0',origin='https://acorra.test')=>new Request('https://acorra.test/api/profile?owner_id=bob',{method,headers:{...(id?{'oai-authenticated-user-id':id}:{}),Origin:origin,'If-Match':rev},...(data?{body:JSON.stringify(data)}:{})});
+ assert.equal((await worker.fetch(req(null),env)).status,401);
+ const data={displayName:'Alice QA',avatar:'gold'};
+ assert.equal((await worker.fetch(req('alice','POST',data),env)).status,200);
+ assert.deepEqual((await(await worker.fetch(req('alice'),env)).json()).profile,data);
+ assert.deepEqual((await(await worker.fetch(req('bob'),env)).json()).profile,{displayName:'',avatar:'forest'});
+ assert.equal((await worker.fetch(req('alice','POST',data),env)).status,409);
+ assert.equal((await worker.fetch(req('alice','POST',data,'1','https://evil.test'),env)).status,403);
+ assert.equal((await worker.fetch(req('bob','POST',{...data,owner_id:'alice'}),env)).status,400);
+ assert.equal((await worker.fetch(req('bob','POST',{displayName:'x'.repeat(61),avatar:'gold'}),env)).status,400);
+ assert.equal((await worker.fetch(req('bob','POST',{...data,avatar:'javascript:bad'}),env)).status,400);
+ assert.equal((await worker.fetch(req('bob','POST',{displayName:'Bob QA',avatar:'slate'}),env)).status,200);
+ assert.deepEqual((await(await worker.fetch(req('alice'),env)).json()).profile,data);
+ assert.equal((await worker.fetch(new Request('https://acorra.test/api/workspace',{headers:{'oai-authenticated-user-id':'alice'}}),env)).status,423);
+});

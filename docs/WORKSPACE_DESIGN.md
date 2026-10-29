@@ -38,3 +38,11 @@ Profile uses one compact account panel: sign-in status, the available workspace,
 Removed the user-facing storage marker experiment, automatic storage-check fetch, engineering launch-gate prose and redundant Sandy-library button. The storage-check API remains available for existing integration checks. No auth scope, persistence setting or financial-data release gate was changed. Native identity does not currently supply a display name or email to this client, so Profile does not invent either.
 
 Verified all four account display states with server rendering, Settings and Summary navigation in the browser, desktop layout, and 320px/390px mobile fit. No personal financial data was used.
+
+## Editable profile
+
+Profile now edits an optional display name (up to 60 characters) and an initials-avatar colour. Signed-in preferences persist in a dedicated D1 `user_profiles` table, separate from financial records. ChatGPT remains the sign-in method; no email, legal name or password is invented or requested. Anonymous visitors can inspect the form but must sign in before editing/saving.
+
+The profile endpoint derives the owner exclusively from the Sites-authenticated identity, rejects extra fields and cross-origin writes, and uses revision checks to prevent lost updates. The financial-data release lock remains false. A schema-only migration appends the profile table to the existing Worker migration journal; this custom Worker project does not use a Drizzle ORM schema generator.
+
+Verification: 30 tests pass, including profile persistence, two-identity isolation, rejected owner selectors, invalid names/colours, stale saves and cross-origin writes. Local browser fixtures verified save/reload, two separate accounts, cancel, and the 390px mobile layout. Local fixtures are not production authentication verification and no test profile data is deployed.

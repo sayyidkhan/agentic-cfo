@@ -4,9 +4,9 @@ import {stat,readFile,mkdir} from 'node:fs/promises'
 import {DatabaseSync} from 'node:sqlite'
 await mkdir(new URL('./.qa/',import.meta.url),{recursive:true})
 const db=new DatabaseSync(new URL('./.qa/preview.sqlite',import.meta.url).pathname)
-for(const table of ['financial_workspaces','storage_checks']){
+for(const table of ['financial_workspaces','storage_checks','user_profiles']){
  if(!db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name=?").get(table)){
-  const migration=table==='financial_workspaces'?'0000_financial_workspaces.sql':'0001_storage_checks.sql'
+  const migration=table==='financial_workspaces'?'0000_financial_workspaces.sql':table==='storage_checks'?'0001_storage_checks.sql':'0002_user_profiles.sql'
   const migrations=JSON.parse(await readFile(new URL('./dist/preview-migrations.json',import.meta.url),'utf8'))
   db.exec(migrations.find(item=>item.name===migration).sql)
  }

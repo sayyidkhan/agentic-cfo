@@ -21,6 +21,26 @@ export function createHandler(realDataEnabled=false){return async function(reque
   const accountKey=digest?Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join(''):null
   return json({signedIn:!!userId,accountKey,realDataEnabled,signInPath:'/signin-with-chatgpt?return_to=%2Faccount',signOutPath:'/signout-with-chatgpt?return_to=%2Faccount'})
  }
+ if(path==='/api/profile'){
+  const owner=request.headers.get('oai-authenticated-user-id')
+  if(!owner)return json({error:'Sign in to save your profile.'},401)
+  if(!['GET','POST'].includes(request.method))return json({error:'Method not allowed'},405)
+  if(request.method==='POST'&&request.headers.get('Origin')!==url.origin)return json({error:'Same-origin request required'},403)
+  if(!env.DB)return json({error:'Your profile is temporarily unavailable. Please try again.'},503)
+  try{
+   const row=await env.DB.prepare('SELECT display_name, avatar, revision FROM user_profiles WHERE owner_id = ?').bind(owner).first()
+   if(request.method==='GET')return json({profile:{displayName:row?.display_name||'',avatar:row?.avatar||'forest'},revision:row?.revision||0})
+   const raw=await request.text();if(raw.length>1000)return json({error:'Profile is too large.'},413)
+   const input=JSON.parse(raw)
+   if(!input||typeof input!=='object'||Array.isArray(input)||Object.keys(input).some(k=>!['displayName','avatar'].includes(k)))return json({error:'Invalid profile fields.'},400)
+   if(typeof input.displayName!=='string'||input.displayName.trim().length>60||/[\u0000-\u001f\u007f]/.test(input.displayName)||!['forest','gold','slate','rose'].includes(input.avatar))return json({error:'Use a name up to 60 characters and choose an avatar colour.'},400)
+   const expected=request.headers.get('If-Match');if(!expected||!/^\d+$/.test(expected)||Number(expected)!==(row?.revision||0))return json({error:'Your profile changed elsewhere. Reload it before saving.'},409)
+   const name=input.displayName.trim(),now=new Date().toISOString()
+   const result=row?await env.DB.prepare('UPDATE user_profiles SET display_name = ?, avatar = ?, revision = revision + 1, updated_at = ? WHERE owner_id = ? AND revision = ?').bind(name,input.avatar,now,owner,Number(expected)).run():await env.DB.prepare('INSERT OR IGNORE INTO user_profiles (owner_id, display_name, avatar, revision, updated_at) VALUES (?, ?, ?, 1, ?)').bind(owner,name,input.avatar,now).run()
+   if(!result.meta.changes)return json({error:'Your profile changed elsewhere. Reload it before saving.'},409)
+   return json({profile:{displayName:name,avatar:input.avatar},revision:Number(expected)+1})
+  }catch(e){return json({error:e instanceof SyntaxError?'Invalid profile data.':'Your profile could not be saved. Please try again.'},e instanceof SyntaxError?400:503)}
+ }
  if(path==='/api/storage-check'){
   const userId=request.headers.get('oai-authenticated-user-id')
   if(!userId)return json({error:'Sign in with ChatGPT to check saved progress'},401)
