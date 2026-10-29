@@ -54,3 +54,9 @@ Signed-in users can upload, replace or remove a private profile photo. The brows
 R2 uses the native BUCKET binding. Photo objects are never public: the image route requires the native signed-in identity and derives its object key server-side from that identity. Query parameters cannot select another user's photo. Writes require same-origin requests, a JPEG signature and a 1 MB processed-image limit; reads are private/no-store. Display-name and avatar-colour persistence remains independent.
 
 31 tests pass, including private reads, account isolation, cross-origin rejection, unsafe type/size rejection and removal. Browser tests used a synthetic test image: upload, 512px output, reload, separate local identities, removal and mobile fit passed. Preview photo objects are memory-only test fixtures; production photos use R2.
+
+## Settings directory
+
+The Settings entry opens a compact directory with Companion → Sandy’s expressions, and Demo data → Reset demo. The seven-state library and animation controls now live at `/settings?section=sandy`, with a return link and nested desktop breadcrumb. Existing `/settings?sandy=<state>` links remain compatible. Reset demo remains on the Settings directory and retains its existing scope and behaviour.
+
+Browser verification covered opening the library, choosing Relieved Sandy, pausing/resuming animation, returning to Settings, a legacy Calm link, and mobile menu navigation at 390px with no horizontal overflow. This is a navigation/layout change; financial calculations, authentication and storage are unchanged.

@@ -432,3 +432,22 @@
 .profile-editor .profile-identity>div{min-width:0}
 .profile-editor .profile-identity h2{overflow-wrap:anywhere}
 @media(max-width:420px){.profile-auth-status{align-items:flex-start;flex-direction:column;gap:6px}.profile-auth-method{font-size:12px}}
+
+/* Settings is a small directory; the expression library is a nested destination. */
+.cfo-app .settings-page{max-width:900px;margin-inline:0;gap:28px}
+.cfo-app .settings-page>.settings-group{background:transparent;border:0;box-shadow:none;padding:0}
+.settings-group>h2{font-size:12px;font-weight:600;color:#65736b;letter-spacing:.3px;margin:0 0 12px 4px}
+.cfo-app .settings-menu{padding:0;overflow:hidden}
+.settings-option{display:flex;align-items:center;gap:17px;padding:24px;color:var(--cfo-ink);transition:background .15s}
+.settings-option:hover{background:#f8faf5}
+.settings-option:focus-visible,.settings-back:focus-visible{outline:2px solid #8f743e;outline-offset:-3px}
+.settings-option-icon{display:grid;place-items:center;width:48px;height:48px;border-radius:15px;flex-shrink:0;background:#f4ecd4;color:#796129}
+.settings-option>div{flex:1;min-width:0}
+.cfo-app .settings-option h3{font-size:16px;font-weight:600;letter-spacing:-.3px;margin:0 0 5px}
+.settings-option p{font-size:13px;line-height:1.6;color:var(--cfo-muted);margin:0}
+.settings-option>svg{flex-shrink:0;color:#718173}
+.settings-back{display:inline-flex;align-items:center;gap:8px;width:fit-content;min-height:44px;font-size:13px;font-weight:600;color:var(--cfo-brand);margin-bottom:-12px}
+.cfo-app .settings-page .settings-reset{padding:24px;gap:20px}
+.cfo-app .settings-page .settings-reset h2{font-size:16px;letter-spacing:-.3px}
+.settings-page .settings-reset>div{max-width:470px}
+@media(max-width:767px){.settings-option{padding:20px;gap:13px}.settings-option p{font-size:12px}.cfo-app .settings-page .settings-reset{padding:20px}.settings-option-icon{width:42px;height:42px;border-radius:13px}}
