@@ -21,6 +21,21 @@ export function createHandler(realDataEnabled=false){return async function(reque
   const accountKey=digest?Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join(''):null
   return json({signedIn:!!userId,accountKey,realDataEnabled,signInPath:'/signin-with-chatgpt?return_to=%2Faccount',signOutPath:'/signout-with-chatgpt?return_to=%2Faccount'})
  }
+ if(path==='/api/profile/photo'){
+  const owner=request.headers.get('oai-authenticated-user-id');if(!owner)return json({error:'Sign in to manage your photo.'},401)
+  if(!['GET','POST','DELETE'].includes(request.method))return json({error:'Method not allowed'},405)
+  if(request.method!=='GET'&&request.headers.get('Origin')!==url.origin)return json({error:'Same-origin request required'},403)
+  if(!env.BUCKET)return json({error:'Photo storage is temporarily unavailable.'},503)
+  const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(owner)),key='profile-photos/'+Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('')+'.jpg'
+  try{
+   if(request.method==='GET'){const object=await env.BUCKET.get(key);return object?new Response(object.body,{headers:{...security,'Content-Type':'image/jpeg','Cache-Control':'private, no-store'}}):json({error:'No profile photo.'},404)}
+   if(request.method==='DELETE'){await env.BUCKET.delete(key);return json({saved:true})}
+   if(Number(request.headers.get('Content-Length'))>1048576)return json({error:'Photo must be smaller than 1 MB after resizing.'},413)
+   const bytes=new Uint8Array(await request.arrayBuffer());if(bytes.length>1048576)return json({error:'Photo is too large.'},413)
+   if(request.headers.get('Content-Type')!=='image/jpeg'||bytes.length<4||bytes[0]!==255||bytes[1]!==216||bytes[bytes.length-2]!==255||bytes[bytes.length-1]!==217)return json({error:'Choose a valid photo.'},400)
+   await env.BUCKET.put(key,bytes,{httpMetadata:{contentType:'image/jpeg'}});return json({saved:true})
+  }catch{return json({error:'Your photo could not be updated. Please try again.'},503)}
+ }
  if(path==='/api/profile'){
   const owner=request.headers.get('oai-authenticated-user-id')
   if(!owner)return json({error:'Sign in to save your profile.'},401)

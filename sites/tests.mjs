@@ -387,3 +387,19 @@ test('profiles persist per native identity and reject cross-account selectors, s
  assert.deepEqual((await(await worker.fetch(req('alice'),env)).json()).profile,data);
  assert.equal((await worker.fetch(new Request('https://acorra.test/api/workspace',{headers:{'oai-authenticated-user-id':'alice'}}),env)).status,423);
 });
+
+test('profile photos are private per native identity with safe formats and size limits',async()=>{
+ const objects=new Map();const env={BUCKET:{async get(k){return objects.has(k)?{body:objects.get(k)}:null},async put(k,v){objects.set(k,v)},async delete(k){objects.delete(k)}}};
+ const req=(id,method='GET',body=null,type='image/jpeg',origin='https://acorra.test')=>new Request('https://acorra.test/api/profile/photo?owner=alice',{method,headers:{...(id?{'oai-authenticated-user-id':id}:{}),Origin:origin,'Content-Type':type},...(body?{body}:{})});
+ const jpg=new Uint8Array([255,216,1,2,255,217]);
+ assert.equal((await worker.fetch(req(null,'POST',jpg),env)).status,401);
+ assert.equal((await worker.fetch(req('alice','POST',jpg,'image/jpeg','https://evil.test'),env)).status,403);
+ assert.equal((await worker.fetch(req('alice','POST','<svg/>','image/svg+xml'),env)).status,400);
+ assert.equal((await worker.fetch(req('alice','POST',new Uint8Array(1048577)),env)).status,413);
+ assert.equal((await worker.fetch(req('alice','POST',jpg),env)).status,200);
+ const photo=await worker.fetch(req('alice'),env);assert.equal(photo.status,200);assert.match(photo.headers.get('cache-control'),/private, no-store/);assert.deepEqual(new Uint8Array(await photo.arrayBuffer()),jpg);
+ assert.equal((await worker.fetch(req('bob'),env)).status,404);
+ assert.equal((await worker.fetch(req('bob','DELETE'),env)).status,200);
+ assert.equal((await worker.fetch(req('alice'),env)).status,200);
+ assert.equal((await worker.fetch(req('alice','DELETE'),env)).status,200);assert.equal((await worker.fetch(req('alice'),env)).status,404);
+});

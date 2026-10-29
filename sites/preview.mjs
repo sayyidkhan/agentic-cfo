@@ -12,6 +12,7 @@ for(const table of ['financial_workspaces','storage_checks','user_profiles']){
  }
 }
 const DB={prepare(sql){return{bind(...values){return{async first(){return db.prepare(sql).get(...values)},async run(){const result=db.prepare(sql).run(...values);return{meta:{changes:Number(result.changes)}}}}}}}}
+const photos=new Map();const BUCKET={async get(key){const bytes=photos.get(key);return bytes?{body:bytes}:null},async put(key,bytes){photos.set(key,bytes)},async delete(key){photos.delete(key)}}
 const server=http.createServer(async(req,res)=>{
  try{
   const origin='http://'+req.headers.host,url=new URL(req.url,origin)
@@ -33,10 +34,10 @@ const server=http.createServer(async(req,res)=>{
   headers.delete('oai-authenticated-user-id')
   const visitor=(req.headers.cookie||'').match(/(?:^|; )acorra_qa_visitor=(alice|bob)(?:;|$)/)?.[1]
   if(visitor)headers.set('oai-authenticated-user-id','local-fixture-'+visitor)
-  let body='';if(!['GET','HEAD'].includes(req.method))for await(const chunk of req)body+=chunk
-  const request=new Request(origin+req.url,{method:req.method,headers,...(body?{body}:{})})
+  const chunks=[];if(!['GET','HEAD'].includes(req.method))for await(const chunk of req)chunks.push(chunk);const body=Buffer.concat(chunks)
+  const request=new Request(origin+req.url,{method:req.method,headers,...(body.length?{body}:{})})
   // Real-data flag is enabled only for fixture visitors on this local QA server.
-  const response=await (visitor?createHandler(true):worker.fetch)(request,{DB})
+  const response=await (visitor?createHandler(true):worker.fetch)(request,{DB,BUCKET})
   res.writeHead(response.status,Object.fromEntries(response.headers));res.end(Buffer.from(await response.arrayBuffer()))
  }catch(error){res.writeHead(500,{'Content-Type':'text/plain'});res.end('Preview could not complete this request.')}
 })

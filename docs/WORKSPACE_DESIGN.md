@@ -46,3 +46,11 @@ Profile now edits an optional display name (up to 60 characters) and an initials
 The profile endpoint derives the owner exclusively from the Sites-authenticated identity, rejects extra fields and cross-origin writes, and uses revision checks to prevent lost updates. The financial-data release lock remains false. A schema-only migration appends the profile table to the existing Worker migration journal; this custom Worker project does not use a Drizzle ORM schema generator.
 
 Verification: 30 tests pass, including profile persistence, two-identity isolation, rejected owner selectors, invalid names/colours, stale saves and cross-origin writes. Local browser fixtures verified save/reload, two separate accounts, cancel, and the 390px mobile layout. Local fixtures are not production authentication verification and no test profile data is deployed.
+
+## Optional profile photos
+
+Signed-in users can upload, replace or remove a private profile photo. The browser accepts JPG/PNG/WebP up to 5 MB, decodes the image and centre-crops/resizes it to a 512px JPEG before uploading. Re-encoding discards source metadata. Photo changes save immediately; removing a photo restores the initials avatar.
+
+R2 uses the native BUCKET binding. Photo objects are never public: the image route requires the native signed-in identity and derives its object key server-side from that identity. Query parameters cannot select another user's photo. Writes require same-origin requests, a JPEG signature and a 1 MB processed-image limit; reads are private/no-store. Display-name and avatar-colour persistence remains independent.
+
+31 tests pass, including private reads, account isolation, cross-origin rejection, unsafe type/size rejection and removal. Browser tests used a synthetic test image: upload, 512px output, reload, separate local identities, removal and mobile fit passed. Preview photo objects are memory-only test fixtures; production photos use R2.
