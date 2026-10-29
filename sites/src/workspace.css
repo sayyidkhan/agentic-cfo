@@ -373,3 +373,23 @@
 }
 
 @media(min-width:1024px){.cfo-app .cfo-navigation-inner.workspace-nav-desktop{display:flex}.cfo-app .cfo-navigation-inner.workspace-nav-mobile{display:none}}
+
+/* Four clear destinations: highlights, transactions, planning and guidance. */
+@media(max-width:1023px){.cfo-app .workspace-nav-mobile{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.cfo-app .summary-back{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--cfo-brand);min-height:36px;margin-bottom:8px}
+.cfo-app .summary-list>a{display:flex;align-items:center;justify-content:space-between;gap:15px;min-height:70px;padding:14px 0;border-top:1px solid var(--cfo-stroke);color:var(--cfo-ink)}
+.cfo-app .summary-list>a:first-child{border:0;padding-top:0}
+.cfo-app .summary-list>a:last-child{padding-bottom:0}
+.cfo-app .summary-list>a>span{display:grid;gap:6px;flex:1;min-width:0}
+.cfo-app .summary-list strong{font-size:13px;font-weight:600;line-height:1.4}
+.cfo-app .summary-list>a>strong{white-space:nowrap;font-variant-numeric:tabular-nums;font-size:14px}
+.cfo-app .summary-list small{font-size:10px;color:var(--cfo-muted);line-height:1.5}
+.cfo-app .summary-list progress{appearance:none;width:100%;height:6px;border:0;border-radius:10px;overflow:hidden;background:#edf0e8;margin:4px 0}
+.cfo-app .summary-list progress::-webkit-progress-bar{background:#edf0e8}
+.cfo-app .summary-list progress::-webkit-progress-value{background:#748958;border-radius:10px}
+.cfo-app .summary-list progress::-moz-progress-bar{background:#748958;border-radius:10px}
+.cfo-app .summary-more{display:inline-flex;min-height:40px;align-items:center;font-size:12px;font-weight:600;color:var(--cfo-brand)}
+.cfo-app .workspace-overview>.summary-bills,.cfo-app .workspace-overview>.summary-goals{height:auto}
+.cfo-app .workspace-transactions .transaction-entry{order:0}.cfo-app .workspace-transactions .transaction-records{order:1}
+@media(min-width:1024px){.cfo-app .workspace-overview>.acorra-recent{grid-row:auto}.cfo-app .workspace-overview>.acorra-next{grid-row:auto}}
+@media(max-width:767px){.cfo-app .summary-list strong{font-size:12px}.cfo-app .summary-list>a>strong{font-size:13px}.cfo-app .workspace-breadcrumb{flex-wrap:wrap}}

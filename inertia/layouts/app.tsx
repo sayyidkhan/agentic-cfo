@@ -1,16 +1,15 @@
 import { Form } from '@adonisjs/inertia/react'
 import { Link, usePage } from '@inertiajs/react'
 import { type ReactNode } from 'react'
-import { LayoutDashboard, ReceiptText, Target, Landmark, MessageCircle, Leaf, LogOut } from 'lucide-react'
+import { LayoutDashboard, ReceiptText, Target, MessageCircle, Leaf, LogOut } from 'lucide-react'
 import ThemeToggle from '~/components/theme_toggle'
 import FlashToasts from '~/components/flash_toasts'
 import SandyAvatar from '~/components/sandy_avatar'
 
 const nav = [
-  { label: 'Overview', url: '/dashboard', view: 'overview', icon: LayoutDashboard },
-  { label: 'Transactions', url: '/dashboard?view=transactions', view: 'transactions', icon: ReceiptText },
-  { label: 'Budgets & goals', url: '/dashboard?view=budget', view: 'budget', icon: Target },
-  { label: 'Wealth', url: '/dashboard?view=wealth', view: 'wealth', icon: Landmark },
+  { label: 'Summary', url: '/dashboard', view: 'overview', icon: LayoutDashboard },
+  { label: 'Activity', url: '/dashboard?view=transactions', view: 'transactions', icon: ReceiptText },
+  { label: 'Plan', url: '/dashboard?view=budget', view: 'budget', icon: Target },
   { label: 'Sandy', url: '/cfo', view: 'chat', icon: MessageCircle },
 ] as const
 
@@ -38,7 +37,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
     <nav className="cfo-navigation" aria-label="Financial workspace">
       <div className="cfo-navigation-inner">
         {nav.map(({ label, url: href, view, icon: Icon }) =>
-          <Link href={href} key={view} aria-current={selected === view ? 'page' : undefined}>
+          <Link href={href} key={view} aria-current={(selected==='wealth'?'overview':selected) === view ? 'page' : undefined}>
             <Icon size={16}/>{label}
           </Link>)}
       </div>
