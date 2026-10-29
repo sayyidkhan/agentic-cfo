@@ -30,3 +30,11 @@ The internal app uses a balance-first hierarchy and direct everyday actions insp
 - Net worth is a Summary detail screen containing account balances, asset/debt valuations and creation/update controls. Existing `view=wealth` links remain compatible, with Summary selected in navigation and a back link.
 - Desktop keeps Sandy first. Mobile has four destinations: Summary, Activity, Sandy, Budget.
 - Landing page branding and seasonal animation are unchanged.
+
+## Profile cleanup
+
+Profile uses one compact account panel: sign-in status, the available workspace, Settings, and account actions. Signed-out visitors get the native ChatGPT sign-in link; signed-in visitors get a status and logout. Loading and failed session checks have explicit states and a retry control.
+
+Removed the user-facing storage marker experiment, automatic storage-check fetch, engineering launch-gate prose and redundant Sandy-library button. The storage-check API remains available for existing integration checks. No auth scope, persistence setting or financial-data release gate was changed. Native identity does not currently supply a display name or email to this client, so Profile does not invent either.
+
+Verified all four account display states with server rendering, Settings and Summary navigation in the browser, desktop layout, and 320px/390px mobile fit. No personal financial data was used.
