@@ -1,6 +1,6 @@
 import React,{useEffect,useRef,useState} from 'react'
-import {UserRound,LogOut,RefreshCw,Check} from 'lucide-react'
-import {usePage,Head} from './bridge'
+import {UserRound,LogOut,RefreshCw,Check,Settings,ChevronRight} from 'lucide-react'
+import {usePage,Head,Link} from './bridge'
 import {requestJson} from './api'
 const colours=['forest','gold','slate','rose'] as const
 export default function Account(){
@@ -26,6 +26,7 @@ export default function Account(){
  {notice&&<p role="status" className="profile-saved"><Check size={15}/>{notice}</p>}
  <div className="profile-save-row">{signed?<><button className="btn btn--primary" type="submit" disabled={!ready||saving||photoBusy||!dirty}>{saving?'Saving…':'Save changes'}</button><button className="btn btn--secondary" type="button" disabled={!dirty||saving||!ready} onClick={()=>{setName(saved.displayName);setAvatar(saved.avatar);setError('');setNotice('')}}>Cancel</button></>:page.sessionStatus==='error'?<button type="button" className="btn btn--secondary" onClick={page.refreshSession}>Retry sign-in check</button>:<a className="btn btn--primary" href={session?.signInPath||'/signin-with-chatgpt?return_to=%2Faccount'} target="_top">Sign in with ChatGPT</a>}</div>
  </form>
+ <Link href="/settings" className="profile-mobile-settings"><Settings size={20}/><span><strong>Settings</strong><small>Sandy’s expressions and demo controls</small></span><ChevronRight size={18}/></Link>
  <div className="profile-connection"><div><h3>Sign-in method</h3><p>ChatGPT manages your sign-in details.</p></div>{signed&&<a className="profile-signout" href={session.signOutPath} target="_top"><LogOut size={15}/>Log out</a>}</div>
  </section></div>
 }

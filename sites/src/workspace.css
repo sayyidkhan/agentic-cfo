@@ -374,8 +374,8 @@
 
 @media(min-width:1024px){.cfo-app .cfo-navigation-inner.workspace-nav-desktop{display:flex}.cfo-app .cfo-navigation-inner.workspace-nav-mobile{display:none}}
 
-/* Four clear destinations: highlights, transactions, planning and guidance. */
-@media(max-width:1023px){.cfo-app .workspace-nav-mobile{grid-template-columns:repeat(4,minmax(0,1fr))}}
+/* Mobile keeps guidance centred, with Profile after Budget. */
+@media(max-width:1023px){.cfo-app .workspace-nav-mobile{grid-template-columns:repeat(5,minmax(0,1fr))}}
 .cfo-app .summary-back{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--cfo-brand);min-height:36px;margin-bottom:8px}
 .cfo-app .summary-list>a{display:flex;align-items:center;justify-content:space-between;gap:15px;min-height:70px;padding:14px 0;border-top:1px solid var(--cfo-stroke);color:var(--cfo-ink)}
 .cfo-app .summary-list>a:first-child{border:0;padding-top:0}
@@ -451,3 +451,13 @@
 .cfo-app .settings-page .settings-reset h2{font-size:16px;letter-spacing:-.3px}
 .settings-page .settings-reset>div{max-width:470px}
 @media(max-width:767px){.settings-option{padding:20px;gap:13px}.settings-option p{font-size:12px}.cfo-app .settings-page .settings-reset{padding:20px}.settings-option-icon{width:42px;height:42px;border-radius:13px}}
+
+.profile-mobile-settings{display:none}
+@media(max-width:1023px){
+ .profile-mobile-settings{display:flex;align-items:center;gap:12px;padding:20px;border-top:1px solid var(--cfo-stroke);color:var(--cfo-ink);min-height:76px}
+ .profile-mobile-settings>span{display:grid;gap:5px;flex:1;min-width:0}
+ .profile-mobile-settings strong{font-size:14px;font-weight:600}
+ .profile-mobile-settings small{font-size:11px;line-height:1.5;color:var(--cfo-muted)}
+ .profile-mobile-settings>svg{flex-shrink:0;color:var(--cfo-brand)}
+ .profile-mobile-settings:focus-visible{outline:2px solid #8f743e;outline-offset:-3px}
+}

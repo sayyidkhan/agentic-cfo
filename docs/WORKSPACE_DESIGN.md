@@ -60,3 +60,9 @@ R2 uses the native BUCKET binding. Photo objects are never public: the image rou
 The Settings entry opens a compact directory with Companion → Sandy’s expressions, and Demo data → Reset demo. The seven-state library and animation controls now live at `/settings?section=sandy`, with a return link and nested desktop breadcrumb. Existing `/settings?sandy=<state>` links remain compatible. Reset demo remains on the Settings directory and retains its existing scope and behaviour.
 
 Browser verification covered opening the library, choosing Relieved Sandy, pausing/resuming animation, returning to Settings, a legacy Calm link, and mobile menu navigation at 390px with no horizontal overflow. This is a navigation/layout change; financial calculations, authentication and storage are unchanged.
+
+## Mobile Profile navigation
+
+Mobile and tablet bottom navigation now has five destinations: Summary, Activity, Sandy, Budget, Profile. The header Profile popup is removed, so Sandy returns to the centre and Profile opens the account page directly. A mobile-only Settings row inside Profile preserves access to preferences; Settings and its expression library keep Profile selected as their parent tab. The desktop sidebar remains unchanged.
+
+Browser checks verified the five-tab order, Profile navigation from Sandy, Profile → Settings, the active parent tab, and 390px layout without horizontal overflow. The five touch targets are approximately 71px wide at the tested viewport. No account or financial behaviour changed.
