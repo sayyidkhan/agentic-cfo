@@ -1,27 +1,42 @@
-/* One deliberate transition from the seasonal landing page into the workspace. */
-.acorra-entry{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;isolation:isolate;overflow:hidden;background:#0b3026;color:#fbf7e9;animation:acorra-entry-cover .17s ease-out both;cursor:progress}
-.acorra-entry-atmosphere{position:absolute;inset:-25%;z-index:-1;background:radial-gradient(ellipse at 45% 45%,#38715945,transparent 52%),radial-gradient(ellipse at 75% 75%,#cfb4691c,transparent 45%)}
-.acorra-entry-atmosphere i{position:absolute;width:65%;aspect-ratio:1;border:1px solid #e4ca8b0f;border-radius:50%;top:15%;left:19%;transform:rotate(-25deg) scaleX(1.6)}
-.acorra-entry-atmosphere i:nth-child(2){transform:rotate(-25deg) scaleX(1.85);opacity:.65}.acorra-entry-atmosphere i:nth-child(3){transform:rotate(-25deg) scaleX(2.1);opacity:.4}
-.acorra-entry-content{display:flex;flex-direction:column;align-items:center;padding:32px;animation:acorra-entry-arrive .5s cubic-bezier(.2,.7,.2,1) both}
-.acorra-entry-emblem{position:relative;display:grid;place-items:center;width:126px;height:126px;margin-bottom:22px}
-.acorra-entry-emblem .acorra-mark{width:70px;height:70px;filter:drop-shadow(0 9px 18px #0003);animation:acorra-entry-breathe 1.4s ease-in-out infinite}
-.acorra-entry-orbit{position:absolute;inset:0;border:1px solid #dcc58620;border-top-color:#e5ce8f;border-right-color:#dcc58670;border-radius:50%;animation:acorra-entry-orbit 1.8s linear infinite}
-.acorra-entry-orbit--inner{inset:10px;border-top-color:transparent;border-bottom-color:#dcc58655;border-right-color:transparent;animation-direction:reverse;animation-duration:2.6s}
-.acorra-entry-wordmark{font:52px/1.05 Georgia,serif;letter-spacing:-2.5px;color:#fbf7e9}
-.acorra-entry-caption{margin-top:19px;font:500 13px/1.5 system-ui,sans-serif;letter-spacing:.02em;color:#c6d4c6}
-.acorra-entry-track{width:104px;height:2px;border-radius:2px;background:#ecdbac20;margin-top:23px;overflow:hidden}
-.acorra-entry-track i{display:block;width:44%;height:100%;background:linear-gradient(90deg,transparent,#e4c781,transparent);animation:acorra-entry-travel 1.1s ease-in-out infinite}
-.acorra-entry--reveal{pointer-events:none;animation:acorra-entry-reveal .32s cubic-bezier(.4,0,.2,1) both}
-.acorra-entry--reveal .acorra-entry-content{animation:acorra-entry-content-out .32s ease-in both}
-.acorra-route-surface:has(+.acorra-entry--reveal){animation:acorra-workspace-arrive .32s cubic-bezier(.2,.7,.2,1) both}
-@keyframes acorra-entry-cover{from{opacity:0}to{opacity:1}}
-@keyframes acorra-entry-arrive{from{opacity:0;transform:translateY(16px) scale(.96)}to{opacity:1;transform:none}}
-@keyframes acorra-entry-breathe{50%{transform:translateY(-3px);filter:drop-shadow(0 12px 22px #dfc37a18)}}
-@keyframes acorra-entry-orbit{to{transform:rotate(360deg)}}
+/* A staged brand entrance: light gathers, the identity forms, then the app opens. */
+.acorra-entry{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;isolation:isolate;overflow:hidden;background:#082b23;color:#fbf7e9;animation:acorra-entry-cover .32s ease-out both;cursor:progress}
+.acorra-entry-atmosphere{position:absolute;inset:-50%;z-index:-1;background:radial-gradient(ellipse at 38% 40%,#4c8d605c,transparent 44%),radial-gradient(ellipse at 66% 56%,#d4b25d30,transparent 36%);animation:acorra-entry-aurora 3s ease-in-out both}
+.acorra-entry-atmosphere i{position:absolute;width:46%;aspect-ratio:1;border:1px solid #e4ca8b1b;border-radius:50%;top:27%;left:27%;animation:acorra-entry-contour 4s ease-in-out both}
+.acorra-entry-atmosphere i:nth-child(2){animation-delay:.08s;scale:1.3;opacity:.65}.acorra-entry-atmosphere i:nth-child(3){animation-delay:.16s;scale:1.6;opacity:.4}
+.acorra-entry-content{display:flex;flex-direction:column;align-items:center;padding:32px;position:relative}
+.acorra-entry-emblem{position:relative;display:grid;place-items:center;width:172px;height:172px;margin-bottom:28px}
+.acorra-entry-logo{display:grid;place-items:center;animation:acorra-entry-logo-in 1.05s cubic-bezier(.16,1,.3,1) .15s both}
+.acorra-entry-logo .acorra-mark{width:92px;height:92px;filter:drop-shadow(0 12px 22px #0004);animation:acorra-entry-breathe 2.2s ease-in-out 1.15s infinite}
+.acorra-entry-halo{position:absolute;inset:20px;border-radius:50%;background:radial-gradient(circle,#e5c67d32,transparent 68%);box-shadow:0 0 80px 18px #d4bb6a15;animation:acorra-entry-halo 1.7s ease-out .1s both}
+.acorra-entry-halo:before,.acorra-entry-halo:after{content:"";position:absolute;inset:-6px;border:1px solid #e4ca8b55;border-radius:50%;animation:acorra-entry-ripple 1.7s ease-out .2s both}
+.acorra-entry-halo:after{animation-delay:.45s}
+.acorra-entry-orbit{position:absolute;inset:0;border:1px solid #dcc58622;border-top:2px solid #f0d397;border-right-color:#dcc58680;border-radius:50%;animation:acorra-entry-orbit 2.7s cubic-bezier(.3,.1,.25,1) both}
+.acorra-entry-orbit--inner{inset:13px;border-top-color:transparent;border-bottom-color:#dcc58680;border-right-color:transparent;animation-direction:reverse;animation-duration:3.1s}
+.acorra-entry-wordmark{display:flex;font:68px/1.15 Georgia,serif;letter-spacing:-3.6px;color:#fbf7e9;padding:3px 7px}
+.acorra-entry-wordmark>span{display:inline-block;animation:acorra-entry-letter .8s cubic-bezier(.16,1,.3,1) calc(.4s + var(--letter)*.065s) both}
+.acorra-entry-caption{margin-top:18px;font:500 13px/1.5 system-ui,sans-serif;letter-spacing:.06em;color:#c6d4c6;animation:acorra-entry-caption .6s ease .95s both}
+.acorra-entry-track{width:120px;height:2px;border-radius:2px;background:#ecdbac20;margin-top:23px;overflow:hidden;animation:acorra-entry-caption .6s ease 1s both}
+.acorra-entry-track i{display:block;width:44%;height:100%;background:linear-gradient(90deg,transparent,#f0d397,transparent);animation:acorra-entry-travel 1.25s ease-in-out infinite}
+.acorra-entry-sparks{position:absolute;top:calc(50% - 68px);left:50%;width:0;height:0;pointer-events:none}
+.acorra-entry-sparks i{position:absolute;width:4px;height:4px;left:-2px;top:-2px;border-radius:50%;background:#f0d397;box-shadow:0 0 14px #ebcf85;animation:acorra-entry-gather 1.5s cubic-bezier(.2,.7,.3,1) calc(.15s + var(--delay)) both}
+.acorra-entry-sparks i:nth-child(3n){width:2px;height:2px;opacity:.6}
+.acorra-entry--reveal{pointer-events:none;animation:acorra-entry-reveal .65s cubic-bezier(.65,0,.25,1) both}
+.acorra-entry--reveal .acorra-entry-content{animation:acorra-entry-content-out .5s ease-in both}
+.acorra-route-surface:has(+.acorra-entry--reveal){animation:acorra-workspace-arrive .65s ease-out both}
+@keyframes acorra-entry-cover{from{opacity:1}to{opacity:1}}
+@keyframes acorra-entry-aurora{from{transform:rotate(-14deg) scale(.8);opacity:.25}to{transform:rotate(12deg) scale(1.15);opacity:1}}
+@keyframes acorra-entry-contour{from{transform:rotate(-35deg) scaleX(1.4);opacity:0}30%{opacity:1}to{transform:rotate(15deg) scaleX(1.8)}}
+@keyframes acorra-entry-logo-in{from{opacity:1;transform:translateY(22px) scale(.65) rotate(-12deg);filter:blur(0)}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes acorra-entry-breathe{50%{transform:translateY(-5px);filter:drop-shadow(0 16px 28px #dfc37a33)}}
+@keyframes acorra-entry-halo{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1.35)}}
+@keyframes acorra-entry-ripple{from{opacity:.8;transform:scale(.6)}to{opacity:0;transform:scale(2.4)}}
+@keyframes acorra-entry-orbit{from{opacity:0;transform:rotate(-150deg) scale(.75)}18%{opacity:1}to{opacity:1;transform:rotate(210deg) scale(1)}}
+@keyframes acorra-entry-letter{from{opacity:1;transform:translateY(25px) rotate(6deg);filter:blur(0)}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes acorra-entry-caption{from{opacity:.75;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes acorra-entry-gather{0%{opacity:0;transform:rotate(var(--angle)) translateX(240px) scale(.4)}18%{opacity:1}75%{opacity:.85}100%{opacity:0;transform:rotate(calc(var(--angle) + 45deg)) translateX(58px) scale(.25)}}
 @keyframes acorra-entry-travel{from{transform:translateX(-110%)}to{transform:translateX(340%)}}
-@keyframes acorra-entry-reveal{to{opacity:0}}
-@keyframes acorra-entry-content-out{to{opacity:0;transform:translateY(-16px) scale(1.03)}}
-@keyframes acorra-workspace-arrive{from{opacity:.5}to{opacity:1}}
-@media(max-width:600px){.acorra-entry-wordmark{font-size:46px}.acorra-entry-emblem{width:112px;height:112px}.acorra-entry-emblem .acorra-mark{width:64px;height:64px}}
-@media(prefers-reduced-motion:reduce){.acorra-entry,.acorra-entry *,.acorra-route-surface:has(+.acorra-entry--reveal){animation:none!important}.acorra-entry--reveal{opacity:0}}
+@keyframes acorra-entry-reveal{0%{clip-path:circle(150% at 50% 46%);opacity:1}85%{opacity:1}100%{clip-path:circle(0% at 50% 46%);opacity:0}}
+@keyframes acorra-entry-content-out{to{opacity:0;transform:translateY(-20px) scale(1.12)}}
+@keyframes acorra-workspace-arrive{from{opacity:.35}to{opacity:1}}
+@media(max-width:600px){.acorra-entry-wordmark{font-size:58px;letter-spacing:-3px}.acorra-entry-emblem{width:150px;height:150px;margin-bottom:24px}.acorra-entry-logo .acorra-mark{width:82px;height:82px}.acorra-entry-sparks{top:calc(50% - 62px)}}
+@media(prefers-reduced-motion:reduce){.acorra-entry,.acorra-entry *,.acorra-entry :before,.acorra-entry :after,.acorra-route-surface:has(+.acorra-entry--reveal){animation:none!important}.acorra-entry--reveal{opacity:0}}

@@ -74,3 +74,7 @@ All landing links that enter the workspace use a shared branded entry curtain. T
 The destination renders behind an inert surface until the reveal completes. Focus moves to its heading, repeated activations are ignored, browser history cancels pending entry, and timers/body scroll locks clean up on exit. Reduced-motion preferences skip the transition. A slow personal-workspace load can hold the curtain, with an 8-second escape to the app’s existing loading/error screen. Internal tab changes and direct app visits stay immediate.
 
 Verification: 31 existing tests passed. Browser checks covered desktop Open app, Explore Acorra, keyboard entry, mobile viewport coverage, the final Summary focus and unlocked surface, and browser Back restoring the landing page without a stuck overlay. Mobile had no horizontal overflow.
+
+## Expanded app entrance
+
+The landing-to-app entrance now lasts about 2.55 seconds after its first painted frame, replacing the previous 940ms sequence. Twelve gold sparks converge around a larger acorn identity, light rings expand, the Acorra letters enter in sequence, and a 650ms circular curtain reveal opens the workspace. The clock starts after two animation frames so initial click/render work does not consume the visible presentation time; a 120ms timer starts it if animation frames are throttled. The brand remains visible even before animations advance. Slow-load escape, cleanup, focus handoff and reduced-motion bypass remain intact.
