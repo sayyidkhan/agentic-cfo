@@ -7,6 +7,7 @@ import Landing from './Landing'
 import Account from './Account'
 import Settings from './Settings'
 import WorkspaceStatus from './WorkspaceStatus'
+import AppEntryTransition from './AppEntryTransition'
 import {loadSession,loadWorkspace,saveWorkspaceAction} from './api'
 import {workspaceHref,isPersonal} from './routing'
 import {Context,connect,Link} from './bridge'
@@ -18,7 +19,10 @@ function App(){
  const identity=useRef<string|null>(null),epoch=useRef(0),sessionGeneration=useRef(0),busy=useRef(false),mounted=useRef(true),personalRef=useRef<any>(null)
  personalRef.current=personal
  const personalMode=isPersonal(url),accountPage=url.split('?')[0]==='/account',settingsPage=url.split('?')[0]==='/settings'
- const go=(href:string)=>{href=workspaceHref(href,personalMode);history.pushState(null,'',href);setUrl(href);window.scrollTo(0,0)}
+ const [entryTarget,setEntryTarget]=useState<string|null>(null),entryPending=useRef(false)
+ const commitRoute=(href:string)=>{history.pushState(null,'',href);setUrl(href);window.scrollTo(0,0)}
+ const go=(href:string)=>{href=workspaceHref(href,personalMode);if(entryPending.current)return;if(url==='/'&&href.split('?')[0]!=='/'&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){entryPending.current=true;setEntryTarget(href);return}commitRoute(href)}
+ const finishEntry=()=>{entryPending.current=false;setEntryTarget(null);requestAnimationFrame(()=>{const title=document.querySelector<HTMLElement>('.app-main h1');if(title){title.setAttribute('tabindex','-1');title.focus({preventScroll:true})}})}
  const expireSession=useCallback(()=>{epoch.current++;sessionGeneration.current++;identity.current=null;setPersonal(null);setRevision(0);setSession({signedIn:false,realDataEnabled:false});setWorkspaceStatus('signin')},[])
  const refreshSession=useCallback(async()=>{
   const sessionTicket=++sessionGeneration.current
@@ -36,7 +40,7 @@ function App(){
   try{const result=await loadWorkspace();if(!mounted.current||ticket!==epoch.current)return;derive(result.state);setPersonal(result.state);setRevision(result.revision);setWorkspaceStatus('ready')}
   catch(e:any){if(!mounted.current||ticket!==epoch.current)return;setWorkspaceError(e.message);if(e.status===401||e.status===423){setPersonal(null);setWorkspaceStatus(e.status===401?'signin':'locked')}else setWorkspaceStatus(refreshing?'ready':'error');if(e.status===401)expireSession()}
  },[expireSession])
- useEffect(()=>{void refreshSession();const pop=()=>setUrl(location.pathname+location.search);const focus=()=>void refreshSession();window.addEventListener('popstate',pop);window.addEventListener('focus',focus);return()=>{mounted.current=false;window.removeEventListener('popstate',pop);window.removeEventListener('focus',focus)}},[refreshSession])
+ useEffect(()=>{void refreshSession();const pop=()=>{entryPending.current=false;setEntryTarget(null);setUrl(location.pathname+location.search)};const focus=()=>void refreshSession();window.addEventListener('popstate',pop);window.addEventListener('focus',focus);return()=>{mounted.current=false;window.removeEventListener('popstate',pop);window.removeEventListener('focus',focus)}},[refreshSession])
  useEffect(()=>{
   if(!personalMode||accountPage||settingsPage)return
   if(sessionStatus==='error'){setWorkspaceStatus('error');return}
@@ -64,7 +68,8 @@ function App(){
  const state=personalMode?personal:demo
  const props=state?derive(state).props:null
  const page={url,props:{preferences:{theme:'light'}},flash:{},session,sessionStatus,refreshSession,expireSession,personalMode,workspaceStatus,workspaceError,reloadWorkspace,saving:saving||workspaceStatus==='refreshing',revision,reset:()=>{if(!confirm('Reset all demo transactions, budgets, goals and chat to the original samples?'))return false;setDemo(syntheticState());return true}}
- return <Context.Provider value={page}>{url==='/'?<Landing/>:<Layout>{settingsPage?<Settings/>:accountPage?<Account/>:personalMode&&(!['ready','refreshing'].includes(workspaceStatus)||!state)?<WorkspaceStatus/>:<>{workspaceError&&personalMode&&<div role="alert" className="workspace-error"><p>{workspaceError}</p><button disabled={saving||workspaceStatus==='refreshing'} className="btn btn--secondary" onClick={reloadWorkspace}>Refresh saved records</button></div>}{url.startsWith('/cfo')?<Chat configured={false} dailyMessageLimit={100} messages={state.messages}/>:<Dashboard {...props as any}/>}</>}</Layout>}</Context.Provider>
+ const entryReady=url===entryTarget&&(!personalMode||accountPage||settingsPage||!['loading'].includes(workspaceStatus))
+ return <Context.Provider value={page}><div className="acorra-route-surface" inert={!!entryTarget}>{url==='/'?<Landing/>:<Layout>{settingsPage?<Settings/>:accountPage?<Account/>:personalMode&&(!['ready','refreshing'].includes(workspaceStatus)||!state)?<WorkspaceStatus/>:<>{workspaceError&&personalMode&&<div role="alert" className="workspace-error"><p>{workspaceError}</p><button disabled={saving||workspaceStatus==='refreshing'} className="btn btn--secondary" onClick={reloadWorkspace}>Refresh saved records</button></div>}{url.startsWith('/cfo')?<Chat configured={false} dailyMessageLimit={100} messages={state.messages}/>:<Dashboard {...props as any}/>}</>}</Layout>}</div>{entryTarget&&<AppEntryTransition ready={entryReady} onCovered={()=>commitRoute(entryTarget)} onDone={finishEntry}/>}</Context.Provider>
 }
 class Boundary extends React.Component<any,any>{state={failed:false};static getDerivedStateFromError(){return {failed:true}}render(){return this.state.failed?<main style={{padding:40}}><h1>Let’s start fresh.</h1><p>The demo could not display that change. Reload to restore the sample records.</p><button onClick={()=>location.reload()}>Restore demo</button></main>:this.props.children}}
 createRoot(document.getElementById('root')!).render(<Boundary><App/></Boundary>)

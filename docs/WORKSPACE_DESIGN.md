@@ -66,3 +66,11 @@ Browser verification covered opening the library, choosing Relieved Sandy, pausi
 Mobile and tablet bottom navigation now has five destinations: Summary, Activity, Sandy, Budget, Profile. The header Profile popup is removed, so Sandy returns to the centre and Profile opens the account page directly. A mobile-only Settings row inside Profile preserves access to preferences; Settings and its expression library keep Profile selected as their parent tab. The desktop sidebar remains unchanged.
 
 Browser checks verified the five-tab order, Profile navigation from Sandy, Profile → Settings, the active parent tab, and 390px layout without horizontal overflow. The five touch targets are approximately 71px wide at the tested viewport. No account or financial behaviour changed.
+
+## Landing-to-app transition
+
+All landing links that enter the workspace use a shared branded entry curtain. The header Open app link now uses client navigation, matching Explore Acorra and the deeper preview links. A forest-green overlay with a gold orbit, Acorra mark/wordmark and indeterminate loading trail covers the route swap, then fades into the destination. The usual sequence is about 940ms; there is no fabricated percentage or financial-sync claim.
+
+The destination renders behind an inert surface until the reveal completes. Focus moves to its heading, repeated activations are ignored, browser history cancels pending entry, and timers/body scroll locks clean up on exit. Reduced-motion preferences skip the transition. A slow personal-workspace load can hold the curtain, with an 8-second escape to the app’s existing loading/error screen. Internal tab changes and direct app visits stay immediate.
+
+Verification: 31 existing tests passed. Browser checks covered desktop Open app, Explore Acorra, keyboard entry, mobile viewport coverage, the final Summary focus and unlocked surface, and browser Back restoring the landing page without a stuck overlay. Mobile had no horizontal overflow.
