@@ -2,6 +2,12 @@
 
 The internal app uses a balance-first hierarchy and direct everyday actions inspired by Revolut, retaining Acorra’s forest green, champagne accents and Sandy identity. Reference: https://www.revolut.com/blog/post/revolut-10/ . No Revolut artwork or branding is included.
 
+## Stable wide Sandy chat — 31 October 2026
+
+The chat workspace now explicitly fills its available container width at every breakpoint. Auto inline margins previously let a narrow-screen flex child shrink to its contents, so expanding the Guided mode explanation widened the entire card. The shared CSS fix keeps the wider layout for both disclosure states and later chat content.
+
+Browser validation reproduced a 437px-to-593px width change at a 640px test frame before the fix. After the fix the card stays 593px in both states; in a 390px frame it stays 343px, with no horizontal overflow. Sites build passed. No financial logic or data access changed.
+
 ## Stronger workspace colour and contrast — 31 October 2026
 
 The workspace now uses a deep forest desktop rail with a gold active destination, a richer emerald monthly panel and a warm amber Sandy card. White cards have clearer boundaries against a cool neutral background. Supporting labels are darker; near-limit bars use deep amber, regular progress uses emerald and overspending uses red. Status wording and exact amounts remain visible, so meaning is not conveyed by colour alone. Mobile has a solid emerald active tab and a separate gold Sandy icon. Plan, Spending, Accounts, Profile and Settings inherit the stronger shared palette.

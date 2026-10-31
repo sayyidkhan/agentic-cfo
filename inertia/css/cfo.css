@@ -140,6 +140,8 @@
 .cfo-workspace progress { accent-color: var(--cfo-brand); }
 .cfo-workspace .page { padding: 0; }
 .cfo-chat-page { color: var(--cfo-ink); }
+/* Keep the wider chat frame stable when disclosures or replies change content. */
+.cfo-app .cfo-chat-page { width: 100%; min-width: 0; max-width: none; margin-inline: 0; }
 .cfo-chat-page > div, .cfo-chat-page form, .cfo-chat-page form textarea { color: var(--cfo-ink); }
 @media (max-width: 1000px) {
   .cfo-span-7, .cfo-span-5 { grid-column: span 6; }
