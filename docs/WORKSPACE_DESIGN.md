@@ -4,7 +4,7 @@ The internal app uses a balance-first hierarchy and direct everyday actions insp
 
 ## Presentation
 
-- Desktop uses a fixed 208px navigation rail below a full-width 36px workspace/demo header bar. Profile, Settings and sign-in/logout are direct links at the bottom, with a divider above Profile and the brand line at the very bottom, below sign-in/logout. Sandy is the first desktop navigation item; mobile keeps Sandy in the centre. There is no floating desktop account submenu. The content header contains the breadcrumb. Tablet and mobile retain the profile menu in the header and bottom navigation with Sandy in the centre. Short desktop windows scroll the navigation links while keeping account links accessible.
+- Desktop uses a fixed 208px navigation rail below a full-width 36px workspace/demo header bar. Profile, Settings and sign-in/logout are direct links at the bottom, with a divider above Profile and the brand line at the very bottom, below sign-in/logout. Sandy is the first desktop navigation item; mobile keeps Sandy in the centre. There is no floating desktop account submenu. The content header contains the breadcrumb. Tablet and mobile use five bottom destinations, with Profile after Budget and Sandy in the centre; the header profile menu has been removed. Short desktop windows scroll the navigation links while keeping account links accessible.
 - Summary groups recorded cash, monthly spending and net worth in one emerald balance surface with Add entry, Budget ahead and Ask Sandy shortcuts. The three values stay on one row on mobile. `FitMoney` scales exact SGD amounts to fit without rounding, truncation or wrapping.
 - Budget highlights and Sandy’s next-step card form an asymmetric desktop layout and stack on mobile; bills and savings progress follow.
 - Activity shows readable transaction descriptions, account/date metadata, signed amounts and compact action menus. Menus dismiss on outside click, action selection or Escape, with focus returned on keyboard dismissal.
@@ -21,14 +21,14 @@ The internal app uses a balance-first hierarchy and direct everyday actions insp
 - Compact record menus open, launch editors and dismiss with Escape. Financial-record deletion retains its existing confirmation.
 - Temporary responsive QA routes are removed before publishing. No financial test data is packaged.
 
-## Four-tab organisation
+## Financial destinations
 
 - Summary is the starting screen for net worth, recorded cash, income/spending, budget highlights, upcoming bills, savings progress and financial alerts. Each highlight links to its detail or management screen.
 - Activity is transaction entry and history only; monthly cash-flow cards are no longer repeated there.
 - Budget manages spending limits, bills and savings goals. Summary links select the appropriate Budget section.
 - Sandy explains verified recorded figures in guided mode, with no financial mutations.
 - Net worth is a Summary detail screen containing account balances, asset/debt valuations and creation/update controls. Existing `view=wealth` links remain compatible, with Summary selected in navigation and a back link.
-- Desktop keeps Sandy first. Mobile has four destinations: Summary, Activity, Sandy, Budget.
+- Desktop keeps Sandy first. Mobile has five destinations: Summary, Activity, Sandy, Budget, Profile.
 - Landing page branding and seasonal animation are unchanged.
 
 ## Profile cleanup
@@ -69,7 +69,7 @@ Browser checks verified the five-tab order, Profile navigation from Sandy, Profi
 
 ## Landing-to-app transition
 
-All landing links that enter the workspace use a shared branded entry curtain. The header Open app link now uses client navigation, matching Explore Acorra and the deeper preview links. A forest-green overlay with a gold orbit, Acorra mark/wordmark and indeterminate loading trail covers the route swap, then fades into the destination. The usual sequence is about 940ms; there is no fabricated percentage or financial-sync claim.
+All landing links that enter the workspace use a shared branded entry curtain. The header Open app link now uses client navigation, matching Explore Acorra and the deeper preview links. A forest-green overlay with a gold orbit, Acorra mark/wordmark and indeterminate loading trail covers the route swap, then fades into the destination. The initial sequence was about 940ms (superseded by the expanded entrance below); there is no fabricated percentage or financial-sync claim.
 
 The destination renders behind an inert surface until the reveal completes. Focus moves to its heading, repeated activations are ignored, browser history cancels pending entry, and timers/body scroll locks clean up on exit. Reduced-motion preferences skip the transition. A slow personal-workspace load can hold the curtain, with an 8-second escape to the app’s existing loading/error screen. Internal tab changes and direct app visits stay immediate.
 

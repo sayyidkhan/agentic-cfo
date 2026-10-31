@@ -4,16 +4,22 @@ A personal finance application helping **working professionals** manage monthly 
 
 **Hackathon:** UOB Theme 3 — Proactive Financial Wellbeing and Engagement.
 
-**Mascot:** Sandy the Squirrel (temporary icon avatar; full design intentionally deferred).
+**Mascot:** Sandy the Squirrel. Sites uses original rendered artwork and animation; the separate Adonis app retains its placeholder.
 
 **Former working title:** Agentic CFO. The GitHub repository retains its technical name to avoid breaking existing integrations.
+
+## Current product structure
+
+Summary owns financial highlights and current net worth; Activity owns transactions; Budget owns spending limits, goals and bills; Sandy provides read-only guidance. Mobile navigation is Summary · Activity · Sandy · Budget · Profile, with Settings inside Profile. Desktop retains direct Profile and Settings links. Net-worth/account detail lives under Summary.
+
+The [revised PRD v2.0](docs/PRD.md), dated 31 October 2026, is the product baseline for the next dashboard refinement and distinguishes current delivery from proposed enhancements.
 
 ## MVP pillars
 1. **Budget tracker** — income, expenses, monthly budgets.
 2. **Wealth tracker** — accounts, assets, liabilities and estimated net worth.
 3. **Sandy** — read-only guided financial conversations, proactive risk signals and practical suggestions. Optional generative AI can be configured separately.
 
-## Agreed technical architecture
+## Original Adonis/Zo architecture
 - **AdonisJS + TypeScript** — full-stack application and server logic
 - **React + Inertia** — frontend in the same deployment
 - **Tuyau** — end-to-end type-safe routes/API calls; no tRPC needed initially
@@ -27,7 +33,7 @@ Financial calculations remain deterministic and testable; AI explains and advise
 
 ## ChatGPT Sites version
 
-The additive Sites implementation lives in [`sites/`](sites/README.md), reusing the existing React views, finance calculations and Sandy guided coach. The public release uses synthetic data in browser memory. The account screen and personal D1 workspace UI/API are implemented behind a hard server-side release lock until live native sign-in and two-visitor isolation are verified. Signed-in visitors can save a fixed synthetic test marker on the account screen without entering financial data. The Zo SQLite application and Sites deployment do not synchronize.
+The additive Sites implementation lives in [`sites/`](sites/README.md), reusing the existing React views, finance calculations and Sandy guided coach. The public release uses synthetic data in browser memory. The account screen and personal D1 workspace UI/API are implemented behind a hard server-side release lock until live native sign-in and two-visitor isolation are verified. Signed-in visitors can save optional profile details and a private profile photo separately from the locked financial workspace. The earlier fixed-marker test is no longer a user-facing profile feature. The Zo SQLite application and Sites deployment do not synchronize.
 
 See [Sites verification](docs/SITES_VERIFICATION.md). Build with `npm run build:sites` after installing `sites/` dependencies; test with `npm run test:sites`.
 
@@ -36,12 +42,12 @@ See [Sites verification](docs/SITES_VERIFICATION.md). Build with `npm run build:
 - [Agreed architecture and build plan](docs/BUILD_PLAN.md)
 - [CFO chat setup and security](docs/CFO_CHAT.md)
 - [UI design and browser-review checklist](docs/UI_REVIEW.md)
-- [Acorra branding and Sandy mascot placeholder](docs/BRAND.md)
+- [Acorra branding and Sandy mascot](docs/BRAND.md)
 - [Zo native Node deployment](docs/ZO_DEPLOYMENT.md)
 - [ChatGPT Sites compatibility](docs/SITES_COMPATIBILITY.md)
 - [UOB challenge statements](docs/uob-challenge-statements.md)
 
-**Status:** Full-stack budgeting and wealth app, redesigned five-view finance interface, planning rules and read-only conversational CFO implemented. Previous baseline checks passed; latest expanded browser and native Node verification is pending. Zo deployment remains outstanding. See [implementation status](docs/IMPLEMENTATION_STATUS.md) and [CI verification](docs/CI_VERIFICATION.md).
+**Status:** The Sites application is publicly deployed as an interactive synthetic-data demo. Finance calculations and guided Sandy are implemented; real financial persistence remains locked pending production identity/isolation verification. The latest engineering checkpoint passed 31 Sites tests. Historical Adonis/Zo status is documented separately in [implementation status](docs/IMPLEMENTATION_STATUS.md) and [CI verification](docs/CI_VERIFICATION.md); those reports are not evidence of a verified personal-data release.
 
 **Local setup:** Node.js 24+, npm 11+, then run `npm ci`, copy `.env.example` to `.env`, `node ace generate:key`, `node ace migration:run`, and `npm run dev`.
 
