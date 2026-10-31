@@ -9,7 +9,8 @@ import FitMoney from '~/components/fit_money'
 import SandyAvatar from '~/components/sandy_avatar'
 import AppLayout from '~/layouts/app'
 import FinancialPlanning from '~/components/financial_planning'
-import { TransactionManager, ValuationManager } from '~/components/financial_record_editor'
+import { TransactionManager } from '~/components/financial_record_editor'
+import AccountsPanel from '~/components/accounts_panel'
 
 interface DashboardProps {
   accounts: { id: number; name: string; kind: 'asset' | 'liability'; balanceCents: number }[]
@@ -63,7 +64,7 @@ const pageText: Record<View, { eyebrow: string; title: string; detail: string }>
   wealth: {
     eyebrow: 'THE BIG PICTURE',
     title: 'Accounts',
-    detail: 'Cash, assets and debts, in one place.',
+    detail: 'Everything you own and owe.',
   },
 }
 const money = formatSgd
@@ -226,10 +227,6 @@ export default function Dashboard(props: DashboardProps) {
   const reviewLabel=priority?.code==='cash_shortfall'||priority?.code==='past_due_bills'?'Review bills':priority?.code.startsWith('goal_')?'Review goals':'Review budgets'
   const descriptor = pageText[view]
   const recorded = accounts.length > 0 || valuations.length > 0
-  const assetsTotal = financialPosition.assetsCents
-  const debtTotal = financialPosition.liabilitiesCents
-  const wealthBase = Math.max(0, assetsTotal) + Math.max(0, debtTotal)
-  const share = wealthBase ? Math.min(100, Math.max(0, (Math.max(0, assetsTotal) / wealthBase) * 100)) : 0
 
   return <Page title={descriptor.title} hideTitle>
     <div className={'cfo-workspace workspace-'+view+(view==='overview'?' clarity-overview':'')}>
@@ -292,37 +289,8 @@ export default function Dashboard(props: DashboardProps) {
         <details className="acorra-details cfo-card"><summary>Financial health <span>{planning.insights.length} signals</span></summary><Insights insights={planning.insights}/></details>
       </>}
 
-      {view === 'wealth' && <>
-        <div className="cfo-grid">
-          <section className="cfo-card cfo-hero cfo-span-7">
-            <div className="cfo-hero-inner">
-              <span className="cfo-eyebrow">ASSETS MINUS DEBTS</span>
-              <div className="cfo-hero-number"><FitMoney>{recorded ? money(financialPosition.netWorthCents) : 'No records yet'}</FitMoney></div>
-              <p className="cfo-hero-text">The sum of your recorded assets less debts. Update manual valuations periodically.</p>
-            </div>
-          </section>
-          <section className="cfo-card cfo-span-5">
-            <div className="cfo-card-header"><h2>Balance composition</h2></div>
-            <div className="cfo-wealth-split">
-              <div className="cfo-donut" aria-label="Recorded assets compared with liabilities" style={{background: wealthBase ? 'conic-gradient(#497758 0% ' + share + '%, #c3ad78 ' + share + '% 100%)' : 'var(--cfo-stroke)'}}>
-                <div className="cfo-donut-hole">SGD</div>
-              </div>
-              <div>
-                <div className="cfo-inline-metric"><div className="cfo-inline-metric-label">Assets</div><strong>{money(assetsTotal)}</strong></div>
-                <div className="cfo-inline-metric"><div className="cfo-inline-metric-label">Liabilities</div><strong>{money(debtTotal)}</strong></div>
-              </div>
-            </div>
-          </section>
-          <section id="summary-accounts" className="cfo-card cfo-span-7">
-            <div className="cfo-card-header"><div><h2>Account balances</h2><p className="cfo-card-note">Opening balances plus posted transactions</p></div></div>
-            {!accounts.length ? <div className="cfo-empty"><strong>No accounts recorded</strong>Use the form to add a bank account or loan.</div> :
-              <div>{accounts.map(a => <div className="cfo-inline-metric" key={a.id}><div className="cfo-inline-metric-label">{a.name}<small>{a.kind === 'asset' ? 'Cash / bank' : 'Loan / debt'}</small></div><strong>{money(a.balanceCents)}</strong></div>)}</div>}
-            <p className="cfo-field-note">Compare these calculated balances with statements to identify differences. Automatic bank reconciliation is not enabled.</p>
-            <details className="acorra-details wealth-add" open={!accounts.length}><summary>Add an account <Plus size={16}/></summary><AccountForm/></details>
-          </section>
-          <div className="cfo-span-5 wealth-other"><ValuationManager valuations={valuations}/><details className="acorra-details cfo-card"><summary>Add an asset or debt <Plus size={16}/></summary><ValuationForm currentDate={currentDate}/></details></div>
-        </div>
-      </>}
+      {view === 'wealth' && <AccountsPanel accounts={accounts} valuations={valuations} transactions={recentTransactions} position={financialPosition} cashCents={availableCashCents} currentDate={currentDate} accountForm={<AccountForm/>} valuationForm={<ValuationForm currentDate={currentDate}/>}/>}
+
     </div>
   </Page>
 }

@@ -2,6 +2,14 @@
 
 The internal app uses a balance-first hierarchy and direct everyday actions inspired by Revolut, retaining Acorra’s forest green, champagne accents and Sandy identity. Reference: https://www.revolut.com/blog/post/revolut-10/ . No Revolut artwork or branding is included.
 
+## Accounts reference alignment — 31 October 2026
+
+Accounts now follows the reference dashboard's unified panel hierarchy: a net-worth banner, compact Bank and cash / Other assets / Owed totals, an asset allocation strip and grouped account rows with right-aligned balances. It replaces the split hero/doughnut/valuation-card layout. The allocation strip compares cash with manually valued assets only; debt is kept separate, and the strip is suppressed for empty or negative asset components. No returns or historical growth are invented.
+
+Cash and loan rows expand to show recent recorded activity. Dated manual asset and debt valuations retain their Update/Delete menus in the appropriate group. A single Account button opens a native modal with cash/loan and manual-value forms, keyboard dismissal and focus return. Successful creation closes the modal and exposes the new row; duplicate-name failures preserve the form. Starting another entry clears stale form status. All values remain exact SGD cents. Explicit investment/CPF/property subtypes are not inferred from names or added to the stored model by this layout change.
+
+Validation: build, TypeScript and all 34 existing Sites tests passed. Synthetic browser journeys checked adding S$123.45 cash, adding a S$100.25 manual debt, updating an asset to S$24,500.55, correct net-worth/group totals, duplicate rejection, account expansion, mobile valuation editing and Escape dismissal. 320px/390px layouts have no horizontal overflow, including exact summary amounts and modal forms. Reference Accounts was inspected directly on 31 October 2026. Financial persistence stays locked in the public demo.
+
 ## Stable mobile workspace width — 31 October 2026
 
 The shared workspace now fills its available parent width, preventing Spending and other mobile pages from shrinking to their current content. Existing maximum-width rules still constrain settings/profile and desktop layouts. At a 640px test frame, Spending previously occupied only 336px; it now occupies the available 593px with 16px side gutters, both before and after expanding the transaction form. At 390px it occupies 343px and opening transaction actions introduces no horizontal overflow. Sites build passed. The earlier Sandy-specific sizing remains compatible.

@@ -80,12 +80,11 @@ export function TransactionManager({ transactions, accounts, categories }: {
   </section>
 }
 
-export function ValuationManager({ valuations }: { valuations: ManualValuation[] }) {
+export function ValuationManager({ valuations, title = 'Other assets & debts', description = 'These must not duplicate any bank/cash or debt accounts already recorded.', emptyText = 'No additional valuations recorded.' }: { valuations: ManualValuation[]; title?: string | null; description?: string | null; emptyText?: string }) {
   const [editing, setEditing] = useState<number|null>(null)
   return <section className="cfo-card record-card">
-    <h2>Other assets &amp; debts</h2>
-    <p>These must not duplicate any bank/cash or debt accounts already recorded.</p>
-    {valuations.length===0 ? <p>No additional valuations recorded.</p> :
+    <>{title && <h2>{title}</h2>}{description && <p>{description}</p>}</>
+    {valuations.length===0 ? <p className="accounts-empty">{emptyText}</p> :
     valuations.map(v=><div key={v.id} className="record-item">
       <div className="finance-record-row" style={{display:'flex',justifyContent:'space-between',gap:10,alignItems:'center',flexWrap:'wrap'}}>
         <span className="record-description"><i className="activity-icon" aria-hidden="true"><Landmark size={18}/></i><span><strong>{v.name}</strong><small>{v.kind} · Valued {v.asOf}</small></span></span><strong className="record-amount">{price(v.valueCents)}</strong>
