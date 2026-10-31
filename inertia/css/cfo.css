@@ -51,6 +51,8 @@
 .cfo-app .btn--primary:hover { background: var(--cfo-brand); }
 .cfo-app .btn--secondary { background: var(--cfo-surface); color: var(--cfo-ink); border-color: var(--cfo-stroke); }
 .cfo-workspace { display: grid; gap: 22px; }
+/* Fill the mobile page instead of shrinking to the current text or form. */
+.cfo-app .cfo-workspace { width: 100%; min-width: 0; }
 .cfo-page-intro { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .cfo-eyebrow { text-transform: uppercase; font-size: 11px; font-weight: 760; letter-spacing: .115em; color: var(--cfo-brand); }
 .cfo-page-intro h1 { color: var(--cfo-ink); margin: 4px 0 5px; font-size: clamp(26px, 3.2vw, 36px); line-height: 1.2; letter-spacing: -.045em; font-weight: 780; }

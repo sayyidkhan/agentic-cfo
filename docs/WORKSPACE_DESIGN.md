@@ -2,6 +2,10 @@
 
 The internal app uses a balance-first hierarchy and direct everyday actions inspired by Revolut, retaining Acorra’s forest green, champagne accents and Sandy identity. Reference: https://www.revolut.com/blog/post/revolut-10/ . No Revolut artwork or branding is included.
 
+## Stable mobile workspace width — 31 October 2026
+
+The shared workspace now fills its available parent width, preventing Spending and other mobile pages from shrinking to their current content. Existing maximum-width rules still constrain settings/profile and desktop layouts. At a 640px test frame, Spending previously occupied only 336px; it now occupies the available 593px with 16px side gutters, both before and after expanding the transaction form. At 390px it occupies 343px and opening transaction actions introduces no horizontal overflow. Sites build passed. The earlier Sandy-specific sizing remains compatible.
+
 ## Stable wide Sandy chat — 31 October 2026
 
 The chat workspace now explicitly fills its available container width at every breakpoint. Auto inline margins previously let a narrow-screen flex child shrink to its contents, so expanding the Guided mode explanation widened the entire card. The shared CSS fix keeps the wider layout for both disclosure states and later chat content.
