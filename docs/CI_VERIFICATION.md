@@ -1,27 +1,10 @@
 # Initial Foundation Verification
 
-Automated checks performed by GitHub Actions on 2026-10-29 02:40 UTC.
+Automated checks performed by GitHub Actions on 2026-10-31 10:02 UTC.
 
 - **Generate app key:** PASS
 - **Run migrations:** PASS
-- **Typecheck and codegen:** FAIL
-
-<details><summary>Typecheck and codegen logs</summary>
-
-\`\`\`
-
-> agentic-cfo-starter@0.0.0 typecheck
-> node ace codegen && tsc --noEmit && tsc --noEmit --project inertia/tsconfig.json
-
-[ info ] loading hooks...
-[ info ] generating indexes...
-[ info ] codegen: created 6 file(s)
-[ info ] tuyau: created api client registry (./.adonisjs/client/registry) (9.11 ms)
-[ success ] Codegen files generated
-inertia/components/financial_planning.tsx(30,95): error TS6133: 'availableCashCents' is declared but its value is never read.
-\`\`\`
-</details>
-
+- **Typecheck and codegen:** PASS
 - **Unit tests:** PASS
 - **Authenticated-route smoke tests:** PASS
 - **Production build:** PASS
@@ -31,22 +14,24 @@ inertia/components/financial_planning.tsx(30,95): error TS6133: 'availableCashCe
 <details><summary>Full browser journey and user isolation logs</summary>
 
 \`\`\`
-  - waiting for getByRole('heading', { name: 'Overview', exact: true }) to be visible
+[31mℹ TimeoutError: locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for getByRole('link', { name: /Get started/ })
 [39m
 
- ⁃ at Object.executor [33m(tests/browser/finance_journey.spec.ts:20:72)[39m
+ ⁃ at Object.executor [33m(tests/browser/finance_journey.spec.ts:21:59)[39m
 
-   [2m15[22m [2m┃[22m        email[34m:[0m [32m'financial-journey@example.test'[0m[34m,[0m
    [2m16[22m [2m┃[22m        password[34m:[0m [32m'TestPassword123!'[0m[34m,[0m
    [2m17[22m [2m┃[22m      })
    [2m18[22m [2m┃[22m      [31mawait[0m browserContext[34m.[0m[35mloginAs[0m(user)
    [2m19[22m [2m┃[22m      [31mconst[0m page [34m=[0m [31mawait[0m [35mvisit[0m([32m'/dashboard'[0m)
- [41m❯ 20 ┃      await page.getByRole('heading', { name: 'Overview', exact: true }).waitFor()[49m
-   [2m21[22m [2m┃[22m      [31mawait[0m page[34m.[0m[35mgetByRole[0m([32m'link'[0m[34m,[0m { name[34m:[0m [34m/Get started/[0m })[34m.[0m[35mclick[0m()
+   [2m20[22m [2m┃[22m      [31mawait[0m page[34m.[0m[35mgetByRole[0m([32m'heading'[0m[34m,[0m { name[34m:[0m [32m'Overview'[0m[34m,[0m exact[34m:[0m [36mtrue[0m })[34m.[0m[35mwaitFor[0m()
+ [41m❯ 21 ┃      await page.getByRole('link', { name: /Get started/ }).click()[49m
    [2m22[22m [2m┃[22m      [31mawait[0m page[34m.[0m[35mgetByRole[0m([32m'heading'[0m[34m,[0m { name[34m:[0m [32m'Wealth'[0m[34m,[0m exact[34m:[0m [36mtrue[0m })[34m.[0m[35mwaitFor[0m()
    [2m23[22m [2m┃[22m  
    [2m24[22m [2m┃[22m      [90m// Create a real account using the React/Inertia form.
    [2m25[22m [2m┃[22m  [0m    [31mawait[0m page[34m.[0m[35mgetByLabel[0m([32m'Account name'[0m)[34m.[0m[35mfill[0m([32m'Everyday bank'[0m)
+   [2m26[22m [2m┃[22m      [31mawait[0m page[34m.[0m[35mgetByLabel[0m([32m'Opening balance (SGD)'[0m)[34m.[0m[35mfill[0m([32m'4000.00'[0m)
 
  ⁃ at async #wrapTestInTimeout [33m(node_modules/@japa/core/build/index.js:680:4)[39m
  ⁃ at async TestRunner.run [33m(node_modules/@japa/core/build/index.js:710:4)[39m
@@ -61,8 +46,6 @@ inertia/components/financial_planning.tsx(30,95): error TS6133: 'availableCashCe
 [1/2]─
 
 ❯ Acorra browser journey / logged-in users only see their own bank and chat records
-
-::error file=tests/browser/finance_journey.spec.ts,title=Acorra browser journey / a working professional can build a budget and move through the financial workspace,line=20,column=72::locator.waitFor: Timeout 30000ms exceeded.%0ACall log:%0A  - waiting for getByRole('heading', { name: 'Overview', exact: true }) to be visible%0A
 
 [31mℹ TimeoutError: locator.waitFor: Timeout 30000ms exceeded.
 Call log:
