@@ -10,9 +10,9 @@ A personal finance application helping **working professionals** manage monthly 
 
 ## Current product structure
 
-Summary owns financial highlights and current net worth; Activity owns transactions; Budget owns spending limits, goals and bills; Sandy provides read-only guidance. Mobile navigation is Summary · Activity · Sandy · Budget · Profile, with Settings inside Profile. Desktop retains direct Profile and Settings links. Net-worth/account detail lives under Summary.
+Overview owns financial highlights and current net worth; Spending owns transactions; Plan owns spending limits, goals and bills; Sandy provides read-only guidance. Mobile navigation is Overview · Spending · Sandy · Plan · Profile, with Settings inside Profile. Desktop retains direct Profile and Settings links. Net-worth/account detail lives under Overview.
 
-The [revised PRD v2.0](docs/PRD.md), dated 31 October 2026, is the product baseline for the next dashboard refinement and distinguishes current delivery from proposed enhancements.
+The [revised PRD v2.1](docs/PRD.md), dated 31 October 2026, is the product baseline for the dashboard refinement and distinguishes current delivery from proposed enhancements.
 
 ## MVP pillars
 1. **Budget tracker** — income, expenses, monthly budgets.
@@ -47,7 +47,7 @@ See [Sites verification](docs/SITES_VERIFICATION.md). Build with `npm run build:
 - [ChatGPT Sites compatibility](docs/SITES_COMPATIBILITY.md)
 - [UOB challenge statements](docs/uob-challenge-statements.md)
 
-**Status:** The Sites application is publicly deployed as an interactive synthetic-data demo. Finance calculations and guided Sandy are implemented; real financial persistence remains locked pending production identity/isolation verification. The latest engineering checkpoint passed 31 Sites tests. Historical Adonis/Zo status is documented separately in [implementation status](docs/IMPLEMENTATION_STATUS.md) and [CI verification](docs/CI_VERIFICATION.md); those reports are not evidence of a verified personal-data release.
+**Status:** The Sites application is publicly deployed as an interactive synthetic-data demo. Finance calculations and guided Sandy are implemented; real financial persistence remains locked pending production identity/isolation verification. The latest engineering checkpoint passed 34 Sites tests. Historical Adonis/Zo status is documented separately in [implementation status](docs/IMPLEMENTATION_STATUS.md) and [CI verification](docs/CI_VERIFICATION.md); those reports are not evidence of a verified personal-data release.
 
 **Local setup:** Node.js 24+, npm 11+, then run `npm ci`, copy `.env.example` to `.env`, `node ace generate:key`, `node ace migration:run`, and `npm run dev`.
 

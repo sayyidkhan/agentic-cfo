@@ -403,3 +403,27 @@ test('profile photos are private per native identity with safe formats and size 
  assert.equal((await worker.fetch(req('alice'),env)).status,200);
  assert.equal((await worker.fetch(req('alice','DELETE'),env)).status,200);assert.equal((await worker.fetch(req('alice'),env)).status,404);
 });
+
+test('overview budget totals keep unbudgeted spending explicit and preserve risk order',async()=>{
+ const {overviewBudget}=await import('./dist/overview.mjs')
+ const d=derive(syntheticState(date),date).props,p=overviewBudget(d.budgetStatus,d.expenseCents)
+ assert.equal(p.limitCents,270000);assert.equal(p.spentCents,219000);assert.equal(p.remainingCents,51000);assert.equal(p.unbudgetedCents,0)
+ assert.equal(p.highlights[0].categoryId,'4');assert.notEqual(p.highlights,d.budgetStatus)
+ const partial=overviewBudget(d.budgetStatus.slice(0,1),d.expenseCents)
+ assert.equal(partial.unbudgetedCents,177000);assert.equal(partial.remainingCents,8000)
+})
+test('overview handles no budgets, zero limits, overspending and unsafe aggregates',async()=>{
+ const {overviewBudget}=await import('./dist/overview.mjs')
+ assert.equal(overviewBudget([],1234).unbudgetedCents,1234)
+ const b={categoryId:'x',limitCents:0,spentCents:100,remainingCents:-100,percentUsed:100}
+ const p=overviewBudget([b],100);assert.equal(p.remainingCents,-100);assert.equal(p.percentUsed,100);assert.equal(p.overCount,1)
+ assert.throws(()=>overviewBudget([b,b],200),/Duplicate/)
+ assert.throws(()=>overviewBudget([{...b,limitCents:Number.MAX_SAFE_INTEGER},{...b,categoryId:'y',limitCents:1}],200),/safe integer/)
+ assert.throws(()=>overviewBudget([b],99),/exceeds/)
+})
+test('overview prioritises cash shortfalls and overspending without changing source signals',async()=>{
+ const {overviewInsights}=await import('./dist/overview.mjs')
+ const signals=[{code:'past_due_bills',severity:'warning',title:'Bills',detail:''},{code:'budget_Dining',severity:'notice',title:'Near limit',detail:''},{code:'cash_shortfall',severity:'warning',title:'Cash',detail:''},{code:'overbudget_Shopping',severity:'warning',title:'Over',detail:''}]
+ assert.deepEqual(overviewInsights(signals).map(x=>x.code),['cash_shortfall','overbudget_Shopping','past_due_bills','budget_Dining'])
+ assert.equal(signals[0].code,'past_due_bills')
+})

@@ -1,7 +1,8 @@
+import { overviewBudget, overviewInsights } from '../../app/services/finance/overview.js'
 import { formatSgd } from '../../app/services/finance/money.js'
 import { Form } from '@adonisjs/inertia/react'
 import { Link, usePage } from '@inertiajs/react'
-import { AlertCircle, ArrowRight, Plus, ShieldCheck, CalendarDays, MessageCircle, ArrowLeft } from 'lucide-react'
+import { AlertCircle, ArrowRight, Plus, ShieldCheck, CalendarDays, MessageCircle, ArrowLeft, Landmark, ChevronRight } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import Page from '~/components/page'
 import FitMoney from '~/components/fit_money'
@@ -46,23 +47,23 @@ export function viewFromUrl(url: string): View {
 const pageText: Record<View, { eyebrow: string; title: string; detail: string }> = {
   overview: {
     eyebrow: 'YOUR FINANCIAL HOME',
-    title: 'Summary',
-    detail: 'Your net worth, budget health and what needs attention.',
+    title: 'Overview',
+    detail: 'Your month, at a glance.',
   },
   transactions: {
     eyebrow: 'MONEY IN & OUT',
-    title: 'Activity',
+    title: 'Spending',
     detail: 'Every income, expense and transfer in one place.',
   },
   budget: {
     eyebrow: 'MAKE A PLAN',
-    title: 'Budget',
+    title: 'Plan',
     detail: 'Make room for today. Put something aside for tomorrow.',
   },
   wealth: {
     eyebrow: 'THE BIG PICTURE',
-    title: 'Net worth',
-    detail: 'A complete picture of what you own and owe.',
+    title: 'Accounts',
+    detail: 'Cash, assets and debts, in one place.',
   },
 }
 const money = formatSgd
@@ -116,8 +117,8 @@ function TransactionForm({ accounts, categories, currentDate }: Pick<DashboardPr
     <div className="cfo-card-header"><div><h2>Add a transaction</h2><p className="cfo-card-note">Transfers between your own accounts do not count as expenses.</p></div></div>
     {sourceAccounts.length === 0 ? <div className="cfo-empty">
       <strong>Start with a bank or cash account</strong>
-      Add one from Summary before recording transactions.
-      <Link href="/dashboard?view=wealth">Add an account in Summary <ArrowRight size={13}/></Link>
+      Add one in Accounts before recording transactions.
+      <Link href="/dashboard?view=wealth">Add an account <ArrowRight size={13}/></Link>
     </div> :
     <Form route="finance.transactions.store">
       {({ errors, processing }) => <div className="cfo-form-grid">
@@ -140,7 +141,7 @@ function TransactionForm({ accounts, categories, currentDate }: Pick<DashboardPr
         </select></label>}
         <label className="cfo-wide">Note (optional)<input name="note" maxLength={255} placeholder="Groceries, paycheck or transfer"/></label>
         {kind === 'expense' && categories.length === 0 && <p className="cfo-field-note cfo-wide">
-          Add an expense category in Budgets before recording expenses.
+          Add an expense category in Plan before recording expenses.
         </p>}
         <InlineErrors errors={errors}/>
         <button type="submit" className="cfo-action cfo-wide" disabled={processing || (kind === 'expense' && !categories.length)}>
@@ -218,6 +219,11 @@ export default function Dashboard(props: DashboardProps) {
     financialPosition, budgetStatus, valuations, recentTransactions, availableCashCents,
     commitments, goals, planning,
   } = props
+  const pulse=overviewBudget(budgetStatus,expenseCents),signals=overviewInsights(planning.insights),priority=signals[0]
+  const monthLabel=new Intl.DateTimeFormat('en-SG',{month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(month+'-01T00:00:00Z'))
+  const shortDate=(value:string)=>new Intl.DateTimeFormat('en-SG',{day:'numeric',month:'short',timeZone:'UTC'}).format(new Date(value+'T00:00:00Z'))
+  const reviewHref=priority?.code==='cash_shortfall'||priority?.code==='past_due_bills'?'/dashboard?view=budget&section=bills':priority?.code.startsWith('goal_')?'/dashboard?view=budget&section=goals':'/dashboard?view=budget'
+  const reviewLabel=priority?.code==='cash_shortfall'||priority?.code==='past_due_bills'?'Review bills':priority?.code.startsWith('goal_')?'Review goals':'Review budgets'
   const descriptor = pageText[view]
   const recorded = accounts.length > 0 || valuations.length > 0
   const assetsTotal = financialPosition.assetsCents
@@ -226,45 +232,51 @@ export default function Dashboard(props: DashboardProps) {
   const share = wealthBase ? Math.min(100, Math.max(0, (Math.max(0, assetsTotal) / wealthBase) * 100)) : 0
 
   return <Page title={descriptor.title} hideTitle>
-    <div className={'cfo-workspace workspace-'+view}>
+    <div className={'cfo-workspace workspace-'+view+(view==='overview'?' clarity-overview':'')}>
       <header className="cfo-page-intro">
-        <div>{view==='wealth'&&<Link className="summary-back" href="/dashboard"><ArrowLeft size={14}/>Summary</Link>}<div className="cfo-eyebrow">{new Intl.DateTimeFormat('en-SG',{month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(month+'-01T00:00:00Z'))}</div><h1>{descriptor.title}</h1><p>{descriptor.detail}</p></div>
+        <div>{view==='wealth'&&<Link className="summary-back" href="/dashboard"><ArrowLeft size={14}/>Overview</Link>}<div className="cfo-eyebrow">{monthLabel}</div><h1>{descriptor.title}</h1><p>{descriptor.detail}</p></div>
+        {view==='overview'&&<div className="overview-header-actions"><Link href="/dashboard?view=wealth" className="overview-accounts-link"><Landmark size={16}/>Accounts</Link><Link href="/dashboard?view=transactions&add=1" className="overview-add"><Plus size={17}/>Add entry</Link></div>}
       </header>
 
       {view === 'overview' && <>
-        {!recorded && <div className="cfo-card cfo-alert" role="status">
-          <ShieldCheck size={21}/>
-          <div><strong>Welcome to Acorra</strong><p>Add your first account to establish a starting balance. Then record income and spending in Activity, and set a budget in Budget.</p>
-            <Link className="cfo-action" href="/dashboard?view=wealth">Add your first account <ArrowRight size={14}/></Link></div>
-        </div>}
-        <section className="cfo-card acorra-balance-panel" aria-label="Money snapshot"><div className="balance-panel-heading"><span>YOUR MONEY</span><span className="balance-currency">SGD</span></div><div className="acorra-snapshot">
-          <div><span>Recorded cash</span><FitMoney>{money(availableCashCents)}</FitMoney><Link href="/dashboard?view=wealth">View accounts →</Link></div>
-          <div><span>Spent this month</span><FitMoney>{money(expenseCents)}</FitMoney><small>Income {money(incomeCents)}</small></div>
-          <div><span>Est. net worth</span><FitMoney>{recorded?money(financialPosition.netWorthCents):'Not set up'}</FitMoney><Link href="/dashboard?view=wealth">View breakdown →</Link></div>
-        </div>
-        <nav className="acorra-quick-actions" aria-label="Quick actions">
-          <Link href="/dashboard?view=transactions&add=1"><span><Plus size={21}/></span>Add entry</Link>
-          <Link href="/dashboard?view=budget"><span><CalendarDays size={20}/></span>Budget</Link>
-          <Link href="/cfo"><span><MessageCircle size={21}/></span>Ask Sandy</Link>
-        </nav></section>
-        <section className="cfo-card acorra-recent summary-budgets">
-          <div className="cfo-card-header"><h2>Budget highlights</h2><Link href="/dashboard?view=budget">Manage budgets →</Link></div>
-          <BudgetBars budgets={budgetStatus} categories={categories} budgetStatus={budgetStatus} count={3}/>
+        {!recorded && <div className="cfo-card cfo-alert" role="status"><ShieldCheck size={21}/><div><strong>Start with your first account</strong><p>Add a cash or bank balance, then record a transaction and set a monthly budget.</p><Link href="/dashboard?view=wealth" className="cfo-action">Add an account <ArrowRight size={14}/></Link></div></div>}
+        <section className="cfo-card overview-month" aria-label="Monthly financial overview">
+          <div className="overview-month-heading"><span>THIS MONTH</span><span className="overview-period"><CalendarDays size={13}/>{monthLabel}</span></div>
+          <div className="overview-metrics">
+            <div className="overview-spent"><span>Spent this month</span><FitMoney>{money(expenseCents)}</FitMoney><Link href="/dashboard?view=transactions">View spending <ArrowRight size={12}/></Link></div>
+            <div><span>Recorded cash</span><FitMoney>{money(availableCashCents)}</FitMoney><Link href="/dashboard?view=wealth">Cash &amp; bank accounts <ArrowRight size={12}/></Link></div>
+            <div><span>Estimated net worth</span><FitMoney>{recorded?money(financialPosition.netWorthCents):'Not set up'}</FitMoney><Link href="/dashboard?view=wealth">View accounts <ArrowRight size={12}/></Link></div>
+          </div>
+          <div className="overview-budget-pulse">
+            <div className="overview-pulse-label"><strong>Category budgets</strong><span>{budgetStatus.length?Math.round(pulse.percentUsed)+'% used':'No limits set yet'}</span></div>
+            <div className={'overview-progress'+(pulse.remainingCents<0?' is-over':'')} role="progressbar" aria-label="Monthly category budgets used" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(Math.min(100,Math.max(0,pulse.percentUsed)))} aria-valuetext={money(pulse.spentCents)+' spent against '+money(pulse.limitCents)+' in category limits'}><span style={{width:Math.min(100,Math.max(0,pulse.percentUsed))+'%'}}/></div>
+            <div className="overview-pulse-caption"><span>{budgetStatus.length?<>{money(pulse.spentCents)} of {money(pulse.limitCents)} in category limits</>:<>Create a budget to put your spending in context.</>}</span><strong>{budgetStatus.length?(pulse.remainingCents<0?money(-pulse.remainingCents)+' over budget':money(pulse.remainingCents)+' remaining'):''}</strong></div>
+            {pulse.unbudgetedCents>0&&<Link className="overview-coverage" href="/dashboard?view=budget">{money(pulse.unbudgetedCents)} of spending has no category limit <ArrowRight size={12}/></Link>}
+          </div>
+          <div className="overview-flow"><div><span>Income this month</span><strong>{money(incomeCents)}</strong></div><div><span>Income less spending</span><strong>{money(incomeCents-expenseCents)}</strong></div><Link href="/dashboard?view=budget">Review plan <ArrowRight size={14}/></Link></div>
+        </section>
+        <section className="cfo-card overview-categories">
+          <div className="cfo-card-header"><h2>Where your budget stands</h2><Link href="/dashboard?view=budget">Manage <ArrowRight size={13}/></Link></div>
+          <BudgetBars budgets={pulse.highlights} categories={categories} budgetStatus={budgetStatus} count={3}/>
           {budgetStatus.length>3&&<Link className="summary-more" href="/dashboard?view=budget">View all {budgetStatus.length} budgets →</Link>}
         </section>
-        <section className="cfo-card acorra-next">
-          <div className="checkin-eyebrow">A MOMENT WITH SANDY</div><div className="cfo-brand-row"><SandyAvatar size="md"/><div><h2>Your next move</h2><p className="cfo-card-note">{planning.insights.length?planning.insights[0].title:'No immediate risks flagged in these records.'}</p></div></div>
-          {planning.insights.length>0&&<details className="acorra-details"><summary>Review {planning.insights.length} signal{planning.insights.length===1?'':'s'}</summary><Insights insights={planning.insights}/></details>}
-          <div className="acorra-bill-line"><span>Unpaid bills this month <strong>{money(planning.upcomingTotalCents)}</strong></span><Link href="/dashboard?view=budget&section=bills">Review bills →</Link></div>
-          <p className="cfo-card-note">Cash after those bills: {money(planning.cashAfterUpcomingCents)}. Estimate from recorded bills only.</p>
+        <section className="cfo-card overview-sandy" aria-label="Sandy’s check-in">
+          <div className="overview-sandy-heading"><SandyAvatar size="md"/><div><h2>Sandy’s check-in</h2><span>{priority?.severity==='warning'?'Needs attention':priority?'Worth a look':'Your next step'}</span></div>{signals.length>0&&<span className="overview-signal-count">{signals.length} signals</span>}</div>
+          <h3>{priority?.title||(recorded?'Keep your picture up to date.':'Let’s find your starting point.')}</h3>
+          <p>{priority?.detail||(recorded?'No immediate risks flagged in your records. Keep recording expenses and updating balances so the picture stays useful.':'A cash account and a monthly budget are enough to get started. You can add assets and goals as you go.')}</p>
+          <div className="overview-sandy-actions"><Link className="overview-review" href={recorded?reviewHref:'/dashboard?view=wealth'}>{recorded?reviewLabel:'Add an account'}<ArrowRight size={14}/></Link><Link href="/cfo">Ask Sandy <MessageCircle size={14}/></Link></div>
+          {signals.length>1&&<details className="acorra-details overview-other-signals"><summary>{signals.length-1} more signal{signals.length>2?'s':''}</summary><Insights insights={signals.slice(1)}/></details>}
         </section>
-        <section className="cfo-card summary-bills">
-          <div className="cfo-card-header"><h2>Upcoming bills</h2><Link href="/dashboard?view=budget&section=bills">Manage bills →</Link></div>
-          {planning.upcoming.length?<div className="summary-list">{planning.upcoming.slice(0,3).map(b=><Link key={b.id} href="/dashboard?view=budget&section=bills"><span><strong>{b.name}</strong><small>{b.dueOn<currentDate?'Overdue · ': 'Due '}{b.dueOn}</small></span><strong>{money(b.amountCents)}</strong></Link>)}</div>:<div className="cfo-empty">No unpaid bills recorded this month.</div>}
+        <section className="cfo-card overview-bills">
+          <div className="cfo-card-header"><h2>Bills this month</h2><Link href="/dashboard?view=budget&section=bills">View bills <ArrowRight size={13}/></Link></div>
+          <div className="overview-card-total"><strong>{money(planning.upcomingTotalCents)}</strong><span>recorded unpaid</span></div>
+          {planning.upcoming.length?<div className="overview-detail-list">{planning.upcoming.slice(0,3).map(b=><Link key={b.id} href="/dashboard?view=budget&section=bills"><span className={'overview-date'+(b.dueOn<currentDate?' is-overdue':'')}><b>{b.dueDay}</b><small>{new Intl.DateTimeFormat('en-SG',{month:'short',timeZone:'UTC'}).format(new Date(b.dueOn+'T00:00:00Z'))}</small></span><span><strong>{b.name}</strong><small>{b.dueOn<currentDate?'Past due · confirm payment':'Due '+shortDate(b.dueOn)}</small></span><strong>{money(b.amountCents)}</strong></Link>)}</div>:<div className="cfo-empty">No unpaid bills recorded this month.</div>}
+          <div className="overview-bills-footer"><span>Cash after these bills</span><strong>{money(planning.cashAfterUpcomingCents)}</strong><small>Estimate from recorded bills only</small></div>
         </section>
-        <section className="cfo-card summary-goals">
-          <div className="cfo-card-header"><h2>Savings progress</h2><Link href="/dashboard?view=budget&section=goals">Manage goals →</Link></div>
-          {goals.length?<div className="summary-list">{goals.slice(0,3).map(g=><Link key={g.id} href="/dashboard?view=budget&section=goals"><span><strong>{g.name}</strong><small>{money(g.savedCents)} of {money(g.targetCents)} · Target {g.targetDate}</small><progress aria-label={g.name+' savings progress'} max={100} value={Math.min(100,Math.round(100*g.savedCents/g.targetCents))} aria-valuetext={money(g.savedCents)+' of '+money(g.targetCents)}/></span><ArrowRight size={15}/></Link>)}</div>:<div className="cfo-empty">Create a savings goal in Budget to track your progress.</div>}
+        <section className="cfo-card overview-goals">
+          <div className="cfo-card-header"><h2>Savings goals</h2><Link href="/dashboard?view=budget&section=goals">View goals <ArrowRight size={13}/></Link></div>
+          {goals.length?<div className="overview-goal-list">{goals.slice(0,3).map(g=><Link key={g.id} href="/dashboard?view=budget&section=goals"><div><strong>{g.name}</strong><ChevronRight size={15}/></div><div className="overview-goal-amount"><strong>{money(g.savedCents)}</strong><span>of {money(g.targetCents)}</span></div><progress aria-label={g.name+' savings progress'} max={100} value={g.targetCents?Math.min(100,Math.round(100*g.savedCents/g.targetCents)):0} aria-valuetext={money(g.savedCents)+' of '+money(g.targetCents)}/><small>{g.savedCents>=g.targetCents?'Goal reached':money(g.targetCents-g.savedCents)+' to go'} · Target {shortDate(g.targetDate)} {g.targetDate.slice(0,4)}</small></Link>)}</div>:<div className="cfo-empty"><strong>Give your savings a purpose</strong><Link href="/dashboard?view=budget&section=goals">Create your first goal <ArrowRight size={13}/></Link></div>}
+          <p className="overview-goal-note">Goal progress is a plan, not an additional asset.</p>
         </section>
       </>}
 
@@ -274,7 +286,7 @@ export default function Dashboard(props: DashboardProps) {
       </div>}
 
       {view === 'budget' && <>
-        <div className="acorra-tabs" role="group" aria-label="Budget sections">{(['spending','goals','bills'] as const).map(tab=><button key={tab} aria-pressed={planTab===tab} onClick={()=>setPlanTab(tab)}>{tab==='spending'?'Spending':tab==='goals'?'Goals':'Bills'}</button>)}</div>
+        <div className="acorra-tabs" role="group" aria-label="Plan sections">{(['spending','goals','bills'] as const).map(tab=><button key={tab} aria-pressed={planTab===tab} onClick={()=>setPlanTab(tab)}>{tab==='spending'?'Budgets':tab==='goals'?'Goals':'Bills'}</button>)}</div>
         {planTab==='spending'&&<><section className="cfo-card"><div className="cfo-card-header"><h2>Monthly spending limits</h2><span className="cfo-subtle">{month}</span></div><BudgetBars budgets={budgetStatus} categories={categories} budgetStatus={budgetStatus}/></section><details className="acorra-details cfo-card"><summary>Manage budgets & categories <Plus size={16}/></summary><BudgetForms categories={categories} month={month}/></details></>}
         {planTab!=='spending'&&<FinancialPlanning panel={planTab} commitments={commitments} goals={goals} planning={planning} month={month} currentDate={currentDate} availableCashCents={availableCashCents}/>}
         <details className="acorra-details cfo-card"><summary>Financial health <span>{planning.insights.length} signals</span></summary><Insights insights={planning.insights}/></details>
@@ -311,7 +323,6 @@ export default function Dashboard(props: DashboardProps) {
           <div className="cfo-span-5 wealth-other"><ValuationManager valuations={valuations}/><details className="acorra-details cfo-card"><summary>Add an asset or debt <Plus size={16}/></summary><ValuationForm currentDate={currentDate}/></details></div>
         </div>
       </>}
-      <p className="cfo-subtle" style={{paddingBottom:12}}>All figures are in SGD. Financial insights depend on the records you supply and are not professional financial or investment advice. No payments are initiated.</p>
     </div>
   </Page>
 }

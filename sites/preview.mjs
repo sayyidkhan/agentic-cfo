@@ -17,7 +17,10 @@ const server=http.createServer(async(req,res)=>{
  try{
   const origin='http://'+req.headers.host,url=new URL(req.url,origin)
   if(url.pathname==='/__qa/mobile'){
-   res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});res.end('<!doctype html><title>Acorra mobile QA — 390px</title><body style="background:#ddd;margin:24px"><iframe title="Mobile preview" src="/account" style="width:390px;height:844px;border:0;background:white"></iframe></body>');return
+   const width=Math.min(1100,Math.max(320,Number(url.searchParams.get('width'))||390))
+   const pages={overview:'/dashboard',accounts:'/dashboard?view=wealth',spending:'/dashboard?view=transactions',plan:'/dashboard?view=budget',profile:'/account',sandy:'/cfo',settings:'/settings'}
+   const page=pages[url.searchParams.get('page')]||'/account'
+   res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});res.end('<!doctype html><title>Acorra responsive QA — '+width+'px</title><body style="background:#ddd;margin:24px"><iframe title="Mobile preview" src="'+page+'" style="width:'+width+'px;height:844px;border:0;background:white"></iframe></body>');return
   }
   if(url.pathname==='/__qa/visitors'){
    if(req.method==='POST'){

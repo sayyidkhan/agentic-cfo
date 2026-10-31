@@ -1,5 +1,6 @@
 import './css/app.css'
 import './css/cfo.css'
+import './css/overview.css'
 import { client } from './client'
 import { createRoot } from 'react-dom/client'
 import { TuyauProvider } from '@adonisjs/inertia/react'

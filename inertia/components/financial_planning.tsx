@@ -27,7 +27,7 @@ export interface Planning {
 const dollars = formatSgd
 const inputStyle = { display: 'block', width: '100%', padding: 9, borderRadius: 6, border: '1px solid #aeb8c0' }
 
-export default function FinancialPlanning({ commitments, goals, planning, month, currentDate, availableCashCents, panel = 'all' }: {
+export default function FinancialPlanning({ commitments, goals, planning, month, currentDate, panel = 'all' }: {
   panel?: 'all' | 'goals' | 'bills'
   commitments: Commitment[]
   goals: Goal[]

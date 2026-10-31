@@ -2,6 +2,18 @@
 
 The internal app uses a balance-first hierarchy and direct everyday actions inspired by Revolut, retaining Acorra’s forest green, champagne accents and Sandy identity. Reference: https://www.revolut.com/blog/post/revolut-10/ . No Revolut artwork or branding is included.
 
+## Clearer dashboard hierarchy — 31 October 2026
+
+The agreed navigation is **Overview · Spending · Sandy · Plan · Profile** on mobile. Desktop keeps Sandy first. **Accounts** is a supporting page reached from Overview; legacy URLs remain compatible. Plan contains Budgets, Goals and Bills. Spending continues to support income and transfers.
+
+Overview now leads with a monthly spending panel, exact cash and net-worth figures, category-budget coverage, recorded income and net cash flow. The account and spending figures open their detail screens. Accounts and Add entry remain visible in the page header. Category highlights sort overspent/near-limit budgets first. Spending outside budgeted categories is explicit rather than hidden in a reassuring aggregate.
+
+Sandy shows one prioritised signal and its relevant action: cash shortfall first, then overspending, overdue bill confirmation and other notices. Additional signals expand beneath it. Bill dates/status and goal progress use compact rows. Goals never count as additional assets. All monthly figures reuse the deterministic engine; no forecasts or historical trends were invented.
+
+Validation: 34 Sites tests passed, including aggregate category coverage, zero limits, unsafe totals, duplicate rejection and signal ordering. TypeScript passed. Browser evidence below covers exact-cent expense updates, contextual bill links and responsive layouts. Real financial persistence remains locked; test records are synthetic.
+
+The earlier sections below retain the wording and evidence of their milestones.
+
 ## Presentation
 
 - Desktop uses a fixed 208px navigation rail below a full-width 36px workspace/demo header bar. Profile, Settings and sign-in/logout are direct links at the bottom, with a divider above Profile and the brand line at the very bottom, below sign-in/logout. Sandy is the first desktop navigation item; mobile keeps Sandy in the centre. There is no floating desktop account submenu. The content header contains the breadcrumb. Tablet and mobile use five bottom destinations, with Profile after Budget and Sandy in the centre; the header profile menu has been removed. Short desktop windows scroll the navigation links while keeping account links accessible.
