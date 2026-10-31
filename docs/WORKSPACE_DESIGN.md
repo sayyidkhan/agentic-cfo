@@ -2,6 +2,12 @@
 
 The internal app uses a balance-first hierarchy and direct everyday actions inspired by Revolut, retaining Acorra’s forest green, champagne accents and Sandy identity. Reference: https://www.revolut.com/blog/post/revolut-10/ . No Revolut artwork or branding is included.
 
+## Stronger workspace colour and contrast — 31 October 2026
+
+The workspace now uses a deep forest desktop rail with a gold active destination, a richer emerald monthly panel and a warm amber Sandy card. White cards have clearer boundaries against a cool neutral background. Supporting labels are darker; near-limit bars use deep amber, regular progress uses emerald and overspending uses red. Status wording and exact amounts remain visible, so meaning is not conveyed by colour alone. Mobile has a solid emerald active tab and a separate gold Sandy icon. Plan, Spending, Accounts, Profile and Settings inherit the stronger shared palette.
+
+Validation: the build and all 34 existing tests passed. Browser checks covered desktop navigation and Plan selection, 320px/390px Overview fit and exact monetary values sharing one row. Sampled rendered text contrast ratios were 6.36:1 for muted card text, 7.38:1 for budget labels, 6.93:1 for the active Plan control and over 9:1 for sampled desktop navigation states. These samples are not a complete accessibility audit. No financial calculations, data permissions or persistence gates changed.
+
 ## Clearer dashboard hierarchy — 31 October 2026
 
 The agreed navigation is **Overview · Spending · Sandy · Plan · Profile** on mobile. Desktop keeps Sandy first. **Accounts** is a supporting page reached from Overview; legacy URLs remain compatible. Plan contains Budgets, Goals and Bills. Spending continues to support income and transfers.

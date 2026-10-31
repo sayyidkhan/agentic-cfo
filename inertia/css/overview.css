@@ -48,3 +48,112 @@
 @media(max-width:600px){.cfo-app .clarity-overview .cfo-page-intro{align-items:flex-start;flex-wrap:wrap;gap:12px}.overview-header-actions{width:100%;gap:9px}.overview-header-actions>a{flex:1;min-height:44px;padding:10px 12px;font-size:12px}.cfo-app .clarity-overview>.cfo-card{padding:20px;border-radius:17px}.cfo-app .clarity-overview>.overview-month{padding:19px 16px}.overview-month-heading{font-size:9px}.overview-period{font-size:10px}.overview-metrics{grid-template-columns:1fr 1fr 1fr;gap:10px;margin:21px 0}.overview-metrics>div{gap:7px}.overview-metrics>div+div{padding-left:10px}.overview-metrics>div>span{font-size:10px;min-height:28px}.cfo-app .overview-metrics .acorra-money,.cfo-app .overview-metrics .overview-spent .acorra-money{font-size:clamp(15px,4.2vw,22px);letter-spacing:-.055em}.overview-metrics small,.overview-metrics a{font-size:9px;min-height:27px;line-height:1.4}.overview-metrics a svg{display:none}.overview-pulse-label{font-size:11px}.overview-pulse-label>span,.overview-pulse-caption{font-size:10px}.overview-pulse-caption{gap:12px;align-items:flex-start}.overview-pulse-caption>span{max-width:61%}.overview-flow{gap:16px;margin-top:16px;padding-top:16px;flex-wrap:wrap}.overview-flow>div{flex:1;gap:6px}.overview-flow>div>span{font-size:10px}.overview-flow strong{font-size:17px}.overview-flow>a{width:100%;margin:0;min-height:34px;font-size:11px}.cfo-app .clarity-overview .cfo-card-header h2{font-size:16px}.cfo-app .clarity-overview .cfo-card-header a{font-size:11px}.cfo-app .overview-categories .cfo-between{font-size:11px}.cfo-app .overview-categories .cfo-between>strong{font-size:12px}.cfo-app .overview-sandy h3{font-size:21px;margin-top:20px}.overview-sandy>p{font-size:12px}.overview-detail-list strong{font-size:12px}.overview-detail-list small{font-size:10px}.overview-card-total>strong{font-size:28px}.overview-bills-footer{padding:12px;font-size:11px}.overview-bills-footer>strong{font-size:12px}.overview-goal-amount>strong{font-size:23px}}
 
 .overview-metrics>div{position:relative}.overview-metrics>div>a:after{content:"";position:absolute;inset:0;border-radius:8px}
+
+/* Stronger workspace contrast: distinct navigation, surfaces and financial states. */
+.cfo-app,.cfo-app.premium-workspace{--cfo-bg:#edf2f0;--cfo-surface:#fff;--cfo-ink:#102e25;--cfo-muted:#52635d;--cfo-stroke:#d4dfd9;--cfo-brand:#006747;--cfo-brand-2:#005b3e;--cfo-tint:#e0f2e9;--cfo-caution:#9b5109;--cfo-danger:#b53429}
+.cfo-app .cfo-page-intro h1{color:#092b20;font-weight:750}
+.cfo-app .cfo-page-intro p,.cfo-app .cfo-page-intro .cfo-eyebrow{color:#465d53}
+.cfo-app .cfo-card{border:1px solid #d4dfd9;box-shadow:0 3px 12px #0a392509}
+.cfo-app .cfo-card h2,.cfo-app .cfo-card h3{color:#102e25;font-weight:700}
+.cfo-app .cfo-card-header a{color:#006747;font-weight:700}
+.cfo-app .btn--secondary{background:#e3f0e9;color:#005b3e;border:1px solid #b7d5c5}
+.cfo-app .demo-banner{background:#dcebe2;color:#254c3a;border-bottom:1px solid #b9d1c1}
+.cfo-app .workspace-breadcrumb{color:#465d53}
+.cfo-app .acorra-tabs{background:#dce7e0;border:1px solid #c6d8cc}
+.cfo-app .acorra-tabs button{color:#375447}
+.cfo-app .acorra-tabs button[aria-pressed=true]{background:#006747;color:#fff;box-shadow:0 2px 5px #004a321c}
+.cfo-app .cfo-budget-row strong{color:#133c2c;font-weight:700}
+.cfo-app .cfo-budget-row span{color:#435b4e}
+.cfo-app .cfo-budget-track{background:#dfe8e2;height:9px}
+.cfo-app .cfo-budget-fill{background:#007b53}
+.cfo-app .cfo-budget-fill--warn{background:#a55a08}
+.cfo-app .cfo-budget-fill--over{background:#bf372d}
+.cfo-app .cfo-alert--warning{background:#fff0eb;border-color:#edc1b3}
+.cfo-app .cfo-alert strong{color:#772a20}
+.cfo-app .cfo-alert p{color:#59453c}
+.cfo-app :is(.cfo-form-grid,.finance-edit-grid) label{color:#365246}
+.cfo-app :is(.cfo-form-grid,.finance-edit-grid) :is(input,select,textarea){border-color:#bccfc3!important;background:#f8fbf9}
+.cfo-app .record-amount.kind-income{color:#006747}
+.cfo-app .activity-icon.kind-income{background:#00734f;color:#fff}
+.cfo-app .activity-icon.kind-expense{background:#e7ece9;color:#234d39}
+.cfo-app .activity-icon.kind-transfer{background:#e6e9f8;color:#3f4b85}
+.cfo-app .cfo-chat-welcome .cfo-pill{color:#405d45}
+.cfo-app .cfo-suggested-question{background:#eff6f1;border-color:#c9ded0}
+.cfo-app .profile-auth-method,.cfo-app .profile-status,.cfo-app .settings-group>h2{color:#405b4b}
+.cfo-app .profile-row-icon,.cfo-app .settings-option-icon{background:#e1f0e7;color:#006747}
+.cfo-app .plan-totals{background:#e3f1e8;border:1px solid #bcd9c8}
+.cfo-app .plan-totals span,.cfo-app .plan-totals small{color:#365a45}
+.cfo-app .bill-day{background:#006747;color:#fff}
+.cfo-app .planning-card progress::-webkit-progress-bar{background:#dfe8e2}
+.cfo-app .planning-card progress::-webkit-progress-value{background:#007b53}
+.cfo-app .planning-card progress::-moz-progress-bar{background:#007b53}
+/* The monthly panel has a clear focal value, bright labels and an unambiguous track. */
+.cfo-app .clarity-overview>.overview-month{background:linear-gradient(110deg,#063629,#006346);box-shadow:0 6px 20px #093e2620;border:1px solid #004c35}
+.overview-month-heading,.overview-period{color:#e1eee5}
+.overview-metrics>div>span,.overview-metrics small,.overview-metrics a{color:#deebe4}
+.overview-metrics>div>span{font-weight:600}
+.cfo-app .overview-metrics .acorra-money{color:#fff;font-weight:700}
+.cfo-app .overview-metrics .overview-spent .acorra-money{color:#ffdc82}
+.overview-metrics>div+div{border-left-color:#b9d8c74d}
+.overview-budget-pulse,.overview-flow{border-top-color:#b9d8c74d}
+.overview-pulse-label{color:#fff}.overview-pulse-label>strong{font-weight:700}
+.overview-pulse-label>span{background:#ffdc82;color:#3f2d06;font-weight:700;padding:4px 9px;border-radius:6px}
+.overview-progress{background:#032f23;height:10px;box-shadow:inset 0 0 0 1px #aac8b845}
+.overview-progress>span{background:#ffcc57}.overview-progress.is-over>span{background:#ff9a82}
+.overview-pulse-caption{color:#e0ece5}.overview-pulse-caption>strong{color:#ffe08b;font-weight:700}
+.overview-coverage{color:#ffe0a1;font-weight:600}
+.overview-flow>div>span{color:#deebe4}.overview-flow strong{color:#fff;font-weight:700}
+.overview-flow>a{color:#ffdf87;font-weight:700}
+.overview-accounts-link{color:#005b3e;border-color:#aecbb9;background:#fff}
+.overview-add{background:#006747;border-color:#006747}.overview-add:hover{background:#004e35}
+.cfo-app .clarity-overview>.cfo-card:not(.overview-month){border:1px solid #cedcd3;box-shadow:0 3px 12px #0a39250a}
+.cfo-app .overview-categories .cfo-budget-track{height:9px;background:#e1e8e3}
+.cfo-app .overview-categories .cfo-between{color:#153d2b}
+.cfo-app .overview-categories .cfo-between>strong{font-weight:700}
+.cfo-app .overview-categories .cfo-budget-row span{color:#425a4b}
+.cfo-app .clarity-overview>.cfo-card.overview-sandy{background:#fff3d5;border-color:#e7c677;border-top:4px solid #b5770b}
+.cfo-app .overview-sandy-heading h2{color:#533609}.overview-sandy-heading>div>span{color:#74490d;font-weight:600}
+.overview-signal-count{background:#875008;color:#fff;border:0;font-weight:600}
+.cfo-app .overview-sandy h3{color:#3b2c10;font-weight:700}
+.overview-sandy>p{color:#604b25}
+.overview-sandy-actions>a{color:#005b3e;font-weight:700}
+.overview-sandy-actions .overview-review{background:#006747;color:#fff}
+.overview-other-signals{border-top-color:#d7b876}
+.cfo-app .overview-other-signals>summary{color:#67410a}
+.cfo-app .overview-other-signals .cfo-alert strong{color:#663b0a}
+.cfo-app .overview-other-signals .cfo-alert p{color:#604b25}
+.overview-card-total>strong{color:#153c2d;font-weight:700}
+.overview-date{background:#006747;color:#fff}.overview-date>small{color:#e6f5ec}
+.overview-date.is-overdue{background:#a64023;color:#fff}.overview-date.is-overdue>small{color:#fff0e8}
+.overview-detail-list strong{color:#173d2c;font-weight:650}
+.overview-detail-list small{color:#52635d}
+.overview-bills-footer{background:#e2f1e8;border:1px solid #bedac8;color:#264f39}
+.overview-bills-footer>strong{color:#005b3e;font-weight:700}.overview-bills-footer>small{color:#465f50}
+.overview-goal-amount>strong{color:#006747;font-weight:700}
+.overview-goal-amount>span,.overview-goal-list>a>small,.overview-goal-note{color:#52635d}
+.overview-goal-list progress::-webkit-progress-bar{background:#dfe8e2}
+.overview-goal-list progress::-webkit-progress-value{background:#007b53}
+.overview-goal-list progress::-moz-progress-bar{background:#007b53}
+/* Active navigation must be unmistakable on both touch and desktop layouts. */
+@media(min-width:1024px){
+ .cfo-app.premium-workspace .cfo-navigation{background:#082f25;border-right:1px solid #174b39}
+ .cfo-app.premium-workspace .cfo-navigation .rail-brand{color:#fff5da}
+ .cfo-app.premium-workspace .rail-caption{color:#afc9b9}
+ .cfo-app.premium-workspace .cfo-navigation a:not(.rail-brand){color:#d1e2d7;font-weight:600}
+ .cfo-app.premium-workspace .cfo-navigation a:not(.rail-brand):hover{background:#174b39;color:#fff}
+ .cfo-app.premium-workspace .cfo-navigation a[aria-current=page]{background:#ffdc82;color:#173b27;font-weight:750}
+ .cfo-app.premium-workspace .cfo-navigation a.sandy-nav{color:#ffdc82}
+ .cfo-app.premium-workspace .cfo-navigation a.sandy-nav[aria-current=page]{background:#ffdc82;color:#173b27}
+ .cfo-app.premium-workspace .rail-account{background:#082f25;border-top-color:#426451}
+ .cfo-app.premium-workspace .rail-brand-note{color:#b0cabb}
+ .cfo-app.premium-workspace .rail-brand-note strong{color:#e0e9d9}
+}
+@media(max-width:1023px){
+ .cfo-app .cfo-navigation{background:#fff;border-top-color:#c9d8cd;box-shadow:0 -3px 14px #103e2510}
+ .cfo-app .cfo-navigation a{color:#405b4d;font-weight:600}
+ .cfo-app .cfo-navigation a[aria-current=page]{background:#006747;color:#fff;border-radius:12px;font-weight:700}
+ .cfo-app .cfo-navigation a.sandy-nav{color:#7c4f07}
+ .cfo-app .cfo-navigation a.sandy-nav svg{background:#ffdc82;color:#684005}
+ .cfo-app .cfo-navigation a.sandy-nav[aria-current=page]{background:#fff0c5;color:#684005}
+ .cfo-app .cfo-navigation a.sandy-nav[aria-current=page] svg{background:#ffdc82;color:#684005}
+}
