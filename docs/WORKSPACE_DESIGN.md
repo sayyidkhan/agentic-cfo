@@ -2,6 +2,12 @@
 
 The internal app uses a balance-first hierarchy and direct everyday actions inspired by Revolut, retaining Acorra’s forest green, champagne accents and Sandy identity. Reference: https://www.revolut.com/blog/post/revolut-10/ . No Revolut artwork or branding is included.
 
+## Overview heading alignment — 2 November 2026
+
+The Overview intro now has an explicit row layout above the phone breakpoint and a left-aligned full-width column below 768px. Previously its inherited column direction combined with centred alignment between 601–767px, leaving the heading and actions floating in the middle. Phone action buttons now fill an equal-width row beneath the title, aligned with the financial card.
+
+Validation: Sites build passed. Browser checks at 320, 390, 640, 767 and 768px confirmed the heading and card have the same left edge, both action buttons retain 44px height, and the page has no horizontal overflow. This is a presentation-only change.
+
 ## Accounts reference alignment — 31 October 2026
 
 Accounts now follows the reference dashboard's unified panel hierarchy: a net-worth banner, compact Bank and cash / Other assets / Owed totals, an asset allocation strip and grouped account rows with right-aligned balances. It replaces the split hero/doughnut/valuation-card layout. The allocation strip compares cash with manually valued assets only; debt is kept separate, and the strip is suppressed for empty or negative asset components. No returns or historical growth are invented.
