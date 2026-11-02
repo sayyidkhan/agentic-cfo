@@ -176,3 +176,10 @@ Category cards share emerald wallet icons, dark green remaining amounts and neut
 Status tooltips and About Plan explain the meaning: green below 80% used, gold from 80% while within the limit, and red for overspending. Text labels remain visible alongside colour.
 
 Validation: production build and all 35 tests pass. Desktop browser QA confirmed matching card borders, icons and remaining-amount colours. A 320px synthetic scenario showed gold near-limit, green on-track and red overspent cards together, with no horizontal overflow; the info modal displayed the colour explanation.
+
+
+### Equal category filter tabs — 2 November 2026
+
+All, Needs attention and On track now occupy three equal columns. Buttons share a fixed 48px outer height, identical padding and 1px borders. Labels and count badges are separate elements, allowing a long label to wrap inside its allocated column on small screens. Selected styling no longer changes sizing; accessible names retain label plus count.
+
+Validation: production build and whitespace checks pass. Browser measurements confirmed 87×48px for each tab at 320px and 148×48px for each tab on desktop, without clipped content. Selecting Needs attention still filters the cards correctly.

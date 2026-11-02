@@ -367,10 +367,11 @@
 .cfo-app .budget-section-heading h2{display:flex;align-items:center;gap:9px;font-size:19px;line-height:1.3;font-weight:700;letter-spacing:-.5px;color:#103d2b;margin:0}
 .budget-section-heading h2>span{display:grid;place-items:center;min-width:23px;height:23px;background:#dce8df;color:#46614e;border-radius:7px;padding:0 6px;font-size:11px;font-weight:650;letter-spacing:0}
 .budget-section-heading p{font-size:12px;line-height:1.6;color:#52695b;margin:5px 0 0}
-.budget-filters{display:flex;gap:5px;align-items:center}
-.budget-filters>button{display:flex;align-items:center;justify-content:center;gap:6px;min-height:44px;min-width:0;padding:9px 12px;border:1px solid #cbdace;border-radius:9px;background:#fff;color:#3f5c49;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
-.budget-filters>button>span{display:grid;place-items:center;min-width:18px;height:18px;border-radius:5px;padding:0 4px;background:#e6eee8;font-size:10px;color:#48604f}
-.budget-filters>button[aria-pressed=true]{color:#fff;background:#075d42;border-color:#075d42}.budget-filters>button[aria-pressed=true]>span{background:#ffffff26;color:#fff}
+.budget-filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;align-items:stretch;width:min(100%,456px);flex-shrink:0}
+.budget-filters>button{display:flex;align-items:center;justify-content:center;gap:6px;height:48px;min-height:48px;min-width:0;padding:8px 10px;box-sizing:border-box;border:1px solid #cbdace;border-radius:9px;background:#fff;color:#3f5c49;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
+.budget-filters .budget-filter-label{min-width:0;line-height:1.25;white-space:normal}
+.budget-filters .budget-filter-count{flex-shrink:0;display:grid;place-items:center;min-width:18px;height:18px;border-radius:5px;padding:0 4px;background:#e6eee8;font-size:10px;color:#48604f}
+.budget-filters>button[aria-pressed=true]{color:#fff;background:#075d42;border-color:#075d42}.budget-filters>button[aria-pressed=true]>.budget-filter-count{background:#ffffff26;color:#fff}
 .budget-category-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
 .budget-category-card{--budget-tone:#086547;--budget-soft:#e8f4ed;--budget-bar:linear-gradient(90deg,#006c4c,#15916a);border:1px solid #d3e1d8;border-radius:16px;background:#fff;padding:20px;min-width:0;box-shadow:0 3px 12px #123c2506}
 .budget-category-card.is-near{--budget-tone:#69571e;--budget-soft:#faf2d8;--budget-bar:linear-gradient(90deg,#ccb16b,#e1cd91)}
@@ -397,11 +398,10 @@
  .budget-summary-metrics{gap:10px;margin:21px 0}.budget-summary-metrics>div{gap:8px}.budget-summary-metrics>div+div{padding-left:10px}.budget-summary-metrics>div>span{font-size:10px;min-height:28px}.cfo-app .budget-summary-metrics .acorra-money{font-size:clamp(16px,4.5vw,26px);letter-spacing:-.045em}
  .budget-summary-caption{font-size:10px;gap:8px}.budget-summary-caption>span{text-align:right}.budget-summary-meter{height:8px}
  .budget-section-heading{gap:14px;margin-bottom:14px}.cfo-app .budget-section-heading h2{font-size:18px}.budget-section-heading p{font-size:12px}
- .budget-filters{display:grid;grid-template-columns:.7fr 1.5fr 1fr;width:100%;gap:5px}.budget-filters>button{padding:8px 7px;font-size:11px;gap:4px}
+ .budget-filters{width:100%}.budget-filters>button{padding:6px;font-size:11px;gap:4px}
  .budget-category-grid{grid-template-columns:minmax(0,1fr);gap:12px}.budget-category-card{padding:18px}.budget-category-heading{grid-template-columns:32px minmax(0,1fr) auto;gap:9px}.budget-category-status{grid-column:auto;font-size:10px}.budget-category-amount{margin:16px 0 12px}.budget-category-amount>strong{font-size:25px}.budget-category-footer{font-size:12px}
  .budget-coverage{padding:12px;gap:9px}.budget-coverage strong{font-size:12px}.budget-coverage p{font-size:11px}.budget-coverage-icon{display:none}
 }
-@media(max-width:700px){.budget-filters{grid-template-columns:.65fr 1.5fr 1.15fr;align-items:stretch}.budget-filters>button{white-space:nowrap}}
 @media(max-width:360px){.budget-summary{padding:18px 12px}.budget-summary-metrics{gap:6px}.budget-summary-metrics>div+div{padding-left:6px}.budget-filters>button{padding-inline:5px;gap:4px}}
 
 /* Reserve final widths, expose final figures once, and paint count-up text over them. */

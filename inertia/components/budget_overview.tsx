@@ -60,7 +60,7 @@ export default function BudgetOverview({ budgets, categories, expenseCents }: {
           {key:'all',label:'All',count:budgets.length},
           {key:'attention',label:'Needs attention',count:riskCount},
           {key:'track',label:'On track',count:budgets.length-riskCount},
-        ] as const).map(item=><button key={item.key} type="button" aria-pressed={filter===item.key} onClick={()=>setFilter(item.key)}>{item.label}<span>{item.count}</span></button>)}</div>}
+        ] as const).map(item=><button key={item.key} type="button" aria-label={item.label+' '+item.count} aria-pressed={filter===item.key} onClick={()=>setFilter(item.key)}><span className="budget-filter-label">{item.label}</span><span className="budget-filter-count" aria-hidden="true">{item.count}</span></button>)}</div>}
       </div>
       {!budgets.length ? <div className="budget-page-empty"><Wallet size={30}/><h3>Give your spending a plan</h3><p>Use Manage to choose a category and set your first monthly limit.</p></div> : !shown.length ? <div className="budget-page-empty"><CircleCheck size={28}/><h3>{filter==='attention'?'No categories need attention':'No categories in this view'}</h3><p>{filter==='attention'?'Your recorded category spending is below 80% of each limit.':'Try All to see every category budget.'}</p><button type="button" onClick={()=>setFilter('all')}>Show all budgets</button></div> : <div className="budget-category-grid">{shown.map(b=><BudgetCategoryCard key={filter+':'+b.id} budget={b} name={categories.find(c=>String(c.id)===b.categoryId)?.name || 'Other'}/>)}</div>}
     </section>
