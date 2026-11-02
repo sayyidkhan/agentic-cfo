@@ -2,7 +2,7 @@ import { formatSgd } from '../../app/services/finance/money.js'
 import { Form } from '@adonisjs/inertia/react'
 import { router } from '@inertiajs/react'
 import { useState, useEffect, useRef, type ReactNode } from 'react'
-import {ArrowDownLeft,ArrowUpRight,ArrowLeftRight,Landmark,MoreHorizontal} from 'lucide-react'
+import {ArrowDownLeft,ArrowUpRight,ArrowLeftRight,Landmark,MoreHorizontal,Search} from 'lucide-react'
 
 export interface FinanceAccount { id: number; name: string; kind: 'asset' | 'liability' }
 export interface FinanceCategory { id: number; name: string }
@@ -37,24 +37,31 @@ function RecordActions({label,children}:{label:string;children:ReactNode}){
   return <details className="record-actions" ref={ref}><summary aria-label={label}><MoreHorizontal size={19}/></summary><div onClick={event=>{if((event.target as Element).closest('button')){ref.current?.removeAttribute('open');ref.current?.querySelector('summary')?.focus()}}}>{children}</div></details>
 }
 
-export function TransactionManager({ transactions, accounts, categories }: {
+export function TransactionManager({ transactions, accounts, categories, currentDate }: {
   transactions: FinanceTransaction[]
   accounts: FinanceAccount[]
   categories: FinanceCategory[]
+  currentDate: string
 }) {
   const [editing, setEditing] = useState<number | null>(null)
   const [kind, setKind] = useState<FinanceTransaction['kind']>('expense')
+  const [query,setQuery]=useState(''),[filter,setFilter]=useState<'all'|FinanceTransaction['kind']>('all')
+  const shown=transactions.filter(t=>(filter==='all'||t.kind===filter)&&[t.note,t.bookedOn,t.kind,accounts.find(a=>a.id===t.accountId)?.name,accounts.find(a=>a.id===t.destinationAccountId)?.name,categories.find(c=>c.id===t.categoryId)?.name].join(' ').toLowerCase().includes(query.trim().toLowerCase())).sort((a,b)=>b.bookedOn.localeCompare(a.bookedOn)||b.id-a.id)
+  const dateLabel=(date:string)=>date===currentDate?'Today':new Intl.DateTimeFormat('en-SG',{weekday:'short',day:'numeric',month:'short',timeZone:'UTC'}).format(new Date(date+'T00:00:00Z'))
   const assetAccounts = accounts.filter(a => a.kind === 'asset')
   const beginEdit = (transaction: FinanceTransaction) => {
     setEditing(transaction.id === editing ? null : transaction.id)
     setKind(transaction.kind)
   }
-  return <section className="cfo-card record-card">
-    <div className="cfo-card-header"><h2>Transactions</h2><span className="cfo-pill">{transactions.length} entries</span></div>
-    {transactions.length === 0 && <p>No transactions recorded yet.</p>}
-    {transactions.map(t => <div key={t.id} className="record-item">
+  return <section className="cfo-card record-card spending-ledger" aria-label="Transaction list">
+    <div className="cfo-card-header"><h2>Transactions</h2><span className="spending-entry-count" role="status">{shown.length}{shown.length!==transactions.length?' of '+transactions.length:''} {transactions.length===1?'entry':'entries'}</span></div>
+    <div className="spending-tools"><label className="spending-search"><Search size={17} aria-hidden="true"/><input type="search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search transactions" aria-label="Search transactions"/></label>
+    <div className="spending-filters" role="group" aria-label="Filter transactions">{([{key:'all',label:'All'},{key:'expense',label:'Expenses'},{key:'income',label:'Income'},{key:'transfer',label:'Transfers'}] as const).map(item=><button type="button" key={item.key} aria-pressed={filter===item.key} onClick={()=>setFilter(item.key)}>{item.label}</button>)}</div></div>
+    {!shown.length&&<div className="spending-empty"><strong>{transactions.length?'No matching transactions':'Your transactions start here'}</strong><p>{transactions.length?'Try a different search or type.':'Tap Add to record your first income, expense or transfer.'}</p>{transactions.length>0&&<button type="button" onClick={()=>{setQuery('');setFilter('all')}}>Clear filters</button>}</div>}
+    {shown.map((t,index) => <div key={t.id} className="record-item">
+      {(index===0||shown[index-1].bookedOn!==t.bookedOn)&&<h3 className="spending-date-label">{dateLabel(t.bookedOn)}</h3>}
       <div className="finance-record-row" style={{display:'flex',gap:10,alignItems:'center',justifyContent:'space-between',flexWrap:'wrap'}}>
-        <span className="record-description"><i className={'activity-icon kind-'+t.kind} aria-hidden="true">{t.kind==='income'?<ArrowDownLeft size={19}/>:t.kind==='transfer'?<ArrowLeftRight size={19}/>:<ArrowUpRight size={19}/>}</i><span><strong>{t.note || categories.find(c=>c.id === t.categoryId)?.name || t.kind}</strong><small>{t.bookedOn} · {accounts.find(a=>a.id===t.accountId)?.name || t.kind}</small></span></span>
+        <span className="record-description"><i className={'activity-icon kind-'+t.kind} aria-hidden="true">{t.kind==='income'?<ArrowDownLeft size={19}/>:t.kind==='transfer'?<ArrowLeftRight size={19}/>:<ArrowUpRight size={19}/>}</i><span><strong title={t.note || categories.find(c=>c.id===t.categoryId)?.name || t.kind}>{t.note || categories.find(c=>c.id === t.categoryId)?.name || t.kind}</strong><small>{t.kind==='transfer'?'Transfer':categories.find(c=>c.id===t.categoryId)?.name||(t.kind==='income'?'Income':'Expense')} · {accounts.find(a=>a.id===t.accountId)?.name || t.kind}{t.kind==='transfer'&&t.destinationAccountId?' → '+(accounts.find(a=>a.id===t.destinationAccountId)?.name||'Destination'):''}</small></span></span>
         <strong className={'record-amount kind-'+t.kind}>{t.kind==='expense'?'−':t.kind==='income'?'+':''}{price(t.amountCents)}</strong>
         <RecordActions label={'Actions for '+(t.note||t.kind)}>
           <button className="btn btn--secondary btn--sm" type="button" onClick={()=>beginEdit(t)}>{editing===t.id?'Close':'Edit'}</button>
@@ -74,6 +81,7 @@ export function TransactionManager({ transactions, accounts, categories }: {
           <label>Note<input name="note" defaultValue={t.note ?? ''} style={inputStyle}/></label>
           {Object.values(errors).map((e,i)=><small key={i} role="alert">{e}</small>)}
           <button type="submit" className="btn btn--primary" disabled={processing}>Save changes</button>
+          <button type="button" className="btn btn--secondary" disabled={processing} onClick={()=>setEditing(null)}>Cancel editing</button>
         </div>}
       </Form>}
     </div>)}

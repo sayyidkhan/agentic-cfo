@@ -14,7 +14,7 @@ import FinancialPlanning, { CreateBillForm, CreateGoalForm } from '~/components/
 import PlanActions from '~/components/plan_actions'
 import BudgetOverview from '~/components/budget_overview'
 import RefreshButton from '~/components/refresh_button'
-import { TransactionManager } from '~/components/financial_record_editor'
+import SpendingPage from '~/components/spending_page'
 import AccountsPanel from '~/components/accounts_panel'
 
 interface DashboardProps {
@@ -272,10 +272,10 @@ export default function Dashboard(props: DashboardProps) {
 
   return <Page title={descriptor.title} hideTitle>
     <div className={'cfo-workspace workspace-'+view+(view==='overview'?' clarity-overview':'')}>
-      <header className="cfo-page-intro">
+      {view!=='transactions'&&<header className="cfo-page-intro">
         {view==='budget'?<><div className="cfo-eyebrow">{monthLabel}</div><div className="plan-heading-line"><h1>{descriptor.title}</h1><PlanActions refreshAction={refreshAction} activePanel={planTab} insights={signals} onReview={setPlanTab} budgetForm={<BudgetForms categories={categories} month={month}/>} goalForm={<CreateGoalForm currentDate={currentDate}/>} billForm={<CreateBillForm/>}/></div><p>{descriptor.detail}</p></>:<><div>{view==='wealth'&&<Link className="summary-back" href="/dashboard"><ArrowLeft size={14}/>Overview</Link>}<div className="cfo-eyebrow">{monthLabel}</div><h1>{descriptor.title}</h1><p>{descriptor.detail}</p></div>
-        {view==='overview'&&<div className="overview-header-actions">{refreshAction}<Link href="/dashboard?view=wealth" className="overview-accounts-link"><Landmark size={16}/>Accounts</Link><Link href="/dashboard?view=transactions&add=1" className="overview-add"><Plus size={17}/>Add entry</Link></div>}{view==='transactions'&&refreshAction}</>}
-      </header>
+        {view==='overview'&&<div className="overview-header-actions">{refreshAction}<Link href="/dashboard?view=wealth" className="overview-accounts-link"><Landmark size={16}/>Accounts</Link><Link href="/dashboard?view=transactions&add=1" className="overview-add"><Plus size={17}/>Add entry</Link></div>}</>}
+      </header>}
 
       {view === 'overview' && <>
         {!recorded && <div className="cfo-card cfo-alert" role="status"><ShieldCheck size={21}/><div><strong>Start with your first account</strong><p>Add a cash or bank balance, then record a transaction and set a monthly budget.</p><Link href="/dashboard?view=wealth" className="cfo-action">Add an account <ArrowRight size={14}/></Link></div></div>}
@@ -305,10 +305,7 @@ export default function Dashboard(props: DashboardProps) {
         </section>
       </>}
 
-      {view === 'transactions' && <div className="cfo-grid">
-        <div className="cfo-span-12 transaction-entry"><details className="acorra-details cfo-card" open={recentTransactions.length===0||new URLSearchParams(url.split('?')[1]).has('add')}><summary>Add a transaction <Plus size={16}/></summary><TransactionForm accounts={accounts} categories={categories} currentDate={currentDate}/></details></div>
-        <div className="cfo-span-12 transaction-records"><TransactionManager transactions={recentTransactions} accounts={accounts} categories={categories}/></div>
-      </div>}
+      {view==='transactions'&&<SpendingPage monthLabel={monthLabel} currentDate={currentDate} incomeCents={incomeCents} expenseCents={expenseCents} transactions={recentTransactions} accounts={accounts} categories={categories} refreshAction={refreshAction} createForm={<TransactionForm accounts={accounts} categories={categories} currentDate={currentDate}/>} openAdd={new URLSearchParams(url.split('?')[1]).has('add')}/>}
 
       {view === 'budget' && <>
         <div className="acorra-tabs" role="group" aria-label="Plan sections">{(['spending','goals','bills'] as const).map(tab=><button key={tab} aria-pressed={planTab===tab} onClick={()=>setPlanTab(tab)}>{tab==='spending'?'Budgets':tab==='goals'?'Goals':'Bills'}<span className="plan-section-count">{tab==='spending'?budgetStatus.length:tab==='goals'?goals.length:commitments.length}</span></button>)}</div>

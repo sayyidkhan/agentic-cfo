@@ -200,3 +200,10 @@ Validation: production build and whitespace checks pass. Browser measurements co
 - Public demo refresh recalculates the existing in-tab records; it never reloads the browser, resets the sample state or writes records. Saved workspaces request their current authenticated data and report failures without claiming success.
 - Accessible action labels, pending protection, status/error feedback and 44px phone targets. The Plan toolbar wraps on very narrow screens.
 - Browser-verified refresh retained a new synthetic transaction and an unsaved note, preserved the Needs attention filter, replayed synchronized counters, and fit all three pages at 320px without horizontal overflow. Adapter tests cover async success/failure and absence of writes/navigation.
+
+### Spending mobile layout — 2 November 2026
+- Replaced the centered, wrapping intro and oversized Add disclosure with a compact left-aligned heading, Refresh and Add toolbar. Adding a transaction uses a focused native dialog that closes after a successful insert; errors remain in the form.
+- A small Spent / Income / Net flow strip puts the monthly context above the ledger without another large hero. Transfers are excluded, using existing calculated totals.
+- Added search across notes, date, type, categories and source/destination accounts, plus equal-width All / Expenses / Income / Transfers filters and a matching-entry count. Rows are ordered/grouped by date, with clear signed amounts and account/category metadata. Edits retain their existing form and now offer a direct Cancel action.
+- Preserved page width, all finance behavior, Refresh, navigation and other pages. Mobile rows have less padding; search/form inputs use 16px text to avoid iPhone focus zoom and actions retain 44px touch targets.
+- Browser checks covered 390px and 320px with no horizontal overflow, combined search/filter and empty-state recovery, successful add with automatic dialog closure, editing and refresh preserving the current search and new record.
