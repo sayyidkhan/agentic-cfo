@@ -21,11 +21,10 @@ export default function PlanActions({activePanel,insights,budgetForm,goalForm,bi
   <button type="button" className="plan-manage-button" onClick={openManage}><Plus size={16}/>Manage</button>
   <button type="button" className={'plan-icon-button plan-alert-button'+(warnings?' has-warning':'')} aria-label={'Financial alerts, '+insights.length+' active'} title="Financial alerts" onClick={()=>{setFilter('all');alerts.current?.showModal()}}><Bell size={19}/><span className={'plan-alert-count'+(!insights.length?' is-empty':'')} aria-hidden="true">{insights.length>99?'99+':insights.length}</span></button>
   <button type="button" className="plan-icon-button" aria-label="About Plan" title="About Plan" onClick={()=>info.current?.showModal()}><Info size={19}/></button>
-  <dialog ref={manage} className="plan-dialog" aria-labelledby="plan-manage-title" onClick={e=>{if(e.target===e.currentTarget)manage.current?.close()}}>
-   <div className="plan-dialog-heading"><div><span>YOUR PLAN</span><h2 id="plan-manage-title">Manage your plan</h2></div><button type="button" className="plan-close" aria-label="Close Manage" onClick={()=>manage.current?.close()}><X size={20}/></button></div>
+  <dialog ref={manage} className="plan-dialog plan-manage-dialog" aria-labelledby="plan-manage-title" onClick={e=>{if(e.target===e.currentTarget)manage.current?.close()}}>
+   <div className="plan-dialog-heading"><div><h2 id="plan-manage-title">Manage plan</h2></div><button type="button" className="plan-close" aria-label="Close Manage" onClick={()=>manage.current?.close()}><X size={20}/></button></div>
    <div className="plan-manage-tabs" role="group" aria-label="Manage plan sections">{(['spending','goals','bills'] as Panel[]).map(tab=><button key={tab} type="button" aria-pressed={formTab===tab} onClick={()=>setFormTab(tab)}>{tab==='spending'?'Budgets':tab==='goals'?'Goals':'Bills'}</button>)}</div>
    <div className="plan-dialog-body" key={formTab+formKey}>{formTab==='spending'?budgetForm:formTab==='goals'?goalForm:billForm}</div>
-   <div className="plan-dialog-footer"><button type="button" className="btn btn--secondary" onClick={()=>manage.current?.close()}>Done</button></div>
   </dialog>
   <dialog ref={alerts} className="plan-dialog plan-alert-dialog" aria-labelledby="plan-alerts-title" onClick={e=>{if(e.target===e.currentTarget)alerts.current?.close()}}>
    <div className="plan-dialog-heading"><div><span>{insights.length} ACTIVE</span><h2 id="plan-alerts-title">Financial alerts</h2></div><button type="button" className="plan-close" aria-label="Close alerts" onClick={()=>alerts.current?.close()}><X size={20}/></button></div>

@@ -3,7 +3,7 @@ import { formatSgd } from '../../app/services/finance/money.js'
 import { Form } from '@adonisjs/inertia/react'
 import { Link, usePage } from '@inertiajs/react'
 import { AlertCircle, ArrowRight, Plus, ShieldCheck, CalendarDays, MessageCircle, ArrowLeft, Landmark, ChevronRight } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Page from '~/components/page'
 import FitMoney from '~/components/fit_money'
 import SandyAvatar from '~/components/sandy_avatar'
@@ -155,27 +155,37 @@ function TransactionForm({ accounts, categories, currentDate }: Pick<DashboardPr
 }
 
 function BudgetForms({ categories, month }: Pick<DashboardProps, 'categories' | 'month'>) {
-  return <section className="cfo-card">
-    <div className="cfo-card-header"><div><h2>Set your limits</h2><p className="cfo-card-note">Create spending categories, then give each a monthly allowance.</p></div></div>
-    <Form route="finance.categories.store">
-      {({errors, processing}) => <div className="cfo-form-grid">
-        <label className="cfo-wide">New category<input name="name" maxLength={80} required placeholder="Dining, transport, shopping"/></label>
-        <InlineErrors errors={errors}/>
-        <button className="cfo-action cfo-action--quiet cfo-wide" type="submit" disabled={processing}><Plus size={15}/> Add category</button>
-      </div>}
-    </Form>
-    <div style={{borderTop:'1px solid var(--cfo-stroke)', margin:'24px 0'}}/>
+  const [categoryId, setCategoryId] = useState('')
+  const [addingCategory, setAddingCategory] = useState(!categories.length)
+  const knownIds = useRef(categories.map(c => c.id))
+  useEffect(() => {
+    const added = categories.find(c => !knownIds.current.includes(c.id))
+    knownIds.current = categories.map(c => c.id)
+    if (added) { setCategoryId(String(added.id)); setAddingCategory(false) }
+  }, [categories])
+  return <section className="plan-budget-form">
+    <p className="plan-form-intro">Choose a category and set its monthly limit.</p>
     <Form route="finance.budgets.store">
-      {({errors, processing}) => <div className="cfo-form-grid">
-        <label>Category<select name="categoryId" defaultValue="" required><option value="" disabled>Select category</option>
+      {({errors, processing}) => <div className="cfo-form-grid plan-budget-grid">
+        <label className="cfo-wide">Category<select name="categoryId" value={categoryId} onChange={e=>setCategoryId(e.target.value)} required><option value="" disabled>Choose a category</option>
           {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select></label>
         <label>Month<input name="month" type="month" defaultValue={month} required/></label>
-        <label className="cfo-wide">Monthly limit (SGD)<input name="limit" inputMode="decimal" required placeholder="500.00"/></label>
+        <label>Monthly limit (S$)<input name="limit" inputMode="decimal" required placeholder="500.00"/></label>
         <InlineErrors errors={errors}/>
-        <button type="submit" className="cfo-action cfo-wide" disabled={processing || !categories.length}>Save monthly budget</button>
+        <button type="submit" className="cfo-action cfo-wide plan-submit" disabled={processing || !categories.length}>{processing?'Saving…':'Save budget'}</button>
       </div>}
     </Form>
+    <details className="plan-new-category" open={addingCategory} onToggle={e=>setAddingCategory(e.currentTarget.open)}>
+      <summary><Plus size={15}/>Add a category</summary>
+      <Form route="finance.categories.store">
+        {({errors, processing}) => <div className="plan-category-fields">
+          <label>Category name<input name="name" maxLength={80} required placeholder="e.g. Shopping"/></label>
+          <button className="cfo-action cfo-action--quiet" type="submit" disabled={processing}>{processing?'Adding…':'Add category'}</button>
+          <InlineErrors errors={errors}/>
+        </div>}
+      </Form>
+    </details>
   </section>
 }
 

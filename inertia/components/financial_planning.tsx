@@ -27,26 +27,26 @@ export interface Planning {
 const dollars = formatSgd
 const inputStyle = { display: 'block', width: '100%', padding: 9, borderRadius: 6, border: '1px solid #aeb8c0' }
 
-export function CreateBillForm(){return <Form route="finance.commitments.store">
-          {({ errors, processing }) => <div className="finance-edit-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 10, alignItems: 'end' }}>
+export function CreateBillForm(){return <><p className="plan-form-intro">Add a reminder for a recurring monthly bill.</p><Form route="finance.commitments.store">
+          {({ errors, processing }) => <div className="finance-edit-grid plan-bill-fields" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 10, alignItems: 'end' }}>
             <label>Bill name<input name="name" required placeholder="Rent, insurance" style={inputStyle}/></label>
             <label>Amount (S$)<input name="amount" required inputMode="decimal" placeholder="180.00" style={inputStyle}/></label>
             <label>Due day (1–28)<input name="dueDay" type="number" min="1" max="28" step="1" defaultValue="25" required style={inputStyle}/></label>
-            <button className="btn btn--primary" type="submit" disabled={processing}>Add monthly bill</button>
+            <button className="btn btn--primary plan-submit" type="submit" disabled={processing}>{processing?'Adding…':'Add bill'}</button>
             {Object.values(errors).map((e, i) => <small key={i} role="alert">{e}</small>)}
           </div>}
-        </Form>}
+        </Form></>}
 
-export function CreateGoalForm({currentDate}:{currentDate:string}){return <Form route="finance.goals.store">
-          {({ errors, processing }) => <div className="finance-edit-grid" style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(160px, 1fr))',gap:10,alignItems:'end'}}>
+export function CreateGoalForm({currentDate}:{currentDate:string}){return <><p className="plan-form-intro">Set a savings target and track your progress.</p><Form route="finance.goals.store">
+          {({ errors, processing }) => <div className="finance-edit-grid plan-goal-fields" style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(160px, 1fr))',gap:10,alignItems:'end'}}>
             <label>Goal name<input name="name" placeholder="Emergency fund" required style={inputStyle}/></label>
             <label>Target (S$)<input name="target" placeholder="5000" required inputMode="decimal" style={inputStyle}/></label>
             <label>Saved so far (S$)<input name="saved" defaultValue="0" required inputMode="decimal" style={inputStyle}/></label>
             <label>Target date<input name="targetDate" type="date" defaultValue={currentDate} required style={inputStyle}/></label>
-            <button className="btn btn--primary" type="submit" disabled={processing}>Add goal</button>
+            <button className="btn btn--primary plan-submit" type="submit" disabled={processing}>{processing?'Adding…':'Add goal'}</button>
             {Object.values(errors).map((e, i) => <small key={i} role="alert">{e}</small>)}
           </div>}
-        </Form>}
+        </Form></>}
 
 export default function FinancialPlanning({ commitments, goals, planning, month, currentDate, panel = 'all', showCreate = true, showGuidance = true }: {
   panel?: 'all' | 'goals' | 'bills'

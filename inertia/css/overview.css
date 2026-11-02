@@ -262,22 +262,24 @@
 .plan-actions>.plan-icon-button:hover{background:#e4f2e9}
 .plan-alert-count{position:absolute;right:-4px;top:-5px;display:grid;place-items:center;min-width:19px;height:19px;padding:0 5px;border:2px solid #edf2f0;border-radius:20px;background:#9a5b0b;color:#fff;font-size:9px;font-weight:750;line-height:1}
 .has-warning .plan-alert-count{background:#b33327}.plan-alert-count.is-empty{background:#dce8df;color:#3e6149}
-.plan-dialog{margin:auto;max-width:calc(100vw - 32px);text-align:left;border:1px solid #c7d8cc;border-radius:20px;padding:0;width:min(590px,calc(100vw - 32px));max-height:calc(100dvh - 40px);overflow:auto;background:#fff;color:#143c2b;box-shadow:0 20px 100px #06291d45}
+.plan-dialog{margin:auto;max-width:calc(100vw - 24px);text-align:left;border:1px solid #c7d8cc;border-radius:20px;padding:0;width:min(540px,calc(100vw - 24px));max-height:calc(100dvh - 32px);overflow:hidden;background:#fff;color:#143c2b;box-shadow:0 20px 100px #06291d45;font-size:14px;line-height:1.5;letter-spacing:normal}
+.plan-dialog[open]{display:flex;flex-direction:column}
+.plan-dialog-heading,.plan-manage-tabs,.plan-alert-filters,.plan-dialog-footer{flex-shrink:0}
 .plan-dialog::backdrop{background:#082e2566;backdrop-filter:blur(3px)}
-.plan-dialog-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:22px 24px 18px}
+.plan-dialog-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 22px 16px}
 .plan-dialog-heading>div>span{font-size:9px;letter-spacing:.12em;font-weight:700;color:#56725e;display:block;margin-bottom:6px}
 .cfo-app .plan-dialog-heading h2{font-family:inherit;font-size:22px;font-weight:700;letter-spacing:-.6px;margin:0;color:#163d29;line-height:1.25}
 .plan-close{display:grid;place-items:center;width:40px;min-height:44px;flex-shrink:0;border:0;border-radius:50%;background:#edf4ef;color:#345d43;cursor:pointer}
-.plan-manage-tabs{display:flex;gap:5px;padding:0 24px 20px}
-.plan-manage-tabs>button{flex:1;min-width:0;min-height:44px;background:#edf4ef;color:#416149;border:1px solid #d2e0d5;border-radius:10px;font:inherit;font-size:12px;font-weight:650;padding:10px;cursor:pointer}
+.plan-manage-tabs{display:flex;gap:4px;padding:4px;margin:0 22px 18px;background:#edf4ef;border:1px solid #d6e3d9;border-radius:13px}
+.plan-manage-tabs>button{flex:1;min-width:0;min-height:44px;background:#edf4ef;color:#416149;border:0;border-radius:9px;font:inherit;font-size:13px;font-weight:650;padding:9px;cursor:pointer}
 .plan-manage-tabs>button[aria-pressed=true]{background:#006747;color:#fff;border-color:#006747}
-.plan-dialog-body{padding:0 24px 22px;min-width:0}
+.plan-dialog-body{padding:0 22px 22px;min-width:0;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scroll-padding-block:12px}
 .cfo-app .plan-dialog-body>.cfo-card{padding:0;border:0;box-shadow:none;border-radius:0;margin:0}
 .cfo-app .plan-dialog-body .cfo-card-header h2{font-size:16px}
 .cfo-app .plan-dialog-body .cfo-form-grid{margin-top:12px}
-.cfo-app .plan-dialog .finance-edit-grid{grid-template-columns:minmax(0,1fr)!important;gap:15px!important;align-items:stretch!important}
-.plan-dialog .finance-edit-grid label{display:grid;gap:7px;color:#365246;font-size:12px;font-weight:550}
-.plan-dialog .finance-edit-grid input{border:1px solid #bccfc3!important;border-radius:12px!important;background:#f8fbf9;color:#143c2b;min-height:44px;font:inherit;font-size:16px;padding:12px!important}
+.cfo-app .plan-dialog .finance-edit-grid{grid-template-columns:minmax(0,1fr)!important;gap:13px!important;align-items:stretch!important}
+.plan-dialog .finance-edit-grid label{display:grid;gap:6px;color:#365246;font-size:13px;font-weight:550;min-width:0}
+.plan-dialog .finance-edit-grid input{min-width:0;max-width:100%;border:1px solid #bccfc3!important;border-radius:12px!important;background:#f8fbf9;color:#143c2b;min-height:44px;font:inherit;font-size:16px;padding:12px!important}
 .plan-dialog-footer{display:flex;justify-content:flex-end;align-items:center;gap:16px;padding:16px 24px;border-top:1px solid #dce6df;background:#f8fbf9}
 .plan-dialog-footer>.btn{min-height:44px;min-width:80px;cursor:pointer}
 .plan-dialog-footer>a{display:inline-flex;align-items:center;gap:7px;margin-right:auto;min-height:44px;font-size:12px;font-weight:650;color:#006747}
@@ -304,5 +306,30 @@
 .plan-info-list{margin:0}.plan-info-list>div{padding:16px 0;border-top:1px solid #dce7df}.plan-info-list>div:first-child{border:0;padding-top:0}.plan-info-list dt{font-size:14px;font-weight:700;color:#214b32;margin-bottom:7px}.plan-info-list dd{margin:0;font-size:13px;line-height:1.75;color:#48604e}
 @media(max-width:600px){
  .plan-heading-line{gap:8px}.plan-actions{gap:6px}.plan-actions>.plan-manage-button{padding:10px 11px;font-size:12px}.plan-actions>.plan-icon-button{width:44px}
- .plan-dialog-heading{padding:19px 18px 16px}.cfo-app .plan-dialog-heading h2{font-size:20px}.plan-manage-tabs{padding:0 18px 17px}.plan-dialog-body{padding:0 18px 20px}.plan-dialog-footer{padding:13px 18px}.plan-alert-filters{padding:0 18px 17px;gap:5px}.plan-alert-filters>button{padding:8px 10px;font-size:11px}.plan-alert-item{padding:14px}.cfo-app .plan-alert-item h3{font-size:14px}.plan-info-list dd{font-size:12px}
+ .plan-dialog-heading{padding:18px 18px 14px}.cfo-app .plan-dialog-heading h2{font-size:20px}.plan-manage-tabs{padding:4px;margin:0 18px 16px}.plan-dialog-body{padding:0 18px 20px}.plan-dialog-footer{padding:13px 18px}.plan-alert-filters{padding:0 18px 17px;gap:5px}.plan-alert-filters>button{padding:8px 10px;font-size:11px}.plan-alert-item{padding:14px}.cfo-app .plan-alert-item h3{font-size:14px}.plan-info-list dd{font-size:12px}
 }
+
+/* Keep modal tasks short and let the form body scroll without losing navigation. */
+.cfo-app .plan-dialog .plan-form-intro{font-size:13px;line-height:1.55;color:#52675a;margin:0 0 17px;text-align:left}
+.cfo-app .plan-dialog .plan-budget-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:14px!important;margin:0}
+.cfo-app .plan-dialog .plan-budget-grid label{font-size:13px;line-height:1.5;gap:6px;min-width:0;color:#365246}
+.cfo-app .plan-dialog :is(.plan-budget-grid,.plan-category-fields) :is(input,select){width:100%;min-width:0;max-width:100%;height:46px;min-height:46px;border:1px solid #bccfc3!important;border-radius:10px!important;background:#f8fbf9;font:inherit;font-size:16px;font-weight:400;line-height:normal;padding:10px!important;color:#143c2b;box-sizing:border-box;letter-spacing:normal}
+.cfo-app .plan-dialog input:is([type=month],[type=date]){display:block;text-align:left;-webkit-appearance:none;appearance:none}
+.cfo-app .plan-dialog input::-webkit-date-and-time-value{text-align:left;min-height:1.2em}
+.cfo-app .plan-dialog .plan-submit{display:flex;align-items:center;justify-content:center;justify-self:stretch;width:100%;min-height:48px;margin:3px 0 0;padding:12px 16px;border-radius:11px;font:inherit;font-size:14px;font-weight:650;letter-spacing:normal;background:#006747;border:1px solid #006747;color:#fff;cursor:pointer}
+.plan-new-category{margin-top:18px;border-top:1px solid #dce7df;padding-top:4px}
+.plan-new-category>summary{display:flex;align-items:center;gap:7px;min-height:44px;width:fit-content;cursor:pointer;color:#006747;font-size:13px;font-weight:600;list-style:none}
+.plan-new-category>summary::-webkit-details-marker{display:none}
+.plan-new-category[open]>summary svg{transform:rotate(45deg)}
+.plan-category-fields{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:10px;padding:8px 0 1px}
+.plan-category-fields>label{display:grid;gap:6px;min-width:0;color:#365246;font-size:13px;font-weight:550}
+.cfo-app .plan-category-fields>.cfo-action{min-height:46px;padding:10px 12px;border-radius:10px;white-space:nowrap;font-size:12px;font-weight:600}
+.plan-category-fields>:is([role=alert],.cfo-wide){grid-column:1/-1}
+.cfo-app .plan-dialog-body .finance-edit-grid>.plan-submit{margin-top:5px}
+@media(max-height:550px){.plan-dialog{max-height:calc(100dvh - 16px)}.plan-dialog-heading{padding-block:12px}.plan-manage-tabs{margin-bottom:12px}}
+
+@media(max-width:479px){.cfo-app .plan-dialog .plan-budget-grid{grid-template-columns:minmax(0,1fr)!important}}
+
+.cfo-app .plan-dialog :is(.plan-bill-fields,.plan-goal-fields){grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.plan-dialog :is(.plan-bill-fields,.plan-goal-fields)>:is(label:first-child,button,[role=alert]),.plan-dialog .plan-goal-fields>label:nth-child(4){grid-column:1/-1}
+@media(max-width:360px){.cfo-app .plan-dialog :is(.plan-bill-fields,.plan-goal-fields){grid-template-columns:minmax(0,1fr)!important}}
