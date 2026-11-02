@@ -158,3 +158,12 @@ The three monthly budget totals count from zero into their exact recorded values
 The count starts in view, pauses offscreen or in hidden documents, and replays when the summary values change or Budgets is remounted. Category filtering does not restart it. Reduced-motion users receive final figures directly. Assistive technology gets the final amounts and progress values once rather than every animation frame. The existing landing count-up imports the same pure amount interpolation helper without changing its behaviour.
 
 Validation: production build and all 35 tests pass, including a new exact-cent/monotonic endpoint and bar-synchronisation test for normal, overspent, zero-limit, zero-spend, tiny-cent and large-value cases. Browser QA captured zero, intermediate and final figures, confirmed filter stability and replay when returning from Goals, and checked no horizontal overflow at 320px. Final baseline is S$2,700.00 / S$2,190.00 / S$510.00 with 81% displayed usage and an 81.1111% bar.
+
+
+### Category card count-up — 2 November 2026
+
+Dining, Home & essentials and Transport now use the same 1,250ms count-up as the monthly summary. Each card owns one visible-time clock for spent amount, category limit, remaining/over amount, percentage and bar. The independent CSS bar animation is removed, so the bar width follows displayed spending against its final scale. Each filter switch remounts the visible card set to replay those cards; the monthly summary remains mounted and does not restart.
+
+The cards reserve their final text widths and expose canonical figures to assistive technology. Reduced-motion, offscreen pausing, hidden-document pausing and exact-cent endpoints reuse the existing shared implementation. Status labels and filter membership continue to reflect the actual records.
+
+Validation: production build and all 35 tests pass. Browser QA captured zeroed On track and Needs attention cards, then exact endpoints (Transport S$120/S$200/S$80 with a 60% bar). At 390px, the offscreen Transport card stayed at zero until scrolled into view, then completed; all three cards had exact final figures and no horizontal overflow.
