@@ -167,3 +167,12 @@ Dining, Home & essentials and Transport now use the same 1,250ms count-up as the
 The cards reserve their final text widths and expose canonical figures to assistive technology. Reduced-motion, offscreen pausing, hidden-document pausing and exact-cent endpoints reuse the existing shared implementation. Status labels and filter membership continue to reflect the actual records.
 
 Validation: production build and all 35 tests pass. Browser QA captured zeroed On track and Needs attention cards, then exact endpoints (Transport S$120/S$200/S$80 with a 60% bar). At 390px, the offscreen Transport card stayed at zero until scrolled into view, then completed; all three cards had exact final figures and no horizontal overflow.
+
+
+### Refined category status palette — 2 November 2026
+
+Category cards share emerald wallet icons, dark green remaining amounts and neutral green-grey borders. The former brown near-limit treatment is replaced with a champagne-gold progress gradient and restrained gold status badge, using a circle information icon. On-track progress uses emerald; actual overspending retains a red bar, badge and over-budget amount. This keeps category identity consistent while using colour only where it communicates budget status. Status thresholds, calculations, animation timing and filters are unchanged.
+
+Status tooltips and About Plan explain the meaning: green below 80% used, gold from 80% while within the limit, and red for overspending. Text labels remain visible alongside colour.
+
+Validation: production build and all 35 tests pass. Desktop browser QA confirmed matching card borders, icons and remaining-amount colours. A 320px synthetic scenario showed gold near-limit, green on-track and red overspent cards together, with no horizontal overflow; the info modal displayed the colour explanation.

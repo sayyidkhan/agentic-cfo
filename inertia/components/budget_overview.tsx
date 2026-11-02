@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from '@inertiajs/react'
-import { Wallet, CircleCheck, TriangleAlert, ArrowRight } from 'lucide-react'
+import { Wallet, CircleCheck, CircleAlert, TriangleAlert, ArrowRight } from 'lucide-react'
 import { overviewBudget } from '../../app/services/finance/overview.js'
 import { formatSgd } from '../../app/services/finance/money.js'
 import FitMoney from './fit_money'
@@ -21,7 +21,7 @@ function BudgetCategoryCard({budget:b,name}:{budget:Budget;name:string}){
   const state=b.remainingCents<0?'over':b.percentUsed>=80?'near':'track'
   const label=state==='over'?'Over budget':state==='near'?(b.remainingCents===0?'At limit':'Near limit'):'On track'
   return <article className={'budget-category-card is-'+state} ref={ref} data-counting={counting}>
-    <div className="budget-category-heading"><span className="budget-category-icon"><Wallet size={18}/></span><h3>{name}</h3><span className="budget-category-status">{state==='track'?<CircleCheck size={12}/>:<TriangleAlert size={12}/>} {label}</span></div>
+    <div className="budget-category-heading"><span className="budget-category-icon"><Wallet size={18}/></span><h3>{name}</h3><span className="budget-category-status" title={state==='over'?'Spending exceeds this category limit':state==='near'?'80% or more of this category limit is used':'Below 80% of this category limit'}>{state==='track'?<CircleCheck size={12}/>:state==='near'?<CircleAlert size={12}/>:<TriangleAlert size={12}/>} {label}</span></div>
     <div className="budget-category-amount"><strong><CountValue final={formatSgd(b.spentCents)} display={formatSgd(frame.spent)}/></strong><span>of <CountValue final={formatSgd(b.limitCents)} display={formatSgd(frame.budgeted)}/></span></div>
     <div className="budget-category-meter" role="progressbar" aria-label={name+' budget used'} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(Math.min(100,Math.max(0,b.percentUsed)))} aria-valuetext={Math.round(b.percentUsed)+'% used; '+formatSgd(Math.abs(b.remainingCents))+(b.remainingCents<0?' over budget':' remaining')}><span style={{width:frame.bar+'%'}}/></div>
     <div className="budget-category-footer"><strong><CountValue final={formatSgd(Math.abs(b.remainingCents))} display={formatSgd(Math.abs(frame.remaining))}/> {b.remainingCents<0?'over':'left'}</strong><span><CountValue final={Math.round(b.percentUsed)+'% used'} display={Math.round(frame.percent)+'% used'}/></span></div>
