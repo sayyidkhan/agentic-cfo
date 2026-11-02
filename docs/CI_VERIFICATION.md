@@ -1,6 +1,6 @@
 # Initial Foundation Verification
 
-Automated checks performed by GitHub Actions on 2026-11-02 08:48 UTC.
+Automated checks performed by GitHub Actions on 2026-11-02 09:04 UTC.
 
 - **Generate app key:** PASS
 - **Run migrations:** PASS
@@ -14,8 +14,6 @@ Automated checks performed by GitHub Actions on 2026-11-02 08:48 UTC.
 <details><summary>Full browser journey and user isolation logs</summary>
 
 \`\`\`
-[31mℹ TimeoutError: locator.click: Timeout 30000ms exceeded.
-Call log:
   - waiting for getByRole('link', { name: /Get started/ })
 [39m
 
@@ -46,6 +44,8 @@ Call log:
 [1/2]─
 
 ❯ Acorra browser journey / logged-in users only see their own bank and chat records
+
+::error file=tests/browser/finance_journey.spec.ts,title=Acorra browser journey / a working professional can build a budget and move through the financial workspace,line=21,column=59::locator.click: Timeout 30000ms exceeded.%0ACall log:%0A  - waiting for getByRole('link', { name: /Get started/ })%0A
 
 ::error file=tests/browser/finance_journey.spec.ts,title=Acorra browser journey / logged-in users only see their own bank and chat records,line=81,column=62::locator.waitFor: Timeout 30000ms exceeded.%0ACall log:%0A  - waiting for getByRole('heading', { name: 'Meet Sandy.' }) to be visible%0A
 
