@@ -16,7 +16,7 @@
     "format": "prettier --write .",
     "typecheck": "node ace codegen && tsc --noEmit && tsc --noEmit --project inertia/tsconfig.json",
     "build:sites": "node sites/build.mjs",
-    "test:sites": "node --test sites/tests.mjs"
+    "test:sites": "node --test sites/tests.mjs sites/count-up-hook.test.mjs"
   },
   "imports": {
     "#controllers/*": "./app/controllers/*.js",

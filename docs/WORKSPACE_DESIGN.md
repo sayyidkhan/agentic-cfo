@@ -189,3 +189,8 @@ Validation: production build and whitespace checks pass. Browser measurements co
 - A single visible-time clock drives the whole card, including its percentage and progress bar. It mounts when Overview opens and restarts only when the month or displayed totals change.
 - Exact final values remain available to screen readers; reserved number widths prevent layout shifts. Reduced-motion preferences show final values immediately. No financial calculations or persistence change.
 - Verified production build and diff checks, zero-to-final browser values, exact 81.1111% bar endpoint, and 390px mobile layout without horizontal overflow.
+
+### Wait for the app reveal before counting — 2 November 2026
+- Fixed the missed Overview count-up when entering through the landing page: viewport intersection alone starts the 1.25-second counter beneath the 2.55-second entry overlay.
+- Shared count-up now pauses while its route or any ancestor is inert, and observes inert attribute changes to start after the entry overlay fully clears. Tab visibility, viewport visibility and reduced-motion behavior remain intact.
+- Regression tests exercise the actual hook effect: no frames under the cover, exact endpoint after uncover, covered/hidden time excluded, cleanup, and immediate endpoint for reduced motion. Included in both Sites test commands.
