@@ -427,3 +427,23 @@ test('overview prioritises cash shortfalls and overspending without changing sou
  assert.deepEqual(overviewInsights(signals).map(x=>x.code),['cash_shortfall','overbudget_Shopping','past_due_bills','budget_Dining'])
  assert.equal(signals[0].code,'past_due_bills')
 })
+
+test('budget summary count-up ends at exact cents and keeps usage tied to the displayed spending',async()=>{
+ const {budgetCountFrame,COUNT_DURATION}=await import('./dist/count-up.mjs')
+ for(const [limit,spent] of [[270000,219000],[80000,219000],[50000,0],[0,0],[0,9500],[3,1],[999999999,123456789]]){
+  assert.deepEqual(budgetCountFrame(limit,spent,0),{budgeted:0,spent:0,remaining:0,percent:0,bar:0})
+  let previous=budgetCountFrame(limit,spent,0)
+  for(let t=17;t<COUNT_DURATION;t+=17){
+   const frame=budgetCountFrame(limit,spent,t)
+   for(const field of ['budgeted','spent','remaining']){assert.ok(Number.isSafeInteger(frame[field]));assert.ok(Math.abs(frame[field])>=Math.abs(previous[field]))}
+   assert.ok(frame.budgeted<=limit&&frame.spent<=spent)
+   assert.ok(Math.abs(frame.remaining)<=Math.abs(limit-spent))
+   const usage=limit?frame.spent*100/limit:frame.spent?100:0
+   assert.equal(frame.percent,usage);assert.equal(frame.bar,Math.min(100,usage));previous=frame
+  }
+  const expectedPercent=limit?spent*100/limit:spent?100:0
+  const expected={budgeted:limit,spent,remaining:limit-spent,percent:expectedPercent,bar:Math.min(100,expectedPercent)}
+  assert.deepEqual(budgetCountFrame(limit,spent,COUNT_DURATION),expected)
+  assert.deepEqual(budgetCountFrame(limit,spent,COUNT_DURATION+1000),expected)
+ }
+})

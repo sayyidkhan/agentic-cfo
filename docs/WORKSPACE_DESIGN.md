@@ -149,3 +149,12 @@ Category cards use explicit On track / Near limit / At limit / Over budget label
 This adapts the hierarchy of the user’s Vertical Institute reference: a strong monthly panel, compact number context, readable category progress and clear status colours. Its public dashboard.html source was reviewed via GitHub for this pass. Acorra’s identity, data model and persistence boundaries remain unchanged.
 
 Validation: production build and all 34 existing domain/runtime tests passed. Browser checks covered 320px, 390px, 820px and desktop widths, no horizontal overflow, three mobile totals in one row, working filters and tab navigation. Reducing Home & essentials to S$100 produced S$800 budgeted, S$2,190 spent and S$1,390 over budget; its category moved first with an explicit S$1,550 over label. Raising the Dining and Home limits cleared both notices, and the empty Needs attention filter offered a working Show all budgets action.
+
+
+### Budget summary count-up — 2 November 2026
+
+The three monthly budget totals count from zero into their exact recorded values, using the landing page’s shared 1,250ms cubic easing. Their final text widths are reserved to prevent layout shifts and keep the three-column mobile row. The usage caption and summary bar share the same elapsed time and derive from displayed spending against the final budget scale; the previous separate CSS animation on this bar is removed. Category counts, alert severity and underlying finance calculations stay canonical.
+
+The count starts in view, pauses offscreen or in hidden documents, and replays when the summary values change or Budgets is remounted. Category filtering does not restart it. Reduced-motion users receive final figures directly. Assistive technology gets the final amounts and progress values once rather than every animation frame. The existing landing count-up imports the same pure amount interpolation helper without changing its behaviour.
+
+Validation: production build and all 35 tests pass, including a new exact-cent/monotonic endpoint and bar-synchronisation test for normal, overspent, zero-limit, zero-spend, tiny-cent and large-value cases. Browser QA captured zero, intermediate and final figures, confirmed filter stability and replay when returning from Goals, and checked no horizontal overflow at 320px. Final baseline is S$2,700.00 / S$2,190.00 / S$510.00 with 81% displayed usage and an 81.1111% bar.

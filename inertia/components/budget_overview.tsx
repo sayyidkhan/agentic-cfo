@@ -4,6 +4,8 @@ import { Wallet, CircleCheck, TriangleAlert, ArrowRight } from 'lucide-react'
 import { overviewBudget } from '../../app/services/finance/overview.js'
 import { formatSgd } from '../../app/services/finance/money.js'
 import FitMoney from './fit_money'
+import useCountUp from '../hooks/use_count_up'
+import { budgetCountFrame } from '../lib/count_up'
 
 type Budget = { id: string; categoryId: string; limitCents: number; spentCents: number; remainingCents: number; percentUsed: number }
 type Filter = 'all' | 'attention' | 'track'
@@ -18,17 +20,19 @@ export default function BudgetOverview({ budgets, categories, expenseCents }: {
   const summary = overviewBudget(budgets, expenseCents)
   const riskCount = budgets.filter(attention).length
   const shown = summary.highlights.filter(b => filter === 'all' || (filter === 'attention' ? attention(b) : !attention(b)))
+  const {ref:countRef,elapsed,counting}=useCountUp(summary.limitCents+':'+summary.spentCents)
+  const frame=budgetCountFrame(summary.limitCents,summary.spentCents,elapsed)
   const percent = Math.round(summary.percentUsed)
   return <div className="budget-dashboard">
-    {budgets.length > 0 && <section className={'budget-summary'+(summary.remainingCents < 0 ? ' is-over' : '')} aria-label="Monthly category budget summary">
+    {budgets.length > 0 && <section className={'budget-summary'+(summary.remainingCents < 0 ? ' is-over' : '')} aria-label="Monthly category budget summary" ref={countRef} data-counting={counting}>
       <div className="budget-summary-heading"><span><Wallet size={16}/>MONTHLY BUDGET</span><span className={'budget-summary-status'+(riskCount ? ' needs-attention' : '')}>{riskCount ? <TriangleAlert size={13}/> : <CircleCheck size={13}/>} {riskCount ? riskCount+' '+(riskCount===1?'category needs':'categories need')+' attention' : 'All categories on track'}</span></div>
       <div className="budget-summary-metrics">
-        <div><span>Budgeted</span><FitMoney>{formatSgd(summary.limitCents)}</FitMoney></div>
-        <div><span>Spent in budgets</span><FitMoney>{formatSgd(summary.spentCents)}</FitMoney></div>
-        <div className="budget-summary-remaining"><span>{summary.remainingCents < 0 ? 'Over budget' : 'Remaining'}</span><FitMoney>{formatSgd(Math.abs(summary.remainingCents))}</FitMoney></div>
+        <div><span>Budgeted</span><FitMoney display={formatSgd(frame.budgeted)}>{formatSgd(summary.limitCents)}</FitMoney></div>
+        <div><span>Spent in budgets</span><FitMoney display={formatSgd(frame.spent)}>{formatSgd(summary.spentCents)}</FitMoney></div>
+        <div className="budget-summary-remaining"><span>{summary.remainingCents < 0 ? 'Over budget' : 'Remaining'}</span><FitMoney display={formatSgd(Math.abs(frame.remaining))}>{formatSgd(Math.abs(summary.remainingCents))}</FitMoney></div>
       </div>
-      <div className="budget-summary-meter" role="progressbar" aria-label="Total category budget used" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.min(100, Math.max(0, percent))} aria-valuetext={percent+'% used; '+formatSgd(summary.spentCents)+' spent against '+formatSgd(summary.limitCents)}><span style={{width:Math.min(100, Math.max(0, summary.percentUsed))+'%'}}/></div>
-      <div className="budget-summary-caption"><strong>{percent}% used</strong><span>Across {budgets.length} {budgets.length===1?'category':'categories'} · this month</span></div>
+      <div className="budget-summary-meter" role="progressbar" aria-label="Total category budget used" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.min(100, Math.max(0, percent))} aria-valuetext={percent+'% used; '+formatSgd(summary.spentCents)+' spent against '+formatSgd(summary.limitCents)}><span style={{width:frame.bar+'%'}}/></div>
+      <div className="budget-summary-caption"><strong className="count-value"><span className="count-sr">{percent}% used</span><span className="count-size" aria-hidden="true">{percent}% used</span><span className="count-live" aria-hidden="true">{Math.round(frame.percent)}% used</span></strong><span>Across {budgets.length} {budgets.length===1?'category':'categories'} · this month</span></div>
     </section>}
 
     {summary.unbudgetedCents > 0 && <div className="budget-coverage"><span className="budget-coverage-icon"><Wallet size={18}/></span><div><strong>{formatSgd(summary.unbudgetedCents)} outside category budgets</strong><p>Recorded expenses without a matching monthly limit.</p></div><Link href="/dashboard?view=transactions" aria-label="Review spending outside category budgets"><ArrowRight size={18}/></Link></div>}

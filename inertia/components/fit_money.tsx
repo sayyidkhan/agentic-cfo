@@ -1,7 +1,7 @@
 import {useEffect,useRef} from 'react'
 
 /** Keep the full exact amount visible in a narrow metric, including large balances. */
-export default function FitMoney({children}:{children:string}){
+export default function FitMoney({children,display}:{children:string;display?:string}){
  const root=useRef<HTMLElement>(null),text=useRef<HTMLSpanElement>(null)
  useEffect(()=>{
   const outer=root.current,inner=text.current;if(!outer||!inner)return
@@ -17,5 +17,5 @@ export default function FitMoney({children}:{children:string}){
   observer.observe(outer);fit();document.fonts?.ready.then(fit)
   return()=>{disposed=true;observer.disconnect()}
  },[children])
- return <strong className="acorra-money" ref={root}><span ref={text}>{children}</span></strong>
+ return <strong className="acorra-money" ref={root}><span ref={text} className={display===undefined?undefined:"count-value"}>{display===undefined?children:<><span className="count-sr">{children}</span><span className="count-size" aria-hidden="true">{children}</span><span className="count-live" aria-hidden="true">{display}</span></>}</span></strong>
 }
