@@ -8,7 +8,8 @@ import Page from '~/components/page'
 import FitMoney from '~/components/fit_money'
 import SandyAvatar from '~/components/sandy_avatar'
 import AppLayout from '~/layouts/app'
-import FinancialPlanning from '~/components/financial_planning'
+import FinancialPlanning, { CreateBillForm, CreateGoalForm } from '~/components/financial_planning'
+import PlanActions from '~/components/plan_actions'
 import { TransactionManager } from '~/components/financial_record_editor'
 import AccountsPanel from '~/components/accounts_panel'
 
@@ -231,8 +232,8 @@ export default function Dashboard(props: DashboardProps) {
   return <Page title={descriptor.title} hideTitle>
     <div className={'cfo-workspace workspace-'+view+(view==='overview'?' clarity-overview':'')}>
       <header className="cfo-page-intro">
-        <div>{view==='wealth'&&<Link className="summary-back" href="/dashboard"><ArrowLeft size={14}/>Overview</Link>}<div className="cfo-eyebrow">{monthLabel}</div><h1>{descriptor.title}</h1><p>{descriptor.detail}</p></div>
-        {view==='overview'&&<div className="overview-header-actions"><Link href="/dashboard?view=wealth" className="overview-accounts-link"><Landmark size={16}/>Accounts</Link><Link href="/dashboard?view=transactions&add=1" className="overview-add"><Plus size={17}/>Add entry</Link></div>}
+        {view==='budget'?<><div className="cfo-eyebrow">{monthLabel}</div><div className="plan-heading-line"><h1>{descriptor.title}</h1><PlanActions activePanel={planTab} insights={signals} onReview={setPlanTab} budgetForm={<BudgetForms categories={categories} month={month}/>} goalForm={<CreateGoalForm currentDate={currentDate}/>} billForm={<CreateBillForm/>}/></div><p>{descriptor.detail}</p></>:<><div>{view==='wealth'&&<Link className="summary-back" href="/dashboard"><ArrowLeft size={14}/>Overview</Link>}<div className="cfo-eyebrow">{monthLabel}</div><h1>{descriptor.title}</h1><p>{descriptor.detail}</p></div>
+        {view==='overview'&&<div className="overview-header-actions"><Link href="/dashboard?view=wealth" className="overview-accounts-link"><Landmark size={16}/>Accounts</Link><Link href="/dashboard?view=transactions&add=1" className="overview-add"><Plus size={17}/>Add entry</Link></div>}</>}
       </header>
 
       {view === 'overview' && <>
@@ -284,9 +285,8 @@ export default function Dashboard(props: DashboardProps) {
 
       {view === 'budget' && <>
         <div className="acorra-tabs" role="group" aria-label="Plan sections">{(['spending','goals','bills'] as const).map(tab=><button key={tab} aria-pressed={planTab===tab} onClick={()=>setPlanTab(tab)}>{tab==='spending'?'Budgets':tab==='goals'?'Goals':'Bills'}</button>)}</div>
-        {planTab==='spending'&&<><section className="cfo-card"><div className="cfo-card-header"><h2>Monthly spending limits</h2><span className="cfo-subtle">{month}</span></div><BudgetBars budgets={budgetStatus} categories={categories} budgetStatus={budgetStatus}/></section><details className="acorra-details cfo-card"><summary>Manage budgets & categories <Plus size={16}/></summary><BudgetForms categories={categories} month={month}/></details></>}
-        {planTab!=='spending'&&<FinancialPlanning panel={planTab} commitments={commitments} goals={goals} planning={planning} month={month} currentDate={currentDate} availableCashCents={availableCashCents}/>}
-        <details className="acorra-details cfo-card"><summary>Financial health <span>{planning.insights.length} signals</span></summary><Insights insights={planning.insights}/></details>
+        {planTab==='spending'&&<section className="cfo-card"><div className="cfo-card-header"><h2>Monthly spending limits</h2><span className="cfo-subtle">{month}</span></div>{budgetStatus.length?<BudgetBars budgets={budgetStatus} categories={categories} budgetStatus={budgetStatus}/>:<div className="cfo-empty"><strong>No category budgets yet</strong>Use Manage to add a category and set your monthly limit.</div>}</section>}
+        {planTab!=='spending'&&<FinancialPlanning showCreate={false} showGuidance={false} panel={planTab} commitments={commitments} goals={goals} planning={planning} month={month} currentDate={currentDate} availableCashCents={availableCashCents}/>}
       </>}
 
       {view === 'wealth' && <AccountsPanel accounts={accounts} valuations={valuations} transactions={recentTransactions} position={financialPosition} cashCents={availableCashCents} currentDate={currentDate} accountForm={<AccountForm/>} valuationForm={<ValuationForm currentDate={currentDate}/>}/>}

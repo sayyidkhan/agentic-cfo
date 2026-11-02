@@ -120,3 +120,12 @@ Verification: 31 existing tests passed. Browser checks covered desktop Open app,
 ## Expanded app entrance
 
 The landing-to-app entrance now lasts about 2.55 seconds after its first painted frame, replacing the previous 940ms sequence. Twelve gold sparks converge around a larger acorn identity, light rings expand, the Acorra letters enter in sequence, and a 650ms circular curtain reveal opens the workspace. The clock starts after two animation frames so initial click/render work does not consume the visible presentation time; a 120ms timer starts it if animation frames are throttled. The brand remains visible even before animations advance. Slow-load escape, cleanup, focus handoff and reduced-motion bypass remain intact.
+
+
+### Plan toolbar and modal actions — 2 November 2026
+
+Plan now has a top-right Manage button, an alert bell with a numeric active-condition count, and an information button. Manage opens one native dialog with Budgets, Goals and Bills forms; it starts on the currently selected Plan section. Existing record creation, validation and exact-cent calculations are reused. Inline creation disclosures and the bottom financial-health disclosure have been removed from this page.
+
+The bell opens current financial alerts with All, Warnings and Notices filter buttons and counts. Each alert offers a contextual Review action that closes the dialog and selects the appropriate Plan tab. Reviewing does not clear a condition; changing its underlying records recalculates the badge. This is an active-condition count, not an unread or push-notification system. The info dialog explains budgets, goals, bill reminders, cash-after-bills and the count. Dialogs support Escape, native focus trapping and focus return, and scroll within the viewport.
+
+Validation: production Sites build and all 34 domain/runtime tests pass. Browser checks verified budget saves change the badge (2 to 1), overspending produces one warning and one notice, filter empty states, info content, contextual review, goal creation at S$20.05 / S$100.25 and bill creation at S$42.35 (unpaid total S$317.35; cash after bills S$21,092.65). Mobile toolbar has 44px targets with no horizontal overflow at 320px and 390px. Dialogs were checked for viewport centring and internal scrolling; Escape returns focus to Manage. Desktop toolbar aligns with the content’s right edge. Duplicate-category validation retains the entered name and open modal; a new category becomes selectable immediately.

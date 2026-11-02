@@ -27,8 +27,31 @@ export interface Planning {
 const dollars = formatSgd
 const inputStyle = { display: 'block', width: '100%', padding: 9, borderRadius: 6, border: '1px solid #aeb8c0' }
 
-export default function FinancialPlanning({ commitments, goals, planning, month, currentDate, panel = 'all' }: {
+export function CreateBillForm(){return <Form route="finance.commitments.store">
+          {({ errors, processing }) => <div className="finance-edit-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 10, alignItems: 'end' }}>
+            <label>Bill name<input name="name" required placeholder="Rent, insurance" style={inputStyle}/></label>
+            <label>Amount (S$)<input name="amount" required inputMode="decimal" placeholder="180.00" style={inputStyle}/></label>
+            <label>Due day (1–28)<input name="dueDay" type="number" min="1" max="28" step="1" defaultValue="25" required style={inputStyle}/></label>
+            <button className="btn btn--primary" type="submit" disabled={processing}>Add monthly bill</button>
+            {Object.values(errors).map((e, i) => <small key={i} role="alert">{e}</small>)}
+          </div>}
+        </Form>}
+
+export function CreateGoalForm({currentDate}:{currentDate:string}){return <Form route="finance.goals.store">
+          {({ errors, processing }) => <div className="finance-edit-grid" style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(160px, 1fr))',gap:10,alignItems:'end'}}>
+            <label>Goal name<input name="name" placeholder="Emergency fund" required style={inputStyle}/></label>
+            <label>Target (S$)<input name="target" placeholder="5000" required inputMode="decimal" style={inputStyle}/></label>
+            <label>Saved so far (S$)<input name="saved" defaultValue="0" required inputMode="decimal" style={inputStyle}/></label>
+            <label>Target date<input name="targetDate" type="date" defaultValue={currentDate} required style={inputStyle}/></label>
+            <button className="btn btn--primary" type="submit" disabled={processing}>Add goal</button>
+            {Object.values(errors).map((e, i) => <small key={i} role="alert">{e}</small>)}
+          </div>}
+        </Form>}
+
+export default function FinancialPlanning({ commitments, goals, planning, month, currentDate, panel = 'all', showCreate = true, showGuidance = true }: {
   panel?: 'all' | 'goals' | 'bills'
+  showCreate?: boolean
+  showGuidance?: boolean
   commitments: Commitment[]
   goals: Goal[]
   planning: Planning
@@ -41,7 +64,7 @@ export default function FinancialPlanning({ commitments, goals, planning, month,
     <>
       {(panel==='all'||panel==='bills')&&<section className="cfo-card planning-card">
         <h2>Upcoming commitments</h2>
-        <p className="cfo-card-note">Your monthly reminders. Record each expense separately when you pay.</p>
+        {showGuidance&&<p className="cfo-card-note">Your monthly reminders. Record each expense separately when you pay.</p>}
         <div className="plan-totals"><div><span>Unpaid this month</span><strong>{dollars(planning.upcomingTotalCents)}</strong><small>Includes overdue bills</small></div><div><span>Cash after these bills</span><strong>{dollars(planning.cashAfterUpcomingCents)}</strong><small>Estimate from recorded bills</small></div></div>
         {commitments.length === 0 ? <p>No monthly commitments yet.</p> : (
           <ul style={{ display: 'grid', gap: 9, marginBottom: 18 }}>
@@ -58,21 +81,14 @@ export default function FinancialPlanning({ commitments, goals, planning, month,
             ))}
           </ul>
         )}
-        <details className="acorra-details"><summary>Add a monthly bill</summary><Form route="finance.commitments.store">
-          {({ errors, processing }) => <div className="finance-edit-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 10, alignItems: 'end' }}>
-            <label>Bill name<input name="name" required placeholder="Rent, insurance" style={inputStyle}/></label>
-            <label>Amount (S$)<input name="amount" required inputMode="decimal" placeholder="180.00" style={inputStyle}/></label>
-            <label>Due day (1–28)<input name="dueDay" type="number" min="1" max="28" step="1" defaultValue="25" required style={inputStyle}/></label>
-            <button className="btn btn--primary" type="submit" disabled={processing}>Add monthly bill</button>
-            {Object.values(errors).map((e, i) => <small key={i} role="alert">{e}</small>)}
-          </div>}
-        </Form></details>
-        <small>Marking paid only updates this reminder. Record the actual expense separately so your balances stay accurate.</small>
+        {showCreate&&<details className="acorra-details"><summary>Add a monthly bill</summary><CreateBillForm/></details>}
+        {showGuidance&&<small>Marking paid only updates this reminder. Record the actual expense separately so your balances stay accurate.</small>}
       </section>}
 
       {(panel==='all'||panel==='goals')&&<section className="cfo-card planning-card">
         <h2>Savings goals</h2>
-        <p className="cfo-card-note">Something to look forward to. Goal progress does not add to your net worth.</p>
+        {showGuidance&&<p className="cfo-card-note">Something to look forward to. Goal progress does not add to your net worth.</p>}
+        {!goals.length&&!showCreate&&<p className="cfo-empty">No savings goals yet. Use Manage to create one.</p>}
         {goals.map(g => (
           <div key={g.id} style={{ padding: '12px 0', borderBottom: '1px solid #e1e5e8' }}>
             <div className="goal-heading"><strong>{g.name}</strong><span>{dollars(g.savedCents)} <small>/ {dollars(g.targetCents)}</small></span></div><p className="cfo-card-note">Target {g.targetDate}</p>
@@ -95,17 +111,7 @@ export default function FinancialPlanning({ commitments, goals, planning, month,
             </Form>}
           </div>
         ))}
-        <details className="acorra-details"><summary>Create a goal</summary>
-        <Form route="finance.goals.store">
-          {({ errors, processing }) => <div className="finance-edit-grid" style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(160px, 1fr))',gap:10,alignItems:'end'}}>
-            <label>Goal name<input name="name" placeholder="Emergency fund" required style={inputStyle}/></label>
-            <label>Target (S$)<input name="target" placeholder="5000" required inputMode="decimal" style={inputStyle}/></label>
-            <label>Saved so far (S$)<input name="saved" defaultValue="0" required inputMode="decimal" style={inputStyle}/></label>
-            <label>Target date<input name="targetDate" type="date" defaultValue={currentDate} required style={inputStyle}/></label>
-            <button className="btn btn--primary" type="submit" disabled={processing}>Add goal</button>
-            {Object.values(errors).map((e, i) => <small key={i} role="alert">{e}</small>)}
-          </div>}
-        </Form></details>
+        {showCreate&&<details className="acorra-details"><summary>Create a goal</summary><CreateGoalForm currentDate={currentDate}/></details>}
       </section>}
 
       {panel==='all'&&<section className="cfo-card planning-card">
