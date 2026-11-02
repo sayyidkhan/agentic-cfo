@@ -10,6 +10,7 @@ import SandyAvatar from '~/components/sandy_avatar'
 import AppLayout from '~/layouts/app'
 import FinancialPlanning, { CreateBillForm, CreateGoalForm } from '~/components/financial_planning'
 import PlanActions from '~/components/plan_actions'
+import BudgetOverview from '~/components/budget_overview'
 import { TransactionManager } from '~/components/financial_record_editor'
 import AccountsPanel from '~/components/accounts_panel'
 
@@ -60,7 +61,7 @@ const pageText: Record<View, { eyebrow: string; title: string; detail: string }>
   budget: {
     eyebrow: 'MAKE A PLAN',
     title: 'Plan',
-    detail: 'Make room for today. Put something aside for tomorrow.',
+    detail: 'Set budgets, build savings and stay ahead of bills.',
   },
   wealth: {
     eyebrow: 'THE BIG PICTURE',
@@ -294,8 +295,8 @@ export default function Dashboard(props: DashboardProps) {
       </div>}
 
       {view === 'budget' && <>
-        <div className="acorra-tabs" role="group" aria-label="Plan sections">{(['spending','goals','bills'] as const).map(tab=><button key={tab} aria-pressed={planTab===tab} onClick={()=>setPlanTab(tab)}>{tab==='spending'?'Budgets':tab==='goals'?'Goals':'Bills'}</button>)}</div>
-        {planTab==='spending'&&<section className="cfo-card"><div className="cfo-card-header"><h2>Monthly spending limits</h2><span className="cfo-subtle">{month}</span></div>{budgetStatus.length?<BudgetBars budgets={budgetStatus} categories={categories} budgetStatus={budgetStatus}/>:<div className="cfo-empty"><strong>No category budgets yet</strong>Use Manage to add a category and set your monthly limit.</div>}</section>}
+        <div className="acorra-tabs" role="group" aria-label="Plan sections">{(['spending','goals','bills'] as const).map(tab=><button key={tab} aria-pressed={planTab===tab} onClick={()=>setPlanTab(tab)}>{tab==='spending'?'Budgets':tab==='goals'?'Goals':'Bills'}<span className="plan-section-count">{tab==='spending'?budgetStatus.length:tab==='goals'?goals.length:commitments.length}</span></button>)}</div>
+        {planTab==='spending'&&<BudgetOverview budgets={budgetStatus} categories={categories} expenseCents={expenseCents}/>}
         {planTab!=='spending'&&<FinancialPlanning showCreate={false} showGuidance={false} panel={planTab} commitments={commitments} goals={goals} planning={planning} month={month} currentDate={currentDate} availableCashCents={availableCashCents}/>}
       </>}
 

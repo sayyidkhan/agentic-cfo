@@ -138,3 +138,14 @@ Manage now leads with the budget form: category, month, monthly limit and one Sa
 All Plan dialogs use a bounded flex frame: heading, close button and tab/filter navigation remain visible while only the body scrolls. Alert/info footers also stay visible. Native Escape and focus return remain intact. Inputs use 16px text and 46px controls; main actions are 48px. Budget month and amount stack below 480px so native month values remain readable, and use two columns on wider views. Related goal/bill values share a row where space permits.
 
 Validation: Sites production build and all 34 existing tests pass. Browser QA verified 320px/390px layouts, automatic category selection, a S$123.45 budget save, duplicate-category feedback and a S$42.35 bill save. A temporary 390×480 local fixture confirmed that scrolling and validation leave the heading, close and tabs at the top, with alert footer actions visible. The development fixture was restored after testing.
+
+
+### Budget page hierarchy and category status — 2 November 2026
+
+The Budgets section of Plan now leads with a dark emerald monthly summary: category limits, spending inside those limits, aggregate remaining/over-budget amount and usage meter. It reuses the existing exact-cent overviewBudget calculation. Expenses without a matching category budget remain separate in a conditional coverage notice; no daily allowance, projected savings or new financial model has been invented. The existing workspace width is retained.
+
+Category cards use explicit On track / Near limit / At limit / Over budget labels with green, amber and red status treatments. Cards are ordered by overspending first, then usage; All / Needs attention / On track buttons filter the cards without changing the full-month totals. Needs attention means at least 80% used or a negative remaining amount. Plan’s Budgets, Goals and Bills buttons show record counts, while Manage, active alerts and information dialogs remain available in the header.
+
+This adapts the hierarchy of the user’s Vertical Institute reference: a strong monthly panel, compact number context, readable category progress and clear status colours. Its public dashboard.html source was reviewed via GitHub for this pass. Acorra’s identity, data model and persistence boundaries remain unchanged.
+
+Validation: production build and all 34 existing domain/runtime tests passed. Browser checks covered 320px, 390px, 820px and desktop widths, no horizontal overflow, three mobile totals in one row, working filters and tab navigation. Reducing Home & essentials to S$100 produced S$800 budgeted, S$2,190 spent and S$1,390 over budget; its category moved first with an explicit S$1,550 over label. Raising the Dining and Home limits cleared both notices, and the empty Needs attention filter offered a working Show all budgets action.
