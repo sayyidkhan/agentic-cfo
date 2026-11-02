@@ -183,3 +183,9 @@ Validation: production build and all 35 tests pass. Desktop browser QA confirmed
 All, Needs attention and On track now occupy three equal columns. Buttons share a fixed 48px outer height, identical padding and 1px borders. Labels and count badges are separate elements, allowing a long label to wrap inside its allocated column on small screens. Selected styling no longer changes sizing; accessible names retain label plus count.
 
 Validation: production build and whitespace checks pass. Browser measurements confirmed 87×48px for each tab at 320px and 148×48px for each tab on desktop, without clipped content. Selecting Needs attention still filters the cards correctly.
+
+### Overview monthly card counters — 2 November 2026
+- The monthly Overview card now counts spending, cash, net worth, category limit/spend/remaining, income and income less spending from zero using the existing 1.25-second eased counter.
+- A single visible-time clock drives the whole card, including its percentage and progress bar. It mounts when Overview opens and restarts only when the month or displayed totals change.
+- Exact final values remain available to screen readers; reserved number widths prevent layout shifts. Reduced-motion preferences show final values immediately. No financial calculations or persistence change.
+- Verified production build and diff checks, zero-to-final browser values, exact 81.1111% bar endpoint, and 390px mobile layout without horizontal overflow.

@@ -6,6 +6,8 @@ import { AlertCircle, ArrowRight, Plus, ShieldCheck, CalendarDays, MessageCircle
 import { useState, useEffect, useRef } from 'react'
 import Page from '~/components/page'
 import FitMoney from '~/components/fit_money'
+import useCountUp from '~/hooks/use_count_up'
+import { budgetCountFrame, countedCents } from '~/lib/count_up'
 import SandyAvatar from '~/components/sandy_avatar'
 import AppLayout from '~/layouts/app'
 import FinancialPlanning, { CreateBillForm, CreateGoalForm } from '~/components/financial_planning'
@@ -222,6 +224,31 @@ function ValuationForm({ currentDate }: Pick<DashboardProps, 'currentDate'>) {
   </section>
 }
 
+function OverviewCount({final,display}:{final:string;display:string}) {
+  return <span className="count-value"><span className="count-sr">{final}</span><span className="count-size" aria-hidden="true">{final}</span><span className="count-live" aria-hidden="true">{display}</span></span>
+}
+
+/** One visible-time clock keeps the entire monthly card and its bar in sync. */
+function OverviewMonth({month,monthLabel,expenseCents,availableCashCents,financialPosition,incomeCents,recorded,hasBudgets,pulse}: Pick<DashboardProps,'month'|'expenseCents'|'availableCashCents'|'financialPosition'|'incomeCents'> & {monthLabel:string;recorded:boolean;hasBudgets:boolean;pulse:ReturnType<typeof overviewBudget>}) {
+  const {ref,elapsed,counting}=useCountUp([month,expenseCents,availableCashCents,financialPosition.netWorthCents,incomeCents,pulse.limitCents,pulse.spentCents].join(':'))
+  const frame=budgetCountFrame(pulse.limitCents,pulse.spentCents,elapsed)
+  return <section className="cfo-card overview-month" aria-label="Monthly financial overview" ref={ref} data-counting={counting}>
+          <div className="overview-month-heading"><span>THIS MONTH</span><span className="overview-period"><CalendarDays size={13}/>{monthLabel}</span></div>
+          <div className="overview-metrics">
+            <div className="overview-spent"><span>Spent this month</span><FitMoney display={money(countedCents(expenseCents,elapsed))}>{money(expenseCents)}</FitMoney><Link href="/dashboard?view=transactions">View spending <ArrowRight size={12}/></Link></div>
+            <div><span>Recorded cash</span><FitMoney display={money(countedCents(availableCashCents,elapsed))}>{money(availableCashCents)}</FitMoney><Link href="/dashboard?view=wealth">Cash &amp; bank accounts <ArrowRight size={12}/></Link></div>
+            <div><span>Estimated net worth</span><FitMoney display={recorded?money(countedCents(financialPosition.netWorthCents,elapsed)):undefined}>{recorded?money(financialPosition.netWorthCents):'Not set up'}</FitMoney><Link href="/dashboard?view=wealth">View accounts <ArrowRight size={12}/></Link></div>
+          </div>
+          <div className="overview-budget-pulse">
+            <div className="overview-pulse-label"><strong>Category budgets</strong><span>{hasBudgets?<OverviewCount final={Math.round(pulse.percentUsed)+'% used'} display={Math.round(frame.percent)+'% used'}/>:'No limits set yet'}</span></div>
+            <div className={'overview-progress'+(pulse.remainingCents<0?' is-over':'')} role="progressbar" aria-label="Monthly category budgets used" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(Math.min(100,Math.max(0,pulse.percentUsed)))} aria-valuetext={money(pulse.spentCents)+' spent against '+money(pulse.limitCents)+' in category limits'}><span style={{width:frame.bar+'%'}}/></div>
+            <div className="overview-pulse-caption"><span>{hasBudgets?<><OverviewCount final={money(pulse.spentCents)} display={money(frame.spent)}/> of <OverviewCount final={money(pulse.limitCents)} display={money(frame.budgeted)}/> in category limits</>:<>Create a budget to put your spending in context.</>}</span><strong>{hasBudgets?<><OverviewCount final={money(Math.abs(pulse.remainingCents))} display={money(Math.abs(frame.remaining))}/> {pulse.remainingCents<0?'over budget':'remaining'}</>:''}</strong></div>
+            {pulse.unbudgetedCents>0&&<Link className="overview-coverage" href="/dashboard?view=budget"><OverviewCount final={money(pulse.unbudgetedCents)} display={money(countedCents(pulse.unbudgetedCents,elapsed))}/> of spending has no category limit <ArrowRight size={12}/></Link>}
+          </div>
+          <div className="overview-flow"><div><span>Income this month</span><strong><OverviewCount final={money(incomeCents)} display={money(countedCents(incomeCents,elapsed))}/></strong></div><div><span>Income less spending</span><strong><OverviewCount final={money(incomeCents-expenseCents)} display={money(countedCents(incomeCents-expenseCents,elapsed))}/></strong></div><Link href="/dashboard?view=budget">Review plan <ArrowRight size={14}/></Link></div>
+        </section>
+}
+
 export default function Dashboard(props: DashboardProps) {
   const { url } = usePage()
   const view = viewFromUrl(url)
@@ -249,21 +276,7 @@ export default function Dashboard(props: DashboardProps) {
 
       {view === 'overview' && <>
         {!recorded && <div className="cfo-card cfo-alert" role="status"><ShieldCheck size={21}/><div><strong>Start with your first account</strong><p>Add a cash or bank balance, then record a transaction and set a monthly budget.</p><Link href="/dashboard?view=wealth" className="cfo-action">Add an account <ArrowRight size={14}/></Link></div></div>}
-        <section className="cfo-card overview-month" aria-label="Monthly financial overview">
-          <div className="overview-month-heading"><span>THIS MONTH</span><span className="overview-period"><CalendarDays size={13}/>{monthLabel}</span></div>
-          <div className="overview-metrics">
-            <div className="overview-spent"><span>Spent this month</span><FitMoney>{money(expenseCents)}</FitMoney><Link href="/dashboard?view=transactions">View spending <ArrowRight size={12}/></Link></div>
-            <div><span>Recorded cash</span><FitMoney>{money(availableCashCents)}</FitMoney><Link href="/dashboard?view=wealth">Cash &amp; bank accounts <ArrowRight size={12}/></Link></div>
-            <div><span>Estimated net worth</span><FitMoney>{recorded?money(financialPosition.netWorthCents):'Not set up'}</FitMoney><Link href="/dashboard?view=wealth">View accounts <ArrowRight size={12}/></Link></div>
-          </div>
-          <div className="overview-budget-pulse">
-            <div className="overview-pulse-label"><strong>Category budgets</strong><span>{budgetStatus.length?Math.round(pulse.percentUsed)+'% used':'No limits set yet'}</span></div>
-            <div className={'overview-progress'+(pulse.remainingCents<0?' is-over':'')} role="progressbar" aria-label="Monthly category budgets used" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(Math.min(100,Math.max(0,pulse.percentUsed)))} aria-valuetext={money(pulse.spentCents)+' spent against '+money(pulse.limitCents)+' in category limits'}><span style={{width:Math.min(100,Math.max(0,pulse.percentUsed))+'%'}}/></div>
-            <div className="overview-pulse-caption"><span>{budgetStatus.length?<>{money(pulse.spentCents)} of {money(pulse.limitCents)} in category limits</>:<>Create a budget to put your spending in context.</>}</span><strong>{budgetStatus.length?(pulse.remainingCents<0?money(-pulse.remainingCents)+' over budget':money(pulse.remainingCents)+' remaining'):''}</strong></div>
-            {pulse.unbudgetedCents>0&&<Link className="overview-coverage" href="/dashboard?view=budget">{money(pulse.unbudgetedCents)} of spending has no category limit <ArrowRight size={12}/></Link>}
-          </div>
-          <div className="overview-flow"><div><span>Income this month</span><strong>{money(incomeCents)}</strong></div><div><span>Income less spending</span><strong>{money(incomeCents-expenseCents)}</strong></div><Link href="/dashboard?view=budget">Review plan <ArrowRight size={14}/></Link></div>
-        </section>
+        <OverviewMonth month={month} monthLabel={monthLabel} expenseCents={expenseCents} availableCashCents={availableCashCents} financialPosition={financialPosition} incomeCents={incomeCents} recorded={recorded} hasBudgets={budgetStatus.length>0} pulse={pulse}/>
         <section className="cfo-card overview-categories">
           <div className="cfo-card-header"><h2>Where your budget stands</h2><Link href="/dashboard?view=budget">Manage <ArrowRight size={13}/></Link></div>
           <BudgetBars budgets={pulse.highlights} categories={categories} budgetStatus={budgetStatus} count={3}/>
