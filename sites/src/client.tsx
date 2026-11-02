@@ -37,8 +37,8 @@ function App(){
  const reloadWorkspace=useCallback(async()=>{
   const ticket=++epoch.current,refreshing=!!personalRef.current
   setWorkspaceStatus(refreshing?'refreshing':'loading');setWorkspaceError('')
-  try{const result=await loadWorkspace();if(!mounted.current||ticket!==epoch.current)return;derive(result.state);setPersonal(result.state);setRevision(result.revision);setWorkspaceStatus('ready')}
-  catch(e:any){if(!mounted.current||ticket!==epoch.current)return;setWorkspaceError(e.message);if(e.status===401||e.status===423){setPersonal(null);setWorkspaceStatus(e.status===401?'signin':'locked')}else setWorkspaceStatus(refreshing?'ready':'error');if(e.status===401)expireSession()}
+  try{const result=await loadWorkspace();if(!mounted.current||ticket!==epoch.current)return;derive(result.state);setPersonal(result.state);setRevision(result.revision);setWorkspaceStatus('ready');return true}
+  catch(e:any){if(!mounted.current||ticket!==epoch.current)return;setWorkspaceError(e.message);if(e.status===401||e.status===423){setPersonal(null);setWorkspaceStatus(e.status===401?'signin':'locked')}else setWorkspaceStatus(refreshing?'ready':'error');if(e.status===401)expireSession();return false}
  },[expireSession])
  useEffect(()=>{void refreshSession();const pop=()=>{entryPending.current=false;setEntryTarget(null);setUrl(location.pathname+location.search)};const focus=()=>void refreshSession();window.addEventListener('popstate',pop);window.addEventListener('focus',focus);return()=>{mounted.current=false;window.removeEventListener('popstate',pop);window.removeEventListener('focus',focus)}},[refreshSession])
  useEffect(()=>{
@@ -64,7 +64,16 @@ function App(){
    setWorkspaceError(e.message);throw e
   }finally{busy.current=false;setSaving(false)}
  }
- connect(act,go)
+ const refreshCurrentView=async()=>{
+  if(personalMode){
+   if(busy.current||saving||workspaceStatus!=='ready')throw Error('Wait until your workspace is ready.')
+   if(!await reloadWorkspace())throw Error('Could not refresh saved records.')
+  }else{
+   // Recalculate this tab's existing records; never replace them with sample data.
+   derive(demo);setDemo(current=>({...current}))
+  }
+ }
+ connect(act,go,refreshCurrentView)
  const state=personalMode?personal:demo
  const props=state?derive(state).props:null
  const page={url,props:{preferences:{theme:'light'}},flash:{},session,sessionStatus,refreshSession,expireSession,personalMode,workspaceStatus,workspaceError,reloadWorkspace,saving:saving||workspaceStatus==='refreshing',revision,reset:()=>{if(!confirm('Reset all demo transactions, budgets, goals and chat to the original samples?'))return false;setDemo(syntheticState());return true}}

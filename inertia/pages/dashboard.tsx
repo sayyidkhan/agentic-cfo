@@ -13,6 +13,7 @@ import AppLayout from '~/layouts/app'
 import FinancialPlanning, { CreateBillForm, CreateGoalForm } from '~/components/financial_planning'
 import PlanActions from '~/components/plan_actions'
 import BudgetOverview from '~/components/budget_overview'
+import RefreshButton from '~/components/refresh_button'
 import { TransactionManager } from '~/components/financial_record_editor'
 import AccountsPanel from '~/components/accounts_panel'
 
@@ -252,6 +253,8 @@ function OverviewMonth({month,monthLabel,expenseCents,availableCashCents,financi
 export default function Dashboard(props: DashboardProps) {
   const { url } = usePage()
   const view = viewFromUrl(url)
+  const [refreshVersion,setRefreshVersion]=useState(0)
+  const refreshAction=<RefreshButton key={view} label={pageText[view].title} onRefreshed={()=>setRefreshVersion(n=>n+1)}/>
   const [planTab,setPlanTab] = useState<'spending'|'goals'|'bills'>('spending')
   useEffect(()=>{const section=new URLSearchParams(url.split('?')[1]).get('section');setPlanTab(section==='goals'||section==='bills'?section:'spending')},[url])
   const {
@@ -270,13 +273,13 @@ export default function Dashboard(props: DashboardProps) {
   return <Page title={descriptor.title} hideTitle>
     <div className={'cfo-workspace workspace-'+view+(view==='overview'?' clarity-overview':'')}>
       <header className="cfo-page-intro">
-        {view==='budget'?<><div className="cfo-eyebrow">{monthLabel}</div><div className="plan-heading-line"><h1>{descriptor.title}</h1><PlanActions activePanel={planTab} insights={signals} onReview={setPlanTab} budgetForm={<BudgetForms categories={categories} month={month}/>} goalForm={<CreateGoalForm currentDate={currentDate}/>} billForm={<CreateBillForm/>}/></div><p>{descriptor.detail}</p></>:<><div>{view==='wealth'&&<Link className="summary-back" href="/dashboard"><ArrowLeft size={14}/>Overview</Link>}<div className="cfo-eyebrow">{monthLabel}</div><h1>{descriptor.title}</h1><p>{descriptor.detail}</p></div>
-        {view==='overview'&&<div className="overview-header-actions"><Link href="/dashboard?view=wealth" className="overview-accounts-link"><Landmark size={16}/>Accounts</Link><Link href="/dashboard?view=transactions&add=1" className="overview-add"><Plus size={17}/>Add entry</Link></div>}</>}
+        {view==='budget'?<><div className="cfo-eyebrow">{monthLabel}</div><div className="plan-heading-line"><h1>{descriptor.title}</h1><PlanActions refreshAction={refreshAction} activePanel={planTab} insights={signals} onReview={setPlanTab} budgetForm={<BudgetForms categories={categories} month={month}/>} goalForm={<CreateGoalForm currentDate={currentDate}/>} billForm={<CreateBillForm/>}/></div><p>{descriptor.detail}</p></>:<><div>{view==='wealth'&&<Link className="summary-back" href="/dashboard"><ArrowLeft size={14}/>Overview</Link>}<div className="cfo-eyebrow">{monthLabel}</div><h1>{descriptor.title}</h1><p>{descriptor.detail}</p></div>
+        {view==='overview'&&<div className="overview-header-actions">{refreshAction}<Link href="/dashboard?view=wealth" className="overview-accounts-link"><Landmark size={16}/>Accounts</Link><Link href="/dashboard?view=transactions&add=1" className="overview-add"><Plus size={17}/>Add entry</Link></div>}{view==='transactions'&&refreshAction}</>}
       </header>
 
       {view === 'overview' && <>
         {!recorded && <div className="cfo-card cfo-alert" role="status"><ShieldCheck size={21}/><div><strong>Start with your first account</strong><p>Add a cash or bank balance, then record a transaction and set a monthly budget.</p><Link href="/dashboard?view=wealth" className="cfo-action">Add an account <ArrowRight size={14}/></Link></div></div>}
-        <OverviewMonth month={month} monthLabel={monthLabel} expenseCents={expenseCents} availableCashCents={availableCashCents} financialPosition={financialPosition} incomeCents={incomeCents} recorded={recorded} hasBudgets={budgetStatus.length>0} pulse={pulse}/>
+        <OverviewMonth key={refreshVersion} month={month} monthLabel={monthLabel} expenseCents={expenseCents} availableCashCents={availableCashCents} financialPosition={financialPosition} incomeCents={incomeCents} recorded={recorded} hasBudgets={budgetStatus.length>0} pulse={pulse}/>
         <section className="cfo-card overview-categories">
           <div className="cfo-card-header"><h2>Where your budget stands</h2><Link href="/dashboard?view=budget">Manage <ArrowRight size={13}/></Link></div>
           <BudgetBars budgets={pulse.highlights} categories={categories} budgetStatus={budgetStatus} count={3}/>
@@ -309,7 +312,7 @@ export default function Dashboard(props: DashboardProps) {
 
       {view === 'budget' && <>
         <div className="acorra-tabs" role="group" aria-label="Plan sections">{(['spending','goals','bills'] as const).map(tab=><button key={tab} aria-pressed={planTab===tab} onClick={()=>setPlanTab(tab)}>{tab==='spending'?'Budgets':tab==='goals'?'Goals':'Bills'}<span className="plan-section-count">{tab==='spending'?budgetStatus.length:tab==='goals'?goals.length:commitments.length}</span></button>)}</div>
-        {planTab==='spending'&&<BudgetOverview budgets={budgetStatus} categories={categories} expenseCents={expenseCents}/>}
+        {planTab==='spending'&&<BudgetOverview animationKey={refreshVersion} budgets={budgetStatus} categories={categories} expenseCents={expenseCents}/>}
         {planTab!=='spending'&&<FinancialPlanning showCreate={false} showGuidance={false} panel={planTab} commitments={commitments} goals={goals} planning={planning} month={month} currentDate={currentDate} availableCashCents={availableCashCents}/>}
       </>}
 

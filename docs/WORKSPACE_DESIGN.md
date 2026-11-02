@@ -194,3 +194,9 @@ Validation: production build and whitespace checks pass. Browser measurements co
 - Fixed the missed Overview count-up when entering through the landing page: viewport intersection alone starts the 1.25-second counter beneath the 2.55-second entry overlay.
 - Shared count-up now pauses while its route or any ancestor is inert, and observes inert attribute changes to start after the entry overlay fully clears. Tab visibility, viewport visibility and reduced-motion behavior remain intact.
 - Regression tests exercise the actual hook effect: no frames under the cover, exact endpoint after uncover, covered/hidden time excluded, cleanup, and immediate endpoint for reduced motion. Included in both Sites test commands.
+
+### Refresh everyday finance views — 2 November 2026
+- Added a secondary Refresh action to Overview, Spending and Plan. It refreshes data in place, preserves scroll, selected plan tabs, category filters and transaction drafts, and replays Overview/Plan count-up displays.
+- Public demo refresh recalculates the existing in-tab records; it never reloads the browser, resets the sample state or writes records. Saved workspaces request their current authenticated data and report failures without claiming success.
+- Accessible action labels, pending protection, status/error feedback and 44px phone targets. The Plan toolbar wraps on very narrow screens.
+- Browser-verified refresh retained a new synthetic transaction and an unsaved note, preserved the Needs attention filter, replayed synchronized counters, and fit all three pages at 320px without horizontal overflow. Adapter tests cover async success/failure and absence of writes/navigation.

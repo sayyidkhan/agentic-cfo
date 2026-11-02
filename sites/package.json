@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "node build.mjs",
-    "test": "node --test tests.mjs count-up-hook.test.mjs",
+    "test": "node --test tests.mjs count-up-hook.test.mjs refresh.test.mjs",
     "dev": "node preview.mjs"
   },
   "dependencies": {

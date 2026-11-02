@@ -5,12 +5,12 @@ import type { Planning } from './financial_planning'
 
 type Panel='spending'|'goals'|'bills'
 interface Props {
- activePanel:Panel; insights:Planning['insights']; budgetForm:ReactNode; goalForm:ReactNode; billForm:ReactNode
+ refreshAction?:ReactNode; activePanel:Panel; insights:Planning['insights']; budgetForm:ReactNode; goalForm:ReactNode; billForm:ReactNode
  onReview:(panel:Panel)=>void
 }
 const target=(code:string):Panel=>code==='cash_shortfall'||code==='past_due_bills'?'bills':code.startsWith('goal_')?'goals':'spending'
 const reviewLabel=(panel:Panel)=>panel==='bills'?'Review bills':panel==='goals'?'Review goals':'Review budgets'
-export default function PlanActions({activePanel,insights,budgetForm,goalForm,billForm,onReview}:Props){
+export default function PlanActions({refreshAction,activePanel,insights,budgetForm,goalForm,billForm,onReview}:Props){
  const manage=useRef<HTMLDialogElement>(null),alerts=useRef<HTMLDialogElement>(null),info=useRef<HTMLDialogElement>(null)
  const [formTab,setFormTab]=useState<Panel>('spending'),[formKey,setFormKey]=useState(0)
  const [filter,setFilter]=useState<'all'|'warning'|'notice'>('all')
@@ -18,6 +18,7 @@ export default function PlanActions({activePanel,insights,budgetForm,goalForm,bi
  const visible=filter==='all'?insights:insights.filter(i=>i.severity===filter)
  const openManage=()=>{setFormTab(activePanel);setFormKey(n=>n+1);manage.current?.showModal()}
  return <div className="plan-actions">
+  {refreshAction}
   <button type="button" className="plan-manage-button" onClick={openManage}><Plus size={16}/>Manage</button>
   <button type="button" className={'plan-icon-button plan-alert-button'+(warnings?' has-warning':'')} aria-label={'Financial alerts, '+insights.length+' active'} title="Financial alerts" onClick={()=>{setFilter('all');alerts.current?.showModal()}}><Bell size={19}/><span className={'plan-alert-count'+(!insights.length?' is-empty':'')} aria-hidden="true">{insights.length>99?'99+':insights.length}</span></button>
   <button type="button" className="plan-icon-button" aria-label="About Plan" title="About Plan" onClick={()=>info.current?.showModal()}><Info size={19}/></button>

@@ -1,9 +1,9 @@
 import React,{createContext,useContext,useState,useEffect} from 'react'
 import {workspaceHref} from './routing'
 export const Context=createContext<any>(null)
-let action:any, navigate:any
-export function connect(a:any,n:any){action=a;navigate=n}
-export const router={delete:(p:string)=>action(p,'DELETE').catch(e=>alert(e.message)),post:(p:string,d={})=>action(p,'POST',d).catch(e=>alert(e.message)),on:()=>()=>{}}
+let action:any, navigate:any, refresh:any
+export function connect(a:any,n:any,r:any){action=a;navigate=n;refresh=r}
+export const router={delete:(p:string)=>action(p,'DELETE').catch(e=>alert(e.message)),post:(p:string,d={})=>action(p,'POST',d).catch(e=>alert(e.message)),on:()=>()=>{},reload:async(options:any={})=>{try{await refresh();options.onSuccess?.()}catch(e){options.onError?.({refresh:e instanceof Error?e.message:'Could not refresh'})}finally{options.onFinish?.()}}}
 export function usePage(){return useContext(Context)}
 export function Head({title}:any){useEffect(()=>{document.title=title+' · Acorra'},[title]);return null}
 export function Link({href,children,...props}:any){const page=usePage();href=workspaceHref(href,!!page?.personalMode);return <a href={href} {...props} onClick={e=>{if(!e.ctrlKey&&!e.metaKey&&(!props.target||props.target!=='_top')){e.preventDefault();navigate(href)}}}>{children}</a>}
