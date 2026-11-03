@@ -213,3 +213,7 @@ Validation: production build and whitespace checks pass. Browser measurements co
 - Refresh replays the counters without resetting the ledger, filters, search, drafts or dialog state. Each transaction starts when visible; hidden/inert routes pause and reduced-motion preferences show exact totals immediately.
 - Kept animation clocks inside the summary/amount components so the searchable ledger is not rerendered on every animation frame. Reserved final widths and canonical screen-reader values preserve the layout and accessibility.
 - Browser checks verified zero-to-exact-final totals and visible row amounts, no mobile overflow, and Refresh preserving an Expenses + transport search. Added a frame-arithmetic regression covering positive, negative and zero net flows.
+
+### Transaction direction colours — 3 November 2026
+- Spending transaction amounts and arrow icons use green for income, red for expenses and blue for transfers. Signed amounts and direction icons remain, so meaning does not depend on colour alone.
+- Scoped to the Spending ledger; other pages, financial calculations and count-up behavior are preserved.

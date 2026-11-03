@@ -453,3 +453,11 @@
 .spending-tools{display:grid;grid-template-columns:minmax(220px,1fr) minmax(320px,1fr);align-items:start;gap:12px}.spending-tools .spending-search,.spending-tools .spending-filters{margin-bottom:0}.spending-tools{margin-bottom:10px}
 @media(max-width:767px){.spending-tools{grid-template-columns:minmax(0,1fr);gap:10px}}
 .cfo-app .workspace-transactions>.spending-totals{background:#e0eee6;color:#104531}
+
+/* Transaction direction stays readable alongside signed amounts and arrow icons. */
+.cfo-app .spending-ledger .record-amount.kind-income{color:#00734f}
+.cfo-app .spending-ledger .record-amount.kind-expense{color:#b33327}
+.cfo-app .spending-ledger .record-amount.kind-transfer{color:#4055a0}
+.cfo-app .spending-ledger .activity-icon.kind-income{background:#e2f3ea;color:#00734f}
+.cfo-app .spending-ledger .activity-icon.kind-expense{background:#fff0ec;color:#b33327}
+.cfo-app .spending-ledger .activity-icon.kind-transfer{background:#e9edfa;color:#4055a0}
