@@ -1,6 +1,6 @@
 # Initial Foundation Verification
 
-Automated checks performed by GitHub Actions on 2026-11-03 04:56 UTC.
+Automated checks performed by GitHub Actions on 2026-11-03 05:30 UTC.
 
 - **Generate app key:** PASS
 - **Run migrations:** PASS
@@ -16,7 +16,7 @@ Automated checks performed by GitHub Actions on 2026-11-03 04:56 UTC.
 [ info ] loading hooks...
 [ info ] generating indexes...
 [ info ] codegen: created 6 file(s)
-[ info ] tuyau: created api client registry (./.adonisjs/client/registry) (9.11 ms)
+[ info ] tuyau: created api client registry (./.adonisjs/client/registry) (8.43 ms)
 [ success ] Codegen files generated
 inertia/components/refresh_button.tsx(12,22): error TS2561: Object literal may only specify known properties, but 'preserveScroll' does not exist in type 'ReloadOptions<RequestPayload>'. Did you mean to write 'preserveUrl'?
 \`\`\`
