@@ -305,7 +305,7 @@ export default function Dashboard(props: DashboardProps) {
         </section>
       </>}
 
-      {view==='transactions'&&<SpendingPage monthLabel={monthLabel} currentDate={currentDate} incomeCents={incomeCents} expenseCents={expenseCents} transactions={recentTransactions} accounts={accounts} categories={categories} refreshAction={refreshAction} createForm={<TransactionForm accounts={accounts} categories={categories} currentDate={currentDate}/>} openAdd={new URLSearchParams(url.split('?')[1]).has('add')}/>}
+      {view==='transactions'&&<SpendingPage animationKey={refreshVersion} monthLabel={monthLabel} currentDate={currentDate} incomeCents={incomeCents} expenseCents={expenseCents} transactions={recentTransactions} accounts={accounts} categories={categories} refreshAction={refreshAction} createForm={<TransactionForm accounts={accounts} categories={categories} currentDate={currentDate}/>} openAdd={new URLSearchParams(url.split('?')[1]).has('add')}/>}
 
       {view === 'budget' && <>
         <div className="acorra-tabs" role="group" aria-label="Plan sections">{(['spending','goals','bills'] as const).map(tab=><button key={tab} aria-pressed={planTab===tab} onClick={()=>setPlanTab(tab)}>{tab==='spending'?'Budgets':tab==='goals'?'Goals':'Bills'}<span className="plan-section-count">{tab==='spending'?budgetStatus.length:tab==='goals'?goals.length:commitments.length}</span></button>)}</div>

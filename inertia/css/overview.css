@@ -452,3 +452,4 @@
 @media(max-width:767px){.cfo-app .spending-search input{font-size:16px}.cfo-app .spending-ledger .finance-edit-grid{grid-template-columns:minmax(0,1fr)!important}}
 .spending-tools{display:grid;grid-template-columns:minmax(220px,1fr) minmax(320px,1fr);align-items:start;gap:12px}.spending-tools .spending-search,.spending-tools .spending-filters{margin-bottom:0}.spending-tools{margin-bottom:10px}
 @media(max-width:767px){.spending-tools{grid-template-columns:minmax(0,1fr);gap:10px}}
+.cfo-app .workspace-transactions>.spending-totals{background:#e0eee6;color:#104531}

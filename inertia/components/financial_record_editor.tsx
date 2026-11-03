@@ -1,4 +1,6 @@
 import { formatSgd } from '../../app/services/finance/money.js'
+import useCountUp from '../hooks/use_count_up'
+import {countedCents} from '../lib/count_up'
 import { Form } from '@adonisjs/inertia/react'
 import { router } from '@inertiajs/react'
 import { useState, useEffect, useRef, type ReactNode } from 'react'
@@ -37,11 +39,19 @@ function RecordActions({label,children}:{label:string;children:ReactNode}){
   return <details className="record-actions" ref={ref}><summary aria-label={label}><MoreHorizontal size={19}/></summary><div onClick={event=>{if((event.target as Element).closest('button')){ref.current?.removeAttribute('open');ref.current?.querySelector('summary')?.focus()}}}>{children}</div></details>
 }
 
-export function TransactionManager({ transactions, accounts, categories, currentDate }: {
+function TransactionAmount({transaction:t,animationKey}:{transaction:FinanceTransaction;animationKey:number}){
+  const {ref,elapsed,counting}=useCountUp([t.id,t.kind,t.amountCents,animationKey].join(':'))
+  const prefix=t.kind==='expense'?'−':t.kind==='income'?'+':''
+  const final=prefix+price(t.amountCents),display=prefix+price(countedCents(t.amountCents,elapsed))
+  return <strong className={'record-amount kind-'+t.kind} ref={ref} data-counting={counting}><span className="count-value"><span className="count-sr">{final}</span><span className="count-size" aria-hidden="true">{final}</span><span className="count-live" aria-hidden="true">{display}</span></span></strong>
+}
+
+export function TransactionManager({ transactions, accounts, categories, currentDate, animationKey=0 }: {
   transactions: FinanceTransaction[]
   accounts: FinanceAccount[]
   categories: FinanceCategory[]
   currentDate: string
+  animationKey?: number
 }) {
   const [editing, setEditing] = useState<number | null>(null)
   const [kind, setKind] = useState<FinanceTransaction['kind']>('expense')
@@ -62,7 +72,7 @@ export function TransactionManager({ transactions, accounts, categories, current
       {(index===0||shown[index-1].bookedOn!==t.bookedOn)&&<h3 className="spending-date-label">{dateLabel(t.bookedOn)}</h3>}
       <div className="finance-record-row" style={{display:'flex',gap:10,alignItems:'center',justifyContent:'space-between',flexWrap:'wrap'}}>
         <span className="record-description"><i className={'activity-icon kind-'+t.kind} aria-hidden="true">{t.kind==='income'?<ArrowDownLeft size={19}/>:t.kind==='transfer'?<ArrowLeftRight size={19}/>:<ArrowUpRight size={19}/>}</i><span><strong title={t.note || categories.find(c=>c.id===t.categoryId)?.name || t.kind}>{t.note || categories.find(c=>c.id === t.categoryId)?.name || t.kind}</strong><small>{t.kind==='transfer'?'Transfer':categories.find(c=>c.id===t.categoryId)?.name||(t.kind==='income'?'Income':'Expense')} · {accounts.find(a=>a.id===t.accountId)?.name || t.kind}{t.kind==='transfer'&&t.destinationAccountId?' → '+(accounts.find(a=>a.id===t.destinationAccountId)?.name||'Destination'):''}</small></span></span>
-        <strong className={'record-amount kind-'+t.kind}>{t.kind==='expense'?'−':t.kind==='income'?'+':''}{price(t.amountCents)}</strong>
+        <TransactionAmount transaction={t} animationKey={animationKey}/>
         <RecordActions label={'Actions for '+(t.note||t.kind)}>
           <button className="btn btn--secondary btn--sm" type="button" onClick={()=>beginEdit(t)}>{editing===t.id?'Close':'Edit'}</button>
           <button className="btn btn--secondary btn--sm" type="button" onClick={()=>{

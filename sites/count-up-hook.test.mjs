@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import {readFileSync} from 'node:fs'
 import {runInNewContext} from 'node:vm'
 import {transformSync} from 'esbuild'
-import {COUNT_DURATION} from './dist/count-up.mjs'
+import {COUNT_DURATION,cashFlowCountFrame} from './dist/count-up.mjs'
 
 // Exercise the actual hook effect with controlled browser lifecycle signals.
 const source=transformSync(readFileSync(new URL('../inertia/hooks/use_count_up.ts',import.meta.url),'utf8'),{loader:'ts',format:'cjs'}).code
@@ -59,4 +59,16 @@ test('reduced motion presents the exact endpoint without waiting for the cover',
  clock.uncover()
  assert.equal(clock.pending,0)
  clock.cleanup()
+})
+
+test('spending counters preserve income minus expenses on every frame, including negative net flow',()=>{
+ for(const [income,spent] of [[520000,219000],[10000,20000],[0,0],[0,1]]){
+  for(let elapsed=0;elapsed<=COUNT_DURATION;elapsed+=25){
+   const frame=cashFlowCountFrame(income,spent,elapsed)
+   assert.equal(frame.net,frame.income-frame.spent)
+   assert.ok(Number.isSafeInteger(frame.net))
+  }
+  assert.deepEqual(cashFlowCountFrame(income,spent,0),{income:0,spent:0,net:0})
+  assert.deepEqual(cashFlowCountFrame(income,spent,COUNT_DURATION),{income,spent,net:income-spent})
+ }
 })

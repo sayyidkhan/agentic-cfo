@@ -13,3 +13,9 @@ export function budgetCountFrame(limitCents:number,spentCents:number,elapsed:num
  const percent=limitCents?spent*100/limitCents:spent?100:0
  return {budgeted:countedCents(limitCents,elapsed),spent,remaining:countedCents(limitCents-spentCents,elapsed),percent,bar:Math.max(0,Math.min(100,percent))}
 }
+
+/** Keep cash-flow relationships exact at every animation frame. */
+export function cashFlowCountFrame(incomeCents:number,expenseCents:number,elapsed:number){
+ const income=countedCents(incomeCents,elapsed),spent=countedCents(expenseCents,elapsed)
+ return {income,spent,net:income-spent}
+}

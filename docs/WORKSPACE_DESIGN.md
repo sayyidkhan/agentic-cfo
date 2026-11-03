@@ -207,3 +207,9 @@ Validation: production build and whitespace checks pass. Browser measurements co
 - Added search across notes, date, type, categories and source/destination accounts, plus equal-width All / Expenses / Income / Transfers filters and a matching-entry count. Rows are ordered/grouped by date, with clear signed amounts and account/category metadata. Edits retain their existing form and now offer a direct Cancel action.
 - Preserved page width, all finance behavior, Refresh, navigation and other pages. Mobile rows have less padding; search/form inputs use 16px text to avoid iPhone focus zoom and actions retain 44px touch targets.
 - Browser checks covered 390px and 320px with no horizontal overflow, combined search/filter and empty-state recovery, successful add with automatic dialog closure, editing and refresh preserving the current search and new record.
+
+### Spending count-up — 3 November 2026
+- Added the existing 1.25-second count-up treatment to Spent, Income, Net flow and individual transaction amounts. Summary values share one clock; net flow equals displayed income minus displayed spending on every frame.
+- Refresh replays the counters without resetting the ledger, filters, search, drafts or dialog state. Each transaction starts when visible; hidden/inert routes pause and reduced-motion preferences show exact totals immediately.
+- Kept animation clocks inside the summary/amount components so the searchable ledger is not rerendered on every animation frame. Reserved final widths and canonical screen-reader values preserve the layout and accessibility.
+- Browser checks verified zero-to-exact-final totals and visible row amounts, no mobile overflow, and Refresh preserving an Expenses + transport search. Added a frame-arithmetic regression covering positive, negative and zero net flows.
