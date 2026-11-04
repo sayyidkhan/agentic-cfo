@@ -1,12 +1,13 @@
 import { Form } from '@adonisjs/inertia/react'
 import { Link, router } from '@inertiajs/react'
-import { useRef } from 'react'
+import { useRef, type ReactNode } from 'react'
 import { BookOpen, LockKeyhole, Send, ShieldCheck, Sparkles, Trash2 } from 'lucide-react'
 import AppLayout from '~/layouts/app'
 import SandyAvatar from '~/components/sandy_avatar'
 import Page from '~/components/page'
 
 interface CfoChatProps {
+  aiControls?: ReactNode
   configured: boolean
   dailyMessageLimit: number
   messages: { id: number; role: 'user' | 'assistant'; content: string }[]
@@ -18,7 +19,7 @@ const suggestions = [
   { title: 'Check my goals', prompt: 'How am I progressing on my savings goals?' },
 ]
 
-export default function CfoChat({ configured, messages, dailyMessageLimit }: CfoChatProps) {
+export default function CfoChat({ configured, messages, dailyMessageLimit, aiControls }: CfoChatProps) {
   const composerRef = useRef<HTMLTextAreaElement>(null)
   const insertSuggestion = (prompt: string) => {
     if (!composerRef.current) return
@@ -63,7 +64,7 @@ export default function CfoChat({ configured, messages, dailyMessageLimit }: Cfo
               }
             </div>
             <div className="cfo-chat-compose">
-              {!configured && <div className="sandy-ai-preview"><div><strong>Bring your own AI <span>Planned</span></strong><p>AI-powered conversations using your own eligible subscription. Guided mode is active today.</p></div><Link href="/settings?section=ai">AI options →</Link></div>}
+              {aiControls || (!configured && <div className="sandy-ai-preview"><div><strong>Bring your own AI <span>Planned</span></strong><p>AI-powered conversations using your own eligible subscription. Guided mode is active today.</p></div><Link href="/settings?section=ai">Connect AI →</Link></div>)}
               <Form route="cfo.message.store" resetOnSuccess>
                 {({errors, processing}) => <div className="cfo-chat-form">
                   <label htmlFor="cfo-question" className="cfo-eyebrow">YOUR QUESTION</label>

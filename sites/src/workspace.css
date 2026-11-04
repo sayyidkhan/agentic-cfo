@@ -434,6 +434,29 @@
 @media(max-width:420px){.profile-auth-status{align-items:flex-start;flex-direction:column;gap:6px}.profile-auth-method{font-size:12px}}
 
 /* Settings is a small directory; the expression library is a nested destination. */
+.ai-menu-status{display:block;margin-top:8px;font-size:11px;color:#687a70}
+.ai-settings-page .ai-connection-heading h2{font-size:20px;margin:0 0 5px;letter-spacing:-.4px}
+.ai-preference{display:flex;gap:18px;justify-content:space-between;align-items:center}
+.ai-preference>div{flex:1;min-width:0}
+.ai-preference strong{font-size:14px;color:var(--cfo-ink)}
+.ai-preference p{font-size:12px;line-height:1.6;margin:5px 0 0;color:var(--cfo-muted)}
+.cfo-app .ai-preference-switch{padding:3px;border:1px solid #b5c8bd;background:#cdd9d2;border-radius:99px;width:48px;min-width:48px;height:28px;min-height:28px;display:flex;align-items:center;cursor:pointer;transition:background .18s}
+.ai-preference-switch>span{display:block;width:20px;height:20px;border-radius:50%;background:white;box-shadow:0 1px 3px #0002;transition:transform .18s}
+.cfo-app .ai-preference-switch[aria-checked=true]{background:#006648;border-color:#006648}
+.ai-preference-switch[aria-checked=true]>span{transform:translateX(19px)}
+.ai-preference-switch:focus-visible{outline:2px solid #006648;outline-offset:4px}
+.cfo-app .ai-preference-footnote{font-size:11px;line-height:1.6;color:var(--cfo-muted);margin:12px 0 0}
+.ai-connect-provider{margin-top:20px}
+.cfo-app .ai-connect-provider:disabled{background:#e2e9e5;color:#65786d;border-color:#d2ded6;cursor:not-allowed;opacity:1}
+.chat-ai-controls{border:1px solid var(--cfo-stroke);border-radius:14px;padding:16px;margin-bottom:18px;background:#f6f9f6}
+.chat-ai-connect{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--cfo-stroke)}
+.chat-ai-connect>svg{flex-shrink:0;color:var(--cfo-brand)}
+.chat-ai-connect>div{flex:1;min-width:0}
+.chat-ai-connect strong{font-size:13px;color:var(--cfo-ink)}
+.chat-ai-connect p{font-size:12px;line-height:1.6;color:var(--cfo-muted);margin:3px 0 0}
+.chat-ai-connect>a{font-size:12px;white-space:nowrap;font-weight:600;color:var(--cfo-brand);display:inline-flex;align-items:center;min-height:44px}
+@media(max-width:480px){.chat-ai-connect{flex-wrap:wrap}.chat-ai-connect>div{flex-basis:calc(100% - 34px)}.chat-ai-connect>a{margin-left:28px}.chat-ai-controls{padding:14px}.ai-settings-page .ai-connection-heading h2{font-size:18px}}
+@media(prefers-reduced-motion:reduce){.ai-preference-switch,.ai-preference-switch>span{transition:none}}
 .cfo-app .ai-connection-card{padding:24px}
 .ai-connection-heading{display:flex;align-items:center;gap:14px;margin-bottom:20px}
 .ai-connection-heading>div{flex:1;min-width:0}

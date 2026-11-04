@@ -3,6 +3,7 @@ import {Head,Link,usePage} from './bridge'
 import {sandyStates,sandyState} from './sandy_states'
 import SandyCharacter from './SandyCharacter'
 import SandyStage from './SandyStage'
+import {AiPreferenceSwitch} from './AiControls'
 import {BookOpen,Pause,Play,RotateCcw,ChevronRight,ArrowLeft,Sparkles,ShieldCheck} from 'lucide-react'
 export default function Settings(){
  const [motion,setMotion]=useState(()=>{try{return localStorage.getItem('acorra-sandy-motion')!=='off'}catch{return true}}),[replay,setReplay]=useState(0)
@@ -12,11 +13,21 @@ export default function Settings(){
  const [greeting,setGreeting]=useState(selected.id==='curious')
  useEffect(()=>{setGreeting(selected.id==='curious')},[selected.id])
  const hello=()=>{setMotion(true);setGreeting(true);setReplay(n=>n+1)}
- useEffect(()=>{if(params.get('section')==='ai')document.getElementById('settings-ai-title')?.focus({preventScroll:true})},[page.url])
+ useEffect(()=>{if(params.get('section')==='ai')document.getElementById('ai-connection-title')?.focus({preventScroll:true})},[page.url])
  useEffect(()=>{if(!params.has('sandy'))return;const title=document.getElementById('sandy-state-title');title?.focus({preventScroll:true});document.getElementById('sandy-state-preview')?.scrollIntoView({block:'start'})},[selected.id])
+ if(params.get('section')==='ai')return <div className="cfo-workspace settings-page ai-settings-page"><Head title="AI connection · Settings"/>
+ <Link href="/settings" className="settings-back"><ArrowLeft size={16}/>Settings</Link>
+ <header className="cfo-page-intro"><div><h1 id="ai-connection-title" tabIndex={-1}>AI connection</h1><p>Bring your own AI. Choose when to use it.</p></div></header>
+ <section className="cfo-card ai-connection-card" aria-labelledby="ai-provider-title"><div className="ai-connection-heading"><span className="settings-option-icon"><Sparkles size={22}/></span><div><h2 id="ai-provider-title">Connect your AI</h2><p>Your subscription. Your conversations with Sandy.</p></div><span className="ai-availability">Not connected</span></div>
+ <div className="ai-provider-row"><div><strong>ChatGPT</strong><small>Use your own eligible subscription</small></div><span className="ai-availability">Coming soon</span></div>
+ <p className="ai-connection-note">ChatGPT subscription connections are not available in this hosted demo yet. Signing in to Acorra does not connect your AI plan.</p>
+ <button type="button" className="btn btn--primary ai-connect-provider" disabled aria-describedby="ai-connect-availability">Connect ChatGPT</button><p id="ai-connect-availability" className="ai-preference-footnote">Requires provider availability and permission to use your plan.</p>
+ </section>
+ <section className="cfo-card ai-connection-card" aria-label="AI preference"><AiPreferenceSwitch/><p className="ai-connection-note">This preference is saved on this browser and shared with Sandy’s chat. Turning it on does not connect an account or send your questions to AI.</p><div className="ai-guided-status"><ShieldCheck size={18}/><div><strong>Guided mode is active</strong><p>Sandy uses rules and your recorded figures until a provider is connected and AI is on.</p></div></div></section>
+ <Link href="/cfo" className="settings-back"><ArrowLeft size={16}/>{params.get('from')==='chat'?'Back to Sandy':'Talk to Sandy'}</Link></div>
  if(!showSandy)return <div className="cfo-workspace settings-page"><Head title="Settings"/>
  <header className="cfo-page-intro"><div><h1>Settings</h1><p>Make Acorra work for you.</p></div></header>
- <section className="settings-group" aria-labelledby="settings-ai-title"><h2 id="settings-ai-title" tabIndex={-1}>AI connection</h2><div className="cfo-card ai-connection-card"><div className="ai-connection-heading"><span className="settings-option-icon"><Sparkles size={22}/></span><div><h3>Bring your own AI</h3><p>Your subscription. Your conversations with Sandy.</p></div><span className="ai-availability">Planned</span></div><p>Use your own eligible AI subscription for more natural conversations about your spending, budgets and goals.</p><div className="ai-provider-row"><div><strong>ChatGPT</strong><small>Subscription connection</small></div><span>Not available yet</span></div><p className="ai-connection-note">ChatGPT plan usage needs a separate connection and permission. Signing in to Acorra does not enable AI. This hosted demo does not support subscription connections yet; availability will depend on provider approval and your plan’s limits.</p><div className="ai-guided-status"><ShieldCheck size={18}/><div><strong>Guided mode is active</strong><p>Sandy uses rules and your recorded figures. No questions are sent to an external AI provider.</p></div></div><Link className="settings-back" href="/cfo">Talk to Sandy <ChevronRight size={16}/></Link></div></section>
+ <section className="settings-group" aria-labelledby="settings-ai-title"><h2 id="settings-ai-title">Intelligence</h2><div className="cfo-card settings-menu"><Link href="/settings?section=ai" className="settings-option"><span className="settings-option-icon"><Sparkles size={22}/></span><div><h3>AI connection</h3><p>Connect your AI and choose when Sandy uses it.</p><span className="ai-menu-status">Not connected · AI preference {page.aiPreferred?'on':'off'}</span></div><ChevronRight size={20}/></Link></div></section>
  <section className="settings-group" aria-labelledby="settings-companion-title"><h2 id="settings-companion-title">Companion</h2><div className="cfo-card settings-menu"><Link href="/settings?section=sandy" className="settings-option"><span className="settings-option-icon"><BookOpen size={22}/></span><div><h3>Sandy’s expressions</h3><p>Explore her moods and control her animations.</p></div><ChevronRight size={20} aria-hidden="true"/></Link></div></section>
  <section className="settings-group" aria-labelledby="settings-data-title"><h2 id="settings-data-title">Demo data</h2>
  <section className="cfo-card settings-reset"><div><h2>Reset demo</h2><p className="cfo-card-note">Restore the original sample finances and clear this tab’s demo chat. Saved accounts are not affected.</p></div><button type="button" className="btn btn--secondary" onClick={()=>{if(page.reset())setResetNotice(true)}}><RotateCcw size={16}/>Reset demo</button>{resetNotice&&<p role="status">Demo restored to its original samples.</p>}</section>

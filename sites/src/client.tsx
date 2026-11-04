@@ -6,6 +6,7 @@ import Layout from './Layout'
 import Landing from './Landing'
 import Account from './Account'
 import Settings from './Settings'
+import ChatAiControls from './AiControls'
 import WorkspaceStatus from './WorkspaceStatus'
 import AppEntryTransition from './AppEntryTransition'
 import {loadSession,loadWorkspace,saveWorkspaceAction} from './api'
@@ -13,6 +14,9 @@ import {workspaceHref,isPersonal} from './routing'
 import {Context,connect,Link} from './bridge'
 import {syntheticState,emptyState,derive,applyAction} from './domain'
 function App(){
+ const [aiPreferred,setAiPreference]=useState(()=>{try{return localStorage.getItem('acorra-ai-preferred')==='on'}catch{return false}})
+ const setAiPreferred=(value:boolean)=>{setAiPreference(value);try{localStorage.setItem('acorra-ai-preferred',value?'on':'off')}catch{}}
+ useEffect(()=>{const sync=(event:StorageEvent)=>{if(event.key==='acorra-ai-preferred')setAiPreference(event.newValue==='on')};window.addEventListener('storage',sync);return()=>window.removeEventListener('storage',sync)},[])
  const [demo,setDemo]=useState<any>(()=>syntheticState()),[personal,setPersonal]=useState<any>(null),[revision,setRevision]=useState(0)
  const [url,setUrl]=useState(location.pathname+location.search),[session,setSession]=useState<any>(null),[sessionStatus,setSessionStatus]=useState('loading')
  const [workspaceStatus,setWorkspaceStatus]=useState('loading'),[workspaceError,setWorkspaceError]=useState(''),[saving,setSaving]=useState(false)
@@ -76,9 +80,9 @@ function App(){
  connect(act,go,refreshCurrentView)
  const state=personalMode?personal:demo
  const props=state?derive(state).props:null
- const page={url,props:{preferences:{theme:'light'}},flash:{},session,sessionStatus,refreshSession,expireSession,personalMode,workspaceStatus,workspaceError,reloadWorkspace,saving:saving||workspaceStatus==='refreshing',revision,reset:()=>{if(!confirm('Reset all demo transactions, budgets, goals and chat to the original samples?'))return false;setDemo(syntheticState());return true}}
+ const page={aiPreferred,setAiPreferred,url,props:{preferences:{theme:'light'}},flash:{},session,sessionStatus,refreshSession,expireSession,personalMode,workspaceStatus,workspaceError,reloadWorkspace,saving:saving||workspaceStatus==='refreshing',revision,reset:()=>{if(!confirm('Reset all demo transactions, budgets, goals and chat to the original samples?'))return false;setDemo(syntheticState());return true}}
  const entryReady=url===entryTarget&&(!personalMode||accountPage||settingsPage||!['loading'].includes(workspaceStatus))
- return <Context.Provider value={page}><div className="acorra-route-surface" inert={!!entryTarget}>{url==='/'?<Landing/>:<Layout>{settingsPage?<Settings/>:accountPage?<Account/>:personalMode&&(!['ready','refreshing'].includes(workspaceStatus)||!state)?<WorkspaceStatus/>:<>{workspaceError&&personalMode&&<div role="alert" className="workspace-error"><p>{workspaceError}</p><button disabled={saving||workspaceStatus==='refreshing'} className="btn btn--secondary" onClick={reloadWorkspace}>Refresh saved records</button></div>}{url.startsWith('/cfo')?<Chat configured={false} dailyMessageLimit={100} messages={state.messages}/>:<Dashboard {...props as any}/>}</>}</Layout>}</div>{entryTarget&&<AppEntryTransition ready={entryReady} onCovered={()=>commitRoute(entryTarget)} onDone={finishEntry}/>}</Context.Provider>
+ return <Context.Provider value={page}><div className="acorra-route-surface" inert={!!entryTarget}>{url==='/'?<Landing/>:<Layout>{settingsPage?<Settings/>:accountPage?<Account/>:personalMode&&(!['ready','refreshing'].includes(workspaceStatus)||!state)?<WorkspaceStatus/>:<>{workspaceError&&personalMode&&<div role="alert" className="workspace-error"><p>{workspaceError}</p><button disabled={saving||workspaceStatus==='refreshing'} className="btn btn--secondary" onClick={reloadWorkspace}>Refresh saved records</button></div>}{url.startsWith('/cfo')?<Chat aiControls={<ChatAiControls/>} configured={false} dailyMessageLimit={100} messages={state.messages}/>:<Dashboard {...props as any}/>}</>}</Layout>}</div>{entryTarget&&<AppEntryTransition ready={entryReady} onCovered={()=>commitRoute(entryTarget)} onDone={finishEntry}/>}</Context.Provider>
 }
 class Boundary extends React.Component<any,any>{state={failed:false};static getDerivedStateFromError(){return {failed:true}}render(){return this.state.failed?<main style={{padding:40}}><h1>Let’s start fresh.</h1><p>The demo could not display that change. Reload to restore the sample records.</p><button onClick={()=>location.reload()}>Restore demo</button></main>:this.props.children}}
 createRoot(document.getElementById('root')!).render(<Boundary><App/></Boundary>)
