@@ -434,6 +434,23 @@
 @media(max-width:420px){.profile-auth-status{align-items:flex-start;flex-direction:column;gap:6px}.profile-auth-method{font-size:12px}}
 
 /* Settings is a small directory; the expression library is a nested destination. */
+.cfo-app .ai-connection-card{padding:24px}
+.ai-connection-heading{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.ai-connection-heading>div{flex:1;min-width:0}
+.cfo-app .ai-connection-heading h3{font-size:20px;letter-spacing:-.5px;margin:0 0 5px}
+.ai-connection-card p{font-size:13px;line-height:1.7;color:var(--cfo-muted);margin:0}
+.ai-availability{font-size:11px;font-weight:600;color:#71632f;background:#f7efd3;border-radius:7px;padding:6px 9px;white-space:nowrap}
+.ai-provider-row{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:18px 0;margin-top:10px;border-bottom:1px solid var(--cfo-stroke)}
+.ai-provider-row>div{display:grid;gap:5px}
+.ai-provider-row strong{font-size:14px}
+.ai-provider-row small,.ai-provider-row>span{font-size:12px;color:var(--cfo-muted)}
+.ai-connection-card .ai-connection-note{font-size:12px;padding-top:16px}
+.ai-guided-status{display:flex;align-items:flex-start;gap:12px;margin-top:22px;padding:16px;background:#edf5ef;border-radius:12px;color:#006648}
+.ai-guided-status>svg{flex-shrink:0;margin-top:2px}
+.ai-guided-status strong{font-size:13px}
+.ai-guided-status p{font-size:12px;margin-top:4px}
+.ai-connection-card>.settings-back{margin-top:12px;margin-bottom:0}
+@media(max-width:480px){.cfo-app .ai-connection-card{padding:20px}.ai-connection-heading{flex-wrap:wrap}.ai-connection-heading>div{flex-basis:calc(100% - 65px)}.ai-availability{margin-left:62px}.cfo-app .ai-connection-heading h3{font-size:18px}}
 .cfo-app .settings-page{max-width:900px;margin-inline:0;gap:28px}
 .cfo-app .settings-page>.settings-group{background:transparent;border:0;box-shadow:none;padding:0}
 .settings-group>h2{font-size:12px;font-weight:600;color:#65736b;letter-spacing:.3px;margin:0 0 12px 4px}

@@ -142,6 +142,16 @@
 .cfo-workspace progress { accent-color: var(--cfo-brand); }
 .cfo-workspace .page { padding: 0; }
 .cfo-chat-page { color: var(--cfo-ink); }
+.sandy-mode-badge{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border-radius:99px;background:#e5f1eb;color:#15513c;font-size:12px;font-weight:600;white-space:nowrap}
+.sandy-mode-badge>span{width:6px;height:6px;border-radius:50%;background:#00845e}
+.sandy-ai-preview{display:flex;align-items:center;gap:16px;padding:14px 16px;margin-bottom:18px;border:1px solid #d7e5dd;background:#f3f7f3;border-radius:14px}
+.sandy-ai-preview>div{flex:1;min-width:0}
+.sandy-ai-preview strong{font-size:13px;color:#183e2e}
+.sandy-ai-preview strong>span{display:inline-block;font-size:10px;font-weight:500;margin-left:6px;padding:3px 6px;border-radius:5px;background:#e7e9df;color:#57644f}
+.sandy-ai-preview p{font-size:12px;line-height:1.6;margin:5px 0 0;color:#52665c}
+.sandy-ai-preview>a{color:#006648;font-size:12px;font-weight:600;white-space:nowrap;min-height:44px;display:inline-flex;align-items:center}
+.sandy-ai-preview>a:focus-visible{outline:2px solid #006648;outline-offset:3px}
+@media(max-width:480px){.sandy-ai-preview{align-items:flex-start;flex-direction:column;gap:2px}.sandy-mode-badge{font-size:11px}}
 /* Keep the wider chat frame stable when disclosures or replies change content. */
 .cfo-app .cfo-chat-page { width: 100%; min-width: 0; max-width: none; margin-inline: 0; }
 .cfo-chat-page > div, .cfo-chat-page form, .cfo-chat-page form textarea { color: var(--cfo-ink); }

@@ -1,5 +1,5 @@
 import { Form } from '@adonisjs/inertia/react'
-import { router } from '@inertiajs/react'
+import { Link, router } from '@inertiajs/react'
 import { useRef } from 'react'
 import { BookOpen, LockKeyhole, Send, ShieldCheck, Sparkles, Trash2 } from 'lucide-react'
 import AppLayout from '~/layouts/app'
@@ -43,6 +43,7 @@ export default function CfoChat({ configured, messages, dailyMessageLimit }: Cfo
                 <SandyAvatar size="md" />
                 <span className="cfo-brand-type"><strong>Sandy the Squirrel</strong><span>Acorra’s friendly financial companion</span></span>
               </div>
+              <span className="sandy-mode-badge"><span aria-hidden="true" />{configured ? 'AI-powered' : 'Guided mode'}</span>
               {messages.length > 0 && <button className="btn btn--secondary btn--sm" type="button"
                 onClick={() => { if (window.confirm('Delete your CFO conversation history?')) router.delete('/cfo/chat') }}>
                 <Trash2 size={14}/> Clear history
@@ -62,7 +63,7 @@ export default function CfoChat({ configured, messages, dailyMessageLimit }: Cfo
               }
             </div>
             <div className="cfo-chat-compose">
-              {!configured && <details className="cfo-chat-mode"><summary>Guided mode <span>About Sandy</span></summary><p>Uses rules and your recorded financial calculations, not a generative AI model. Sandy can explain the numbers but cannot change your records.</p></details>}
+              {!configured && <div className="sandy-ai-preview"><div><strong>Bring your own AI <span>Planned</span></strong><p>AI-powered conversations using your own eligible subscription. Guided mode is active today.</p></div><Link href="/settings?section=ai">AI options →</Link></div>}
               <Form route="cfo.message.store" resetOnSuccess>
                 {({errors, processing}) => <div className="cfo-chat-form">
                   <label htmlFor="cfo-question" className="cfo-eyebrow">YOUR QUESTION</label>

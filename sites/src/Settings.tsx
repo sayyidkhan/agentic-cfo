@@ -3,7 +3,7 @@ import {Head,Link,usePage} from './bridge'
 import {sandyStates,sandyState} from './sandy_states'
 import SandyCharacter from './SandyCharacter'
 import SandyStage from './SandyStage'
-import {BookOpen,Pause,Play,RotateCcw,ChevronRight,ArrowLeft} from 'lucide-react'
+import {BookOpen,Pause,Play,RotateCcw,ChevronRight,ArrowLeft,Sparkles,ShieldCheck} from 'lucide-react'
 export default function Settings(){
  const [motion,setMotion]=useState(()=>{try{return localStorage.getItem('acorra-sandy-motion')!=='off'}catch{return true}}),[replay,setReplay]=useState(0)
  const toggleMotion=()=>setMotion(value=>{try{localStorage.setItem('acorra-sandy-motion',value?'off':'on')}catch{}return !value})
@@ -12,9 +12,11 @@ export default function Settings(){
  const [greeting,setGreeting]=useState(selected.id==='curious')
  useEffect(()=>{setGreeting(selected.id==='curious')},[selected.id])
  const hello=()=>{setMotion(true);setGreeting(true);setReplay(n=>n+1)}
+ useEffect(()=>{if(params.get('section')==='ai')document.getElementById('settings-ai-title')?.focus({preventScroll:true})},[page.url])
  useEffect(()=>{if(!params.has('sandy'))return;const title=document.getElementById('sandy-state-title');title?.focus({preventScroll:true});document.getElementById('sandy-state-preview')?.scrollIntoView({block:'start'})},[selected.id])
  if(!showSandy)return <div className="cfo-workspace settings-page"><Head title="Settings"/>
  <header className="cfo-page-intro"><div><h1>Settings</h1><p>Make Acorra work for you.</p></div></header>
+ <section className="settings-group" aria-labelledby="settings-ai-title"><h2 id="settings-ai-title" tabIndex={-1}>AI connection</h2><div className="cfo-card ai-connection-card"><div className="ai-connection-heading"><span className="settings-option-icon"><Sparkles size={22}/></span><div><h3>Bring your own AI</h3><p>Your subscription. Your conversations with Sandy.</p></div><span className="ai-availability">Planned</span></div><p>Use your own eligible AI subscription for more natural conversations about your spending, budgets and goals.</p><div className="ai-provider-row"><div><strong>ChatGPT</strong><small>Subscription connection</small></div><span>Not available yet</span></div><p className="ai-connection-note">ChatGPT plan usage needs a separate connection and permission. Signing in to Acorra does not enable AI. This hosted demo does not support subscription connections yet; availability will depend on provider approval and your plan’s limits.</p><div className="ai-guided-status"><ShieldCheck size={18}/><div><strong>Guided mode is active</strong><p>Sandy uses rules and your recorded figures. No questions are sent to an external AI provider.</p></div></div><Link className="settings-back" href="/cfo">Talk to Sandy <ChevronRight size={16}/></Link></div></section>
  <section className="settings-group" aria-labelledby="settings-companion-title"><h2 id="settings-companion-title">Companion</h2><div className="cfo-card settings-menu"><Link href="/settings?section=sandy" className="settings-option"><span className="settings-option-icon"><BookOpen size={22}/></span><div><h3>Sandy’s expressions</h3><p>Explore her moods and control her animations.</p></div><ChevronRight size={20} aria-hidden="true"/></Link></div></section>
  <section className="settings-group" aria-labelledby="settings-data-title"><h2 id="settings-data-title">Demo data</h2>
  <section className="cfo-card settings-reset"><div><h2>Reset demo</h2><p className="cfo-card-note">Restore the original sample finances and clear this tab’s demo chat. Saved accounts are not affected.</p></div><button type="button" className="btn btn--secondary" onClick={()=>{if(page.reset())setResetNotice(true)}}><RotateCcw size={16}/>Reset demo</button>{resetNotice&&<p role="status">Demo restored to its original samples.</p>}</section>
