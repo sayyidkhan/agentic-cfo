@@ -1,6 +1,6 @@
 # Initial Foundation Verification
 
-Automated checks performed by GitHub Actions on 2026-11-04 04:47 UTC.
+Automated checks performed by GitHub Actions on 2026-11-04 04:56 UTC.
 
 - **Generate app key:** PASS
 - **Run migrations:** PASS
@@ -16,8 +16,9 @@ Automated checks performed by GitHub Actions on 2026-11-04 04:47 UTC.
 [ info ] loading hooks...
 [ info ] generating indexes...
 [ info ] codegen: created 6 file(s)
-[ info ] tuyau: created api client registry (./.adonisjs/client/registry) (9.84 ms)
+[ info ] tuyau: created api client registry (./.adonisjs/client/registry) (7.46 ms)
 [ success ] Codegen files generated
+app/controllers/cfo_chat_controller.ts(19,39): error TS2345: Argument of type '{ configured: boolean; messages: { id: number; role: "user" | "assistant"; content: string; }[]; dailyMessageLimit: number; }' is not assignable to parameter of type 'never'.
 inertia/components/refresh_button.tsx(12,22): error TS2561: Object literal may only specify known properties, but 'preserveScroll' does not exist in type 'ReloadOptions<RequestPayload>'. Did you mean to write 'preserveUrl'?
 \`\`\`
 </details>
