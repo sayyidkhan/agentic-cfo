@@ -173,7 +173,7 @@ test('Sandy artwork is served intact with safe methods and immutable versioned U
 test('Sandy’s motion keeps feet anchored and independently animates face and tail',async()=>{
  const {createMotionRig,sampleSandyPose}=await import('./dist/sandy-motion.mjs')
  const size=100,index=(x,y)=>(Math.floor(y*size)*size+Math.floor(x*size))*2
- const a=index(.4,.96),b=index(.78,.96),tail=index(.2,.25),paw=index(.64,.555)
+ const a=index(.36,.95),b=index(.72,.95),tail=index(.16,.8),paw=index(.56,.5)
  for(const mood of ['curious','calm','watchful','concerned','screaming','celebrating','relieved']){
   const rig=createMotionRig(mood,size),first=Float32Array.from(rig.frame(0)),moving=rig.frame(1.25)
   for(const foot of [a,b]){assert.ok(Math.abs(moving[foot])<.00001);assert.ok(Math.abs(moving[foot+1])<.00002,'feet stay planted within each complete frame')}
@@ -205,7 +205,7 @@ test('Sandy preserves eye shapes throughout the former blink cycle',async()=>{
  function point(field,x,y){const i=(Math.floor(y*size)*size+Math.floor(x*size))*2;return [x*800+field[i]*800,y*800+field[i+1]*800]}
  for(const t of [0,1.12,1.25,1.38,4.75,5.06,7.05]){
   const field=rig.frame(t)
-  for(const [x,y] of [[.57,.255],[.724,.321]]){
+  for(const [x,y] of [[.471,.157],[.588,.108]]){
    for(const [dx,dy] of [[.025,0],[0,.025]]){
     const a=point(field,x-dx,y-dy),b=point(field,x+dx,y+dy),diameter=Math.hypot(b[0]-a[0],b[1]-a[1])
     assert.ok(Math.abs(diameter-40)<1.5,'eye diameter must not squash or twitch')
@@ -238,7 +238,7 @@ test('Painted blinks change eyelid texture only, without warping the face or rap
  assert.equal(rig.frame(0),open)
  const result=rig.frame(1);let changed=0
  for(let i=0;i<result.data.length;i+=4){assert.equal(result.data[i+3],255);if(result.data[i]!==open.data[i])changed++}
- assert.ok(changed>200&&changed<2400,'only local eyelid patches should change')
+ assert.ok(changed>40&&changed<2400,'only local eyelid patches should change (the beaver\'s eyes are smaller than the squirrel\'s)')
  assert.deepEqual(open.data,snapshot);assert.deepEqual(rig.frame(0).data,snapshot)
  const mouth=(Math.floor(.39*200)*200+Math.floor(.65*200))*4;assert.equal(result.data[mouth],open.data[mouth])
  assert.equal(hasPaintedBlink('calm'),false);assert.equal(hasPaintedBlink('relieved'),false)
@@ -267,8 +267,8 @@ test('Refined lids close from above and tail/paw movement stays continuous',asyn
  const {createMotionRig}=await import('./dist/sandy-motion.mjs')
  const make=value=>({width:400,height:400,data:new Uint8ClampedArray(400*400*4).fill(value)})
  const original=make(40),closed=make(180),frame=createPaintedBlink(original,closed,'curious').frame(.5)
- function pixel(v){const x=.57-v*Math.sin(.28),y=.255+v*Math.cos(.28);return frame.data[(Math.floor(y*400)*400+Math.floor(x*400))*4]}
- assert.ok(pixel(-.025)>pixel(.025)+50,'upper lid must lead instead of both lids squeezing symmetrically')
+ function pixel(v){const x=.471-v*Math.sin(-.28),y=.157+v*Math.cos(-.28);return frame.data[(Math.floor(y*400)*400+Math.floor(x*400))*4]}
+ assert.ok(pixel(-.008)>pixel(.008)+50,'upper lid must lead instead of both lids squeezing symmetrically')
  for(const mood of ['curious','calm','watchful','concerned','screaming','celebrating','relieved']){
   const rig=createMotionRig(mood,40);let last=Float32Array.from(rig.frame(0))
   for(let t=1/60;t<12;t+=1/60){const frame=rig.frame(t);for(let i=0;i<frame.length;i++)assert.ok(Math.abs(frame[i]-last[i])<.012,'no abrupt deformation steps at display cadence');last.set(frame)}
@@ -289,12 +289,12 @@ test('GPU displacement retains subpixel precision and unsupported contexts fall 
  assert.ok(sampleSandyPose('celebrating',1.3).stretch<0,'landing absorbs the hop')
 })
 
-test('Acorn-holding arms retain their shape instead of stretching with isolated paw motion',async()=>{
+test('Twig-holding arms retain their shape instead of stretching with isolated paw motion',async()=>{
  const {createMotionRig}=await import('./dist/sandy-motion.mjs');const size=200,rig=createMotionRig('curious',size)
  const point=(field,x,y)=>{const i=(Math.floor(y*size)*size+Math.floor(x*size))*2;return [(x+field[i])*800,(y+field[i+1])*800]}
  for(const t of [0,1,2,4,5.5,6,7,9]){
-  const field=rig.frame(t),elbow=point(field,.54,.56),wrist=point(field,.64,.55)
-  assert.ok(Math.abs(Math.hypot(wrist[0]-elbow[0],wrist[1]-elbow[1])-Math.hypot(.1,.01)*800)<.5,'held-acorn forearm length stays stable')
+  const field=rig.frame(t),elbow=point(field,.3,.46),wrist=point(field,.22,.41)
+  assert.ok(Math.abs(Math.hypot(wrist[0]-elbow[0],wrist[1]-elbow[1])-Math.hypot(.08,.05)*800)<.5,'twig-holding forearm length stays stable')
  }
  const {createPaintedBlink,hasPaintedBlink}=await import('./dist/sandy-blink.mjs');assert.equal(hasPaintedBlink('greeting'),true)
 })
@@ -326,14 +326,14 @@ test('season story deposits one acorn after release and preserves the winter sta
 })
 
 
-test('winter acting moves the head and tail while preserving the bench and acorn grip',async()=>{
+test('winter acting moves the head and tail while preserving the lounger and gold-acorn grip',async()=>{
  const {createWinterRig}=await import('./dist/winter-motion.mjs'),rig=createWinterRig(),first=Float32Array.from(rig.frame(0));
- const anchors=[[.24,.29],[.30,.4],[.37,.6],[.45,.77],[.76,.75],[.9,.85],[.535,.46],[.595,.45],[.65,.47]];
+ const anchors=[[.1,.92],[.3,.86],[.45,.95],[.9,.35],[.88,.24],[.94,.2],[.55,.33],[.5,.37],[.6,.38]];
  const at=(x,y)=>((Math.round(y*rig.size-.5)*rig.size+Math.round(x*rig.size-.5))*2);
  let movement=0;
  for(let t=0;t<8;t+=.125){const f=rig.frame(t);for(const value of f){assert.ok(Number.isFinite(value));assert.ok(Math.abs(value)<.05)}
   for(const [x,y] of anchors){const k=at(x,y);assert.ok(Math.abs(f[k])<1e-9,'chair and grip anchors must stay still');assert.ok(Math.abs(f[k+1])<1e-9)}
-  for(const [x,y] of [[.55,.20],[.12,.30]]){const k=at(x,y);movement=Math.max(movement,Math.hypot(f[k]-first[k],f[k+1]-first[k+1]))}
+  for(const [x,y] of [[.62,.12],[.68,.88]]){const k=at(x,y);movement=Math.max(movement,Math.hypot(f[k]-first[k],f[k+1]-first[k+1]))}
  }
  assert.ok(movement>.01,'the acting must visibly change the character, not just the background');
  const loop=rig.frame(8);for(let i=0;i<first.length;i++)assert.ok(Math.abs(loop[i]-first[i])<1e-7,'loop must join without a jump');

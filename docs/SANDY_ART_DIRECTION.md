@@ -1,68 +1,55 @@
-# Sandy — rendered character direction
+# Sandy — rendered character direction (beaver)
 
-Sandy is Acorra’s empathetic squirrel companion. This revision replaces the rejected primitive 3D rig with original rendered character artwork, preserving all seven states and the Settings reference library.
+Sandy is Acorra’s calm, capable beaver companion. This revision replaces the earlier squirrel artwork, keeping all seven states, the greeting, the seasonal hero poses and the Settings reference library.
 
 ## Visual identity
 
-- Warm cinnamon and caramel fur with a cream muzzle and belly.
-- Expressive hazel eyes, short squirrel muzzle, small tufted ears and discreet front teeth.
-- A large fluffy plume tail with an S-shaped curl; no tubular or ring-shaped tail.
-- Forest-green neckerchief with a champagne-gold acorn clasp.
-- Soft studio lighting, detailed groomed fur, friendly cinematic 3D rendering.
-- Transparent background; consistent square framing, camera angle and proportions.
+- Adult anthropomorphic beaver, upright on two legs; stocky pear-shaped body.
+- Rich chestnut fur, darker walnut back and limbs, cream-tan muzzle, chin and chest.
+- Broad blunt muzzle, wide dark nose, small round ears set low, warm hazel-brown eyes.
+- Two large warm ivory front teeth, visible even with the mouth closed. Real beaver teeth are orange; ivory is a deliberate choice so the teeth never read as red on screen.
+- Large flat paddle tail in dark charcoal-brown with a stylised crosshatch, always visible in the outline.
+- Honey-brown leather tool belt with a carved wooden acorn buckle. No apron and no neckerchief.
+- Friendly 3D animated-film rendering, soft studio light, transparent background, consistent square framing.
+
+Avoid: bushy tails, ear tufts, squirrel poses with an acorn held at the chest, a green apron, wide startled eyes as the default.
 
 ## Asset inventory
 
-The optimized production images are in `sites/assets/sandy/`: `curious.webp`, `calm.webp`, `watchful.webp`, `concerned.webp`, `screaming.webp`, `celebrating.webp`, `relieved.webp`. The built-in image-generation tool created the artwork without custom API credentials. PNG outputs were converted to 800×800 WebP for delivery while preserving transparency.
+| File | Size | Pose |
+| --- | --- | --- |
+| `sites/assets/sandy/curious.webp` | 800×800 | Head tilt, leafy twig at its side |
+| `sites/assets/sandy/calm.webp` | 800×800 | Eyes closed, paws on belt (also the eyelid source for blinks) |
+| `sites/assets/sandy/watchful.webp` | 800×800 | Paw at chin, one brow raised |
+| `sites/assets/sandy/concerned.webp` | 800×800 | Paw on cheek, worried brows |
+| `sites/assets/sandy/screaming.webp` | 800×800 | Paws on cheeks, comedic alarm |
+| `sites/assets/sandy/celebrating.webp` | 800×800 | Arms up, twig held high, eyes closed |
+| `sites/assets/sandy/relieved.webp` | 800×800 | Eyes closed, paw on chest |
+| `sites/assets/sandy/greeting.webp` | 800×800 | Waving hello |
+| `sites/assets/seasons/sandy-carry.webp` | 800×800 | Walking with a bundle of sticks |
+| `sites/assets/seasons/sandy-stash.webp` | 1254×1254 | Crouching, adding a stick to a stack |
+| `sites/assets/seasons/sandy-winter-rest.webp` | 1254×1254 | Reclining on a lounger, eyes closed |
+| `sites/assets/seasons/sandy-winter-gold.webp` | 1254×1254 | Reclining, holding a gold acorn |
 
-## Generation prompts
+The four seasonal backgrounds are unchanged. In the seasonal hero the stash drawn in code is now six cut sticks that stack into a small lodge (`Stick` in `sites/src/SeasonalHero.tsx`).
 
-Base character prompt:
+## How the artwork was made
 
-> Design Sandy, an original lovable squirrel for Acorra, a premium friendly personal-finance app. High quality 3D animated-film character craftsmanship. Full body isolated on transparent background, square framing, entire huge fluffy S-shaped tail, ears and feet visible. Warm cinnamon and caramel fur, soft cream muzzle and belly, delicate groomed fur, large dark hazel eyes with catchlights, small dark brown nose, rounded cheeks, short squirrel muzzle, two tiny front teeth. Small rounded tufted ears, not rabbit ears. A glorious soft plume tail curving beside the body, not a ring or tube. Appealing pear-shaped proportions, moderately large head, nimble hands, substantial hind feet. Forest green neckerchief and discreet champagne-gold acorn clasp. Slight three-quarter front view, eye-level camera, warm soft studio lighting, subtle rim light. Curious mood: slight head tilt, raised eyebrow, inquisitive half-smile, holding an acorn at chest with both paws. Warm, intelligent, empathetic companion for adults. No text, labels, watermarks, logos, environment or pedestal. No plastic low-poly surfaces or giant teeth.
+1. Identity sheet (front, back, portrait) generated with Seedream 5.5 on Higgsfield (job `3707f4ac-d5ae-449a-a73c-674dfea2dbe6`).
+2. Each pose generated with GPT Image 2.6 on Higgsfield (1:1, high quality, transparent background) with the sheet attached as the identity reference, then the teeth were recoloured from orange to warm ivory (shading kept), and each image was resized to the sizes above and saved as WebP (quality 88).
 
-For every variant, the base image is supplied as an identity reference. Preserve the same squirrel’s face, fur, eyes, muzzle, ears, tail, scarf, clasp, lighting, camera and scale. Change only expression and pose. All variants use a transparent background and contain no text or added characters.
+Shared prompt (add one POSE line per state):
 
-| State | Expression and pose prompt |
-| --- | --- |
-| Curious | Slight head tilt, one raised eyebrow, inquisitive half-smile, both paws holding acorn at chest. |
-| Calm | Gently closed smiling eyes, relaxed upright posture, subtle confident smile, paws holding acorn at waist. |
-| Watchful | Open attentive eyes, one eyebrow raised, thoughtful closed mouth, one paw at chin and the other holding acorn. Helpful, not angry. |
-| Concerned | Raised inner brows, gently worried eyes, slightly downturned mouth, one paw on cheek, other holding acorn. No tears or despair. |
-| Screaming | Comedic marmot-inspired alarm; upright head, very wide eyes with smaller pupils, tall oval open mouth, two little upper teeth, both paws against cheeks, startled stance. Funny, not terrifying. No acorn in hands. |
-| Celebrating | Both arms raised, one paw holding acorn high, smiling eyes, delighted open grin with tiny teeth. No added confetti. |
-| Relieved | Softly closed eyes, relaxed brows, gentle smile, lowered shoulders, one paw on chest and other holding acorn near belly. |
+> The same beaver character as the attached character sheet (use it only for identity: face, chestnut fur, cream-tan muzzle, two large warm ivory front teeth, small round low ears, dark webbed feet, large flat crosshatched paddle tail). Outfit change: no apron at all; it wears only a honey-brown leather tool belt at the waist with a small carved wooden acorn buckle. Stylized 3D animated-film character, soft studio light, warm key from upper left, gentle rim light, fur in large soft groomed clumps. Full body, the whole flat paddle tail visible and angled out to the viewer's left so it shows in the outline, centred in a square frame with small even margins, slight three-quarter front view, eye-level camera. Transparent background, no ground, no shadow, no text.
 
-## Motion and limits
+## Motion calibration
 
-The selected artwork now uses a calibrated 2D deformation rig. Each mood has an authored sequence of anticipation, gesture, hold, follow-through and rest. Head tilts, tail swishes, breathing and paw movement have stronger amplitudes and are coordinated with delayed tail follow-through; eye geometry retains its original shape. Blinks use cached eyelid texture from Calm Sandy, registered and feathered over each open eye before posing the head. Upper/lower reveal masks close and reopen roughly every six seconds, with a guaranteed closed pose when rendering drops frames; no pupil or eye geometry is squeezed. Calm and Relieved retain their original closed eyes. Synthetic compression and drawn eyelash strokes remain disabled. Thumbnails remain still. Larger chat/account avatars share the animation. The artwork is not a skeletal 3D model. The alarm reaction settles quickly; celebration has two small hops followed by rest. Exact head rotations preserve face shape, and floating-point displacement removes subpixel stepping. Pause/resume retains the current pose; replay starts the sequence again. Movements remain gentle and silent. Pause preference is browser-local; reduced-motion settings suppress animation and restore the static artwork. Frames are drawn fully into an offscreen bitmap and presented on one persistent canvas; artwork is decoded once, and no image/filter URLs are changed per frame. Offscreen/background animations stop drawing, and observers/frame callbacks are cleaned up on navigation. Automatic selection based on real finances is not enabled.
+The deformation rig, painted blink and greeting wave are unchanged in behaviour; only their landmarks were re-measured on the beaver artwork (fractions of the 800px image):
 
-### Motion refinement
+- `sites/src/sandy_blink.ts`: eye centres, radii and tilt per open-eyed pose; closed lids sampled from Calm. Celebrating, Calm and Relieved are painted with closed eyes and do not blink.
+- `sites/src/sandy_motion.ts`: neck pivot per mood, head region down to the chin, tail region lower left with its root at (0.30, 0.76), belly breathing above the belt.
+- `sites/src/winter_motion.ts`: head, paddle tail and belly regions on the lounger pose; lounger and gold-acorn paws stay anchored.
+- `sites/src/SandyGreeting.tsx` and `style.css`: forearm cut-out and elbow pivot for the wave.
+- `sites/src/SandyExpression.tsx`: vector beaver fallback if the artwork cannot load.
 
-Tail tips follow the root with a second delay, and paw lifts follow a small inward arc. Upper eyelids lead each blink; the lower lids meet them gently, with varied deterministic pauses between blinks. The renderer targets display-rate updates (up to 60 fps) and limits animation-time jumps after a stalled frame. Existing pause, reduced-motion, static fallback and atomic frame presentation remain in place. These are refinements to the rendered-art rig, not a new 3D model.
-
-Mood changes keep the original artwork visible until a complete frame for that specific mood is ready, avoiding an empty canvas during the transition.
-
-### Rendering optimization and body mechanics
-
-An optional WebGL renderer performs the image deformation on the GPU, using 16-bit encoded displacement and premultiplied artwork to preserve fur edges. It needs no new dependency or float-texture extension. Unsupported/failed WebGL initialization and lost contexts use the CPU renderer. CPU raster coordinates are cached per output buffer and interpolation is unrolled. A local 440px benchmark measured a median 19.6ms before and 17.6ms after for the raster alone, with identical pixel values on a deterministic test image; this is not an iPhone frame-rate claim. Cloud-browser WebGL was unavailable, so browser QA exercised the CPU fallback. Curious Sandy now leans with the listening/acorn gesture; celebration includes compression before takeoff, extension in flight, and compression on landing. The artwork still has the limits of a 2D rig.
-
-### Greeting performance and arm correction
-
-`sites/assets/sandy/greeting.webp` adds a smiling, free-paw greeting pose of the same Sandy. `SandyGreeting.tsx` clips a rigid forearm from that artwork and rotates it about a covered elbow; the original forearm is excluded from the body layer. Its mask excludes the ear. Browser-native SVG/CSS animation supplies three wave beats, a small greeting bounce, a lean, a contact shadow and brief gold sparkles. A cached closed-eye texture is prepared once; no image URLs change per frame. Pause/resume freezes the timeline, Replay restarts it, and reduced-motion shows the static pose. The original curious acorn-holding arm no longer uses isolated hand displacement: that deformation was stretching the forearm. All seven mood reactions remain available in Settings alongside Wave hello. Tapping the large Settings character triggers the greeting. Large neutral avatars also use it.
-
-Greeting asset was made with the built-in image-generation tool, using `curious.webp` as the identity reference, and converted to 800px transparent WebP. Prompt:
-
-> Create an animation-ready greeting pose of exactly this Sandy squirrel, preserving her 3D animated-film fur detail, cinnamon and cream colors, hazel eyes, green neckerchief with tiny gold acorn clasp, enormous fluffy tail, proportions, camera and lighting. Full body square transparent PNG with clear margins. Tail on viewer left. Friendly delighted open smile, looking at viewer. Viewer-left paw holds one acorn at waist. Viewer-right arm extends out to the right, elbow out at shoulder level, forearm raised, open palm facing camera for a wave. Waving hand and forearm are separated from face, ear and torso by transparent space so the forearm can rotate independently around the elbow. Keep feet visible and grounded, body upright, head slightly tilted. Same premium furry Sandy. One character, no text, panels, background or drop shadow.
-
-Validation: inspected both wave extremes and a complete painted blink in browser; checked pause/resume, tap-to-wave, switching back to the mood pose and homepage framing. The held-acorn forearm has a regression check for stable length throughout the timeline. Browser QA does not establish physical iPhone performance.
-
-
-### Relieved sigh visibility fix
-Relieved Sandy now has a six-second compositor-driven, foot-anchored breath-in,
-exhale and settling gesture. It begins immediately, including while the internal
-canvas is loading, and removes the perceived long frozen interval. The original
-art, closed-eye smile and connected arms are preserved; the existing internal
-head/tail rig remains. Pause freezes the outer gesture, Play resumes it, Replay
-remounts its timeline, and reduced-motion disables it. Static library thumbnails
-remain paused at the neutral pose.
+Tests in `sites/tests.mjs` use the same landmarks. If artwork is regenerated, re-measure these points first.

@@ -4,7 +4,7 @@ A personal finance application helping **working professionals** manage monthly 
 
 **Hackathon:** UOB Theme 3 — Proactive Financial Wellbeing and Engagement.
 
-**Mascot:** Sandy the Squirrel. Sites uses original rendered artwork and animation; the separate Adonis app retains its placeholder.
+**Mascot:** Sandy the Beaver. Sites uses original rendered artwork and animation; the separate Adonis app retains its earlier squirrel placeholder.
 
 **Former working title:** Agentic CFO. The GitHub repository retains its technical name to avoid breaking existing integrations.
 

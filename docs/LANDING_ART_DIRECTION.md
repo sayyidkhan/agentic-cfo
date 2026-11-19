@@ -125,3 +125,7 @@ the quiet color shimmer stays. Reduced motion shows exact final values directly.
 Browser QA verified replay on tab selection, matching intermediate cents/widths,
 exact final totals, and the mobile layout at 390px and 320px without overflow.
 The deterministic animation tests also cover zero limits and overspent budgets.
+
+## November 2026: beaver update
+
+Sandy is now a beaver (see `docs/SANDY_ART_DIRECTION.md`). The seasonal backgrounds are unchanged. The code-drawn acorn stash and the released acorn are now cut sticks that stack into a small lodge; the story timing in `season_story.ts` is unchanged (its variables still say nut and stash). Winter keeps the gold acorn as Acorra’s brand symbol. Sections above describe the original squirrel version.
