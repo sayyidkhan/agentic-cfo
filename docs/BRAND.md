@@ -7,7 +7,7 @@
 ## Current implementation
 - Application branding: Acorra
 - The chat experience is named **Chat with Sandy**.
-- On Sites, Sandy uses original rendered beaver artwork: chestnut fur, cream-tan muzzle, bold orange front teeth, small round ears, a flat crosshatched paddle tail and a honey-brown leather tool belt with a carved wooden acorn buckle. The separate Adonis/Zo app retains its existing placeholder icon.
+- On Sites, Sandy uses original rendered beaver artwork: chestnut fur, cream-tan muzzle, large warm ivory front teeth, small round ears, a flat crosshatched paddle tail and a honey-brown leather tool belt with a carved wooden acorn buckle. The separate Adonis/Zo app retains its existing placeholder icon.
 - Character idea: Sandy is a builder. Small habits are sticks; your safety net is the lodge you build, one stick at a time.
 - Sandy was redrawn as a beaver (November 2026) because the earlier squirrel read too close to an established Singapore bank savings mascot.
 - Keep the product refined, welcoming and habit-focused, not childish or judgmental.

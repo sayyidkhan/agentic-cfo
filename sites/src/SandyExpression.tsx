@@ -28,7 +28,7 @@ export default function SandyExpression({mood}:{mood:SandyStateId}){
  <path fill="none" d={worried?'M126 80q9 1 20-6m38 0q10 7 21 6':scream?'M126 72q9-7 20-3m38 0q10-4 21 3':watch?'M126 80l21 5m37 0 22-8':curious?'M126 80q9-7 20-5m38 7 20 4':'M128 82q8-4 16-3m42 0q8-1 16 3'}/>
  </g>
  <path fill={paint('nose')} stroke="none" d="M148 112q18-12 36 0c0 12-9 18-18 18s-18-6-18-18Z"/>
- {scream?<><ellipse cx="166" cy="148" rx="15" ry="20" fill="#4a2a24"/><path d="M158 132h16v12h-16Z" fill="#e98a2c" stroke="#8a4a14" strokeWidth="1.5"/></>:<><path fill="none" d={joy?'M146 136q20 16 40 0':worried?'M150 142q16-6 32 0':'M150 136q16 9 32 0'} strokeWidth="2.5"/><path d="M158 137h16v13h-16Z" fill="#e98a2c" stroke="#8a4a14" strokeWidth="1.5"/><path d="M166 137v13" stroke="#8a4a14" strokeWidth="1"/></>}
+ {scream?<><ellipse cx="166" cy="148" rx="15" ry="20" fill="#4a2a24"/><path d="M158 132h16v12h-16Z" fill="#f5ecd5" stroke="#a08866" strokeWidth="1.5"/></>:<><path fill="none" d={joy?'M146 136q20 16 40 0':worried?'M150 142q16-6 32 0':'M150 136q16 9 32 0'} strokeWidth="2.5"/><path d="M158 137h16v13h-16Z" fill="#f5ecd5" stroke="#a08866" strokeWidth="1.5"/><path d="M166 137v13" stroke="#a08866" strokeWidth="1"/></>}
  <g fill="none" stroke="#c99a6a" strokeWidth="1.3" opacity=".7"><path d="M128 128l-20-4m21 10-18 3m96-9 20-4m-21 10 18 3"/></g>
  {joy?<path fill={paint('fur')} d="M112 176 90 128q-6-14 4-16 9-1 13 12l22 44m94 8 22-48q6-14-4-16-9-1-13 12l-22 44"/>:<path fill={paint('fur')} d="M114 180q-14 26 6 50l14-8-6-34m90-8q14 26-6 50l-14-8 6-34"/>}
  </g>

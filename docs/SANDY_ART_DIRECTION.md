@@ -7,7 +7,7 @@ Sandy is Acorra’s calm, capable beaver companion. This revision replaces the e
 - Adult anthropomorphic beaver, upright on two legs; stocky pear-shaped body.
 - Rich chestnut fur, darker walnut back and limbs, cream-tan muzzle, chin and chest.
 - Broad blunt muzzle, wide dark nose, small round ears set low, warm hazel-brown eyes.
-- Two bold orange-amber front teeth, visible even with the mouth closed.
+- Two large warm ivory front teeth, visible even with the mouth closed. Real beaver teeth are orange; ivory is a deliberate choice so the teeth never read as red on screen.
 - Large flat paddle tail in dark charcoal-brown with a stylised crosshatch, always visible in the outline.
 - Honey-brown leather tool belt with a carved wooden acorn buckle. No apron and no neckerchief.
 - Friendly 3D animated-film rendering, soft studio light, transparent background, consistent square framing.
@@ -36,11 +36,11 @@ The four seasonal backgrounds are unchanged. In the seasonal hero the stash draw
 ## How the artwork was made
 
 1. Identity sheet (front, back, portrait) generated with Seedream 5.5 on Higgsfield (job `3707f4ac-d5ae-449a-a73c-674dfea2dbe6`).
-2. Each pose generated with GPT Image 2.6 on Higgsfield (1:1, high quality, transparent background) with the sheet attached as the identity reference, then resized to the sizes above and saved as WebP (quality 88).
+2. Each pose generated with GPT Image 2.6 on Higgsfield (1:1, high quality, transparent background) with the sheet attached as the identity reference, then the teeth were recoloured from orange to warm ivory (shading kept), and each image was resized to the sizes above and saved as WebP (quality 88).
 
 Shared prompt (add one POSE line per state):
 
-> The same beaver character as the attached character sheet (use it only for identity: face, chestnut fur, cream-tan muzzle, bold orange-amber front teeth, small round low ears, dark webbed feet, large flat crosshatched paddle tail). Outfit change: no apron at all; it wears only a honey-brown leather tool belt at the waist with a small carved wooden acorn buckle. Stylized 3D animated-film character, soft studio light, warm key from upper left, gentle rim light, fur in large soft groomed clumps. Full body, the whole flat paddle tail visible and angled out to the viewer's left so it shows in the outline, centred in a square frame with small even margins, slight three-quarter front view, eye-level camera. Transparent background, no ground, no shadow, no text.
+> The same beaver character as the attached character sheet (use it only for identity: face, chestnut fur, cream-tan muzzle, two large warm ivory front teeth, small round low ears, dark webbed feet, large flat crosshatched paddle tail). Outfit change: no apron at all; it wears only a honey-brown leather tool belt at the waist with a small carved wooden acorn buckle. Stylized 3D animated-film character, soft studio light, warm key from upper left, gentle rim light, fur in large soft groomed clumps. Full body, the whole flat paddle tail visible and angled out to the viewer's left so it shows in the outline, centred in a square frame with small even margins, slight three-quarter front view, eye-level camera. Transparent background, no ground, no shadow, no text.
 
 ## Motion calibration
 
