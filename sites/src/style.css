@@ -59,7 +59,7 @@ body{margin:0;background:#f8f6ef}button,a,input,select,textarea{-webkit-tap-high
 .sandy-performance-options button{border:1px solid #d7decd;border-radius:10px;padding:10px 14px;font-size:12px;color:#36513e;background:#fffdf6}
 .sandy-performance-options button[aria-pressed=true]{background:#214f3d;color:#fff;border-color:#214f3d;box-shadow:0 4px 12px #214f3d18}
 .sandy-greeting{max-width:440px;isolation:isolate}.sandy-greeting-scene{display:block;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 9px 7px #5a3c1412)}
-.sandy-greeting-body{transform-origin:590px 945px}.sandy-greeting-arm{transform-origin:797px 497px}.sandy-greeting-blink{opacity:0}.sandy-hello-sparkles{opacity:0;transform-origin:550px 400px}.sandy-ground-shadow{transform-origin:590px 957px}
+.sandy-greeting-body{transform-origin:560px 960px}.sandy-greeting-arm{transform-origin:805px 430px}.sandy-greeting-blink{opacity:0}.sandy-hello-sparkles{opacity:0;transform-origin:550px 400px}.sandy-ground-shadow{transform-origin:590px 957px}
 .sandy-greeting.is-loaded .sandy-greeting-body{animation:sandy-hello-body 6s linear infinite}
 .sandy-greeting.is-loaded .sandy-greeting-arm{animation:sandy-hello-wave 6s ease-in-out infinite}
 .sandy-greeting.is-loaded .sandy-greeting-blink{animation:sandy-hello-blink 6s linear infinite}

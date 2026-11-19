@@ -4,7 +4,7 @@
 **Status:** Product baseline and dashboard refinement requirements; implementation evidence is recorded separately.
 **Audience:** Working professionals managing personal finances, initially in SGD.
 **Product:** Your personal CFO. **Brand promise:** Grow your wealth, one habit at a time.
-**Companion:** Sandy the Squirrel. **Primary challenge alignment:** UOB Theme 3.
+**Companion:** Sandy the Beaver. **Primary challenge alignment:** UOB Theme 3.
 
 ## 1. Product purpose
 
@@ -210,7 +210,7 @@ A later daily **budget allowance** may divide a defined remaining discretionary 
 | AI prompt handoff | Keep Sandy as the in-app companion. Do not add a competing copy-paste-AI workflow or imply guided mode is generative |
 | Local-device storage and onboarding banners | Do not copy its storage claims: Acorra's demo is tab-memory, profile data is account-persisted, and finance persistence is separately gated |
 
-Retain Acorra's forest green, champagne gold, warm ivory and original squirrel identity. Borrow clarity and useful interactions rather than branding, artwork or unverified calculations.
+Retain Acorra's forest green, champagne gold, warm ivory and original beaver identity. Borrow clarity and useful interactions rather than branding, artwork or unverified calculations.
 
 ## 11. Scope and sequencing
 
@@ -274,7 +274,7 @@ Actual usefulness of proactive guidance and continued manual record-keeping rema
 
 - Overview handles highlights and current net worth; Spending handles transactions; Plan handles category budgets, goals and bills.
 - Net-worth/account detail remains under Overview. Sandy remains a distinct companion destination.
-- Profile is the last mobile tab after Plan; Settings is a directory, with the squirrel-state library inside it.
+- Profile is the last mobile tab after Plan; Settings is a directory, with Sandy’s expression library inside it.
 - The dashboard refinement follows Sections 6–8 and preserves the release lock. Proposed backlog items remain separate from delivered changes; see implementation evidence below.
 - The official UOB challenge transcription is unchanged. Earlier requirements that conflict with this revised product/navigation baseline are superseded; historical verification reports retain their original dates and evidence.
 

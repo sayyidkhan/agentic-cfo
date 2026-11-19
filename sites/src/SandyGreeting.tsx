@@ -12,17 +12,18 @@ function closedEyes(){
   return c.toDataURL('image/webp',.92)
  })().catch(error=>{closedArtwork=undefined;throw error})
 }
-/** Real cutout forearm rotation: the raised paw stays rigid, with a covered elbow joint. */
+/** Real cutout forearm rotation: the raised paw stays rigid, with a covered elbow joint (beaver calibration). */
 export default function SandyGreeting({animated=true,replay=0}:{animated?:boolean,replay?:number}){
  const id='greeting'+useId().replace(/:/g,''),[closed,setClosed]=useState<string>(),[loaded,setLoaded]=useState(false),[failed,setFailed]=useState(false)
  useEffect(()=>{let active=true;const img=new Image();img.src=greeting;img.decode().then(()=>{if(active)setLoaded(true)}).catch(()=>{if(active)setFailed(true)});closedEyes().then(value=>{if(active)setClosed(value)}).catch(()=>{});return()=>{active=false}},[])
  if(failed)return <SandyCharacter mood="curious" animated={animated} replay={replay}/>
- const arm='M 802 438 Q 772 460 775 505 Q 779 542 814 550 L 1000 620 L 1080 300 L 855 300 L 838 395 Z'
+ // Beaver calibration (1000-unit artwork space): the raised forearm and paw, cut just below the elbow.
+ const arm='M 778 418 Q 768 372 782 330 L 775 60 L 1060 60 L 1060 330 L 868 350 Q 872 400 845 430 Q 808 446 778 418 Z'
  return <div className={`sandy-character sandy-greeting${animated?' is-playing':''}${loaded?' is-loaded':''}`} role="img" aria-label="Sandy smiling and waving hello">
  <svg viewBox="-90 -95 1180 1180" className="sandy-greeting-scene" aria-hidden="true">
- <defs><clipPath id={id+'arm'}><path d={arm}/></clipPath><clipPath id={id+'body'}><path clipRule="evenodd" d={'M -150 -150 H 1150 V 1150 H -150 Z '+arm}/></clipPath><clipPath id={id+'elbow'}><ellipse cx="797" cy="497" rx="38" ry="48"/></clipPath></defs>
+ <defs><clipPath id={id+'arm'}><path d={arm}/></clipPath><clipPath id={id+'body'}><path clipRule="evenodd" d={'M -150 -150 H 1150 V 1150 H -150 Z '+arm}/></clipPath><clipPath id={id+'elbow'}><ellipse cx="805" cy="425" rx="38" ry="46"/></clipPath></defs>
  <g key={replay} className="sandy-greeting-performance">
- <ellipse className="sandy-ground-shadow" cx="590" cy="957" rx="200" ry="18" fill="#38503b" opacity=".12"/>
+ <ellipse className="sandy-ground-shadow" cx="560" cy="965" rx="230" ry="18" fill="#38503b" opacity=".12"/>
  <g className="sandy-greeting-body">
  <g className="sandy-greeting-arm" clipPath={'url(#'+id+'arm)'}><image href={greeting} width="1000" height="1000"/></g>
  <g clipPath={'url(#'+id+'body)'}><image href={greeting} width="1000" height="1000"/>{closed&&<image className="sandy-greeting-blink" href={closed} width="1000" height="1000"/>}</g>
